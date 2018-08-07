@@ -9,6 +9,7 @@ class Movie {
   double rating;
   String url;
   String imdbCode;
+  int runtime;
   // Images
   String backgroundImage;
   String coverImage;
@@ -23,6 +24,7 @@ class Movie {
       this.rating,
       this.url,
       this.imdbCode,
+      this.runtime,
       this.backgroundImage,
       this.coverImage,
       this.torrents);
