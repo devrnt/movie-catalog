@@ -7,7 +7,7 @@ List<Movie> movies = [
       'Pina',
       2011,
       'In modern dance since the 1970s, few choreographers have had more influence in the medium than the late Pina Bausch. This film explores the life and work of this artist of movement while we see her company perform her most notable creations where basic things like water, dirt and even gravity take on otherworldly qualities in their dancing.',
-      ['Documentary'],
+      ['Documentary', 'Horror'],
       7.7,
       'https://yts.am/movie/pina-2011',
       'tt1440266',
