@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search),
-              onPressed: () { },
+              onPressed: () {},
             ),
           ],
         ),
@@ -31,7 +31,10 @@ class HomeScreen extends StatelessWidget {
     List<MovieCard> movieCards = new List<MovieCard>();
     movies.forEach((movie) {
       movieCards.add(MovieCard(
-          title: movie.title, year: movie.year, imageUrl: movie.coverImage));
+          id: movie.id,
+          title: movie.title,
+          year: movie.year,
+          imageUrl: movie.coverImage));
     });
     return movieCards;
   }
