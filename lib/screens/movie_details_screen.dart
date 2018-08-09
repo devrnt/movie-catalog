@@ -15,71 +15,32 @@ class MovieDetails extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          Stack(
-            alignment: Alignment(-0.9, 5.0),
-            children: <Widget>[
-              Image.network(movie.backgroundImage),
-              Image.network(
-                movie.coverImage,
-                height: 170.0,
-              )
-            ],
-          ),
-          Container(
-            width: 120.0,
-            height: 80.0,
-            padding: EdgeInsets.fromLTRB(0.0, 30.0, 70.0, 0.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  movie.year.toString(),
-                  style: TextStyle(fontSize: 15.0, color: Colors.grey),
-                ),
-                Text(
-                  movie.title,
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                ),
-              ],
+          _buildBackgroundAndCover(),
+          _buildYearAndTitle(),
+          Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 2 / 3,
+              padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _buildTextIconWidget(
+                      _fromMinutesToHourNotation(movie.runtime),
+                      Icons.access_time,
+                      Theme.of(context).accentColor),
+                  _buildTextIconWidget(movie.rating.toString(), Icons.star,
+                      Theme.of(context).accentColor)
+                ],
+              ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _buildTextIconWidget(_fromMinutesToHourNotation(movie.runtime),
-                    Icons.access_time),
-                _buildTextIconWidget(movie.rating.toString(), Icons.star)
-              ],
-            ),
-          ),
-          Container(
-            child: Text(
-              movie.summary,
-              style: TextStyle(color: Colors.grey[700]),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
-          ),
+          _buildSummary(),
+          _buildGenres(),
           Container(
             margin: EdgeInsets.all(15.0),
             child: Row(
-              children: <Widget>[
-                Text(
-                  'GENRES:',
-                  style: TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.bold),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(left: 5.0),
-                    child: Text(movie.genres[0]))
-              ],
-            ),
-          ),
-          Container(
-            color: Colors.pink,
-            margin: EdgeInsets.all(15.0),
-            child: Row(
-              children: _buildTorrents(movie.torrents),
+              children:
+                  _buildTorrents(movie.torrents, Theme.of(context).accentColor),
             ),
           )
         ],
@@ -87,41 +48,154 @@ class MovieDetails extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildTorrents(List<Torrent> torrents) {
+  Widget _buildBackgroundAndCover() {
+    return Container(
+      child: Stack(
+        alignment: Alignment(-0.9, 5.0),
+        children: <Widget>[
+          Image.network(movie.backgroundImage),
+          Image.network(
+            movie.coverImage,
+            height: 170.0,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildYearAndTitle() {
+    return Center(
+        child: Container(
+      padding: EdgeInsets.fromLTRB(0.0, 30.0, 70.0, 0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            movie.year.toString(),
+            style: TextStyle(fontSize: 15.0, color: Colors.grey),
+          ),
+          Text(
+            movie.title,
+            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    ));
+  }
+
+  Widget _buildSummary() {
+    return Container(
+      child: Text(
+        movie.summary,
+        style: TextStyle(color: Colors.grey[500], height: 1.25),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+    );
+  }
+
+  Widget _buildTextIconWidget(String text, IconData icon, Color color) {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.0),
+          child: Icon(
+            icon,
+            size: 14.0,
+            color: color,
+          ),
+        ),
+        Text((text)),
+      ],
+    );
+  }
+
+  Widget _buildGenres() {
+    final String genreString = 'Genres:'.toUpperCase();
+    String genres = '';
+    movie.genres.forEach((genre) {
+      genres += (genre + ', ');
+    });
+    // remove the last comma
+    String formattedGenres = genres.substring(0, genres.length - 2);
+    return Container(
+      margin: EdgeInsets.all(15.0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            genreString,
+            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 7.0),
+            child: Text(
+              formattedGenres,
+              overflow: TextOverflow.ellipsis,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildTorrents(List<Torrent> torrents, Color iconColor) {
     List<Widget> torrentsWidgets = new List();
 
     torrents.forEach((torrent) {
       torrentsWidgets.add(Expanded(
+          child: Center(
         child: Container(
-          padding: EdgeInsets.all(10.0),
-          color: Colors.grey[300],
-          child: Column(children: <Widget>[
-            Row(
-              children: <Widget>[
-                Icon(Icons.high_quality),
-                Text(torrent.quality),
-              ],
-            ),
-            Row(children: <Widget>[
-              Icon(Icons.folder_open),
-              Text(torrent.size.toString())
-            ]),
-            Row(children: <Widget>[
-              Icon(Icons.file_upload),
-              Text(torrent.seeds.toString()),
-            ]),
-          ]),
+          padding: EdgeInsets.all(17.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 7.0),
+                    child: Icon(
+                      Icons.high_quality,
+                      color: iconColor,
+                      size: 20.0,
+                    ),
+                  ),
+                  Text(torrent.quality),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 7.0),
+                    child: Icon(
+                      Icons.folder_open,
+                      color: iconColor,
+                      size: 20.0,
+                    ),
+                  ),
+                  Text((torrent.size/1048576).floor().toString()+' MB')
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 7.0),
+                    child: Icon(
+                      Icons.high_quality,
+                      color: iconColor,
+                      size: 20.0,
+                    ),
+                  ),
+                  Text(torrent.seeds.toString()),
+                ],
+              ),
+            ],
+          ),
         ),
-      ));
+      )));
     });
 
     return torrentsWidgets;
   }
 
   String _fromMinutesToHourNotation(int minutes) {
-    // imagine we get 60 minutes => return '1h'
-    // 90mintues => return 1:30h
-
     int amountOfHours = (minutes / 60).floor();
     int amountOfMinutes = minutes % 60;
 
@@ -129,21 +203,5 @@ class MovieDetails extends StatelessWidget {
         ' ' + amountOfHours.toString() + ':' + amountOfMinutes.toString();
     print(format);
     return format;
-  }
-
-  Widget _buildTextIconWidget(String text, IconData icon) {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.0),
-          child: Icon(
-            icon,
-            size: 14.0,
-            color: Colors.grey,
-          ),
-        ),
-        Text((text)),
-      ],
-    );
   }
 }
