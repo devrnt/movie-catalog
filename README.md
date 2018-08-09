@@ -1,6 +1,7 @@
-# movie_catalog
+# Movie catalog
 
 A new Flutter project.
+Display movies based on the YIFY api.
 
 ## Getting Started
 
