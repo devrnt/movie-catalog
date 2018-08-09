@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/torrent.dart';
 
 class MovieDetails extends StatelessWidget {
   final Movie movie;
@@ -42,7 +43,7 @@ class MovieDetails extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB( 0.0,  40.0,  0.0,  20.0),
+            padding: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -53,12 +54,68 @@ class MovieDetails extends StatelessWidget {
             ),
           ),
           Container(
-            child: Text(movie.summary, style: TextStyle(color: Colors.grey[700]),),
+            child: Text(
+              movie.summary,
+              style: TextStyle(color: Colors.grey[700]),
+            ),
             padding: EdgeInsets.symmetric(horizontal: 15.0),
           ),
+          Container(
+            margin: EdgeInsets.all(15.0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  'GENRES:',
+                  style: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(left: 5.0),
+                    child: Text(movie.genres[0]))
+              ],
+            ),
+          ),
+          Container(
+            color: Colors.pink,
+            margin: EdgeInsets.all(15.0),
+            child: Row(
+              children: _buildTorrents(movie.torrents),
+            ),
+          )
         ],
       ),
     );
+  }
+
+  List<Widget> _buildTorrents(List<Torrent> torrents) {
+    List<Widget> torrentsWidgets = new List();
+
+    torrents.forEach((torrent) {
+      torrentsWidgets.add(Expanded(
+        child: Container(
+          padding: EdgeInsets.all(10.0),
+          color: Colors.grey[300],
+          child: Column(children: <Widget>[
+            Row(
+              children: <Widget>[
+                Icon(Icons.high_quality),
+                Text(torrent.quality),
+              ],
+            ),
+            Row(children: <Widget>[
+              Icon(Icons.folder_open),
+              Text(torrent.size.toString())
+            ]),
+            Row(children: <Widget>[
+              Icon(Icons.file_upload),
+              Text(torrent.seeds.toString()),
+            ]),
+          ]),
+        ),
+      ));
+    });
+
+    return torrentsWidgets;
   }
 
   String _fromMinutesToHourNotation(int minutes) {
