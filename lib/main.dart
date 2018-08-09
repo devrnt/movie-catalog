@@ -12,7 +12,7 @@ class MovieCatalog extends StatelessWidget {
     return new MaterialApp(
       title: 'Movie Catalog',
       theme: new ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.grey,
       ),
       home: new HomeScreen(),
     );
