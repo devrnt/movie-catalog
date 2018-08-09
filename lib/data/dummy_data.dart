@@ -22,7 +22,15 @@ List<Movie> movies = [
             931649290,
             new DateTime.now(),
             74,
-            57)
+            57),
+        new Torrent(
+            'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
+            '90CBAC6473DD54F9911E4ADBE0C0CE7C0A2DE6FC',
+            '720p',
+            931649290,
+            new DateTime.now(),
+            74,
+            57),
       ]),
   new Movie(
       8521,
@@ -264,7 +272,7 @@ List<Movie> movies = [
             931649290,
             new DateTime.now(),
             74,
-            57)
+            57),
       ]),
   new Movie(
       8521,
