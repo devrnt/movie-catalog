@@ -160,6 +160,9 @@ class MovieDetails extends StatelessWidget {
                   Text(torrent.quality),
                 ],
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+              ),
               Row(
                 children: <Widget>[
                   Padding(
@@ -170,8 +173,11 @@ class MovieDetails extends StatelessWidget {
                       size: 20.0,
                     ),
                   ),
-                  Text((torrent.size/1048576).floor().toString()+' MB')
+                  Text((torrent.size / 1048576).floor().toString() + ' MB')
                 ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
               ),
               Row(
                 children: <Widget>[
@@ -186,6 +192,24 @@ class MovieDetails extends StatelessWidget {
                   Text(torrent.seeds.toString()),
                 ],
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+              ),
+                            Padding(padding: EdgeInsets.symmetric(vertical: 5.0),),
+
+              RaisedButton(
+                color: Colors.black26,
+                onPressed: () {
+                  print(torrent.url);
+                },
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.link),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 7.0)),
+                    Text('Magnet'.toUpperCase())
+                  ],
+                ),
+              )
             ],
           ),
         ),
