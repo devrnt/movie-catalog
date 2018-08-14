@@ -15,7 +15,7 @@ class Torrent {
         json['url'] as String,
         json['hash'] as String,
         json['quality'] as String,
-        json['size'] as num,
+        json['size_bytes'] as num,
         json['dateUploaded'] as DateTime,
         json['seeds'] as int,
         json['peers'] as int);

@@ -18,12 +18,11 @@ class MovieService {
   // Fetch all the movies
   // Keep the order of the API
   Future<List<Movie>> fetchAllMovies(http.Client client) async {
-    final response = await http.get(url);
-    print(response.body);
+    final response = await client.get(url);
+
     if (response.statusCode == 200) {
-      print(response.body);
       // Use the compute function to run parsePhotos in a separate isolate
-      return compute(parseMovies, response.body);
+      return parseMovies(response.body);
     } else {
       throw Exception(
           'Failed to load movies: Check if the api ${url} is still online. If not the case check if the mapping is still correct.');
@@ -32,7 +31,8 @@ class MovieService {
 
   // Convert the list of movies from API to list
   List<Movie> parseMovies(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    final movies = json.decode(responseBody)['data']['movies'];
+    final parsed = movies.cast<Map<String, dynamic>>();
     return parsed.map<Movie>((json) => Movie.fromJson(json)).toList();
   }
 

@@ -52,15 +52,19 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildGridTiles(List<Movie> movies) {
     return GridView.builder(
+      primary: true,
+      padding: EdgeInsets.fromLTRB(2.0, 3.0, 2.0, 3.0),
       gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.555),
       itemCount: movies.length,
       itemBuilder: (context, index) {
         return MovieCard(
-          id: 1,
+          movie: movies[index],
         );
       },
     );
+
+    // Use dummt data
     // List<MovieCard> movieCards = new List<MovieCard>();
 
     // movies.forEach((movie) {

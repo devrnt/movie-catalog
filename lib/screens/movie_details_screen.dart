@@ -104,7 +104,7 @@ class MovieDetails extends StatelessWidget {
             color: color,
           ),
         ),
-        Text((text)),
+        Text(text),
       ],
     );
   }

@@ -5,7 +5,7 @@ class Movie {
   String title;
   int year;
   String summary;
-  List<String> genres;
+  List<dynamic> genres;
   double rating;
   String url;
   String imdbCode;
@@ -31,19 +31,26 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) {
     var list = json['torrents'] as List;
-
     List<Torrent> listTorrents = list.map((i) => Torrent.fromJson(i)).toList();
+    var genres = json['genres'];
+    // some movies have no genres (genres = null)
+    // this is an extra check
+    List<String> genresList = json['genres'] != null
+        ? new List<String>.from(genres)
+        : new List<String>();
 
+    num formattedRating =
+        json['rating'].runtimeType == double ? json['rating'] : 0.0;
     return Movie(
         json['id'] as int,
         json['title'] as String,
         json['year'] as int,
         json['summary'] as String,
-        json['genres'] as List<String>,
-        json['rating'] as num,
+        genresList,
+        formattedRating,
         json['url'] as String,
         json['imdb_code'] as String,
-        json['runtime'] as num,
+        json['runtime'] as int,
         json['background_image_original'] as String,
         json['large_cover_image'] as String,
         listTorrents);

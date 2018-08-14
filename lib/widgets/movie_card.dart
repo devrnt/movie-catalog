@@ -3,19 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:movie_catalog/screens/movie_details_screen.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 
+import 'package:movie_catalog/models/movie.dart';
+
 class MovieCard extends StatefulWidget {
-  final int id;
-  String title;
-  int year;
-  String imageUrl;
+  final Movie movie;
 
   final MovieService _movieService = new MovieService();
 
-  MovieCard({this.id}) {
-    this.title = _movieService.getMovie(id).title;
-    this.year = _movieService.getMovie(id).year;
-    this.imageUrl = _movieService.getMovie(id).coverImage;
-  }
+  MovieCard({this.movie});
 
   @override
   MovieCardState createState() {
@@ -32,7 +27,7 @@ class MovieCardState extends State<MovieCard> {
             context,
             MaterialPageRoute(
               builder: (context) => MovieDetails(
-                    movie: widget._movieService.getMovie(widget.id),
+                    movie: widget.movie,
                   ),
             ),
           );
@@ -49,7 +44,7 @@ class MovieCardState extends State<MovieCard> {
         children: <Widget>[
           Center(
             child: Image.network(
-              widget.imageUrl,
+              widget.movie.coverImage,
               fit: BoxFit.cover,
             ),
           ),
@@ -63,11 +58,13 @@ class MovieCardState extends State<MovieCard> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 2.0),
                     child: Text(
-                      widget.title,
+                      widget.movie.title.length < 15
+                          ? widget.movie.title
+                          : widget.movie.title.substring(0,14) + '...',
                     ),
                   ),
                   Text(
-                    widget.year.toString(),
+                    widget.movie.year.toString(),
                     style: TextStyle(
                         color: Theme.of(context).primaryIconTheme.color,
                         fontSize: 13.0),
