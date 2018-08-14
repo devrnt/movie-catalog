@@ -195,8 +195,9 @@ class MovieDetails extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.0),
               ),
-                            Padding(padding: EdgeInsets.symmetric(vertical: 5.0),),
-
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+              ),
               RaisedButton(
                 color: Colors.black26,
                 onPressed: () {
