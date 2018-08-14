@@ -9,4 +9,15 @@ class Torrent {
 
   Torrent(this.url, this.hash, this.quality, this.size, this.dateUploaded,
       this.seeds, this.peers);
+
+  factory Torrent.fromJson(Map<String, dynamic> json) {
+    return Torrent(
+        json['url'] as String,
+        json['hash'] as String,
+        json['quality'] as String,
+        json['size'] as num,
+        json['dateUploaded'] as DateTime,
+        json['seeds'] as int,
+        json['peers'] as int);
+  }
 }

@@ -28,4 +28,24 @@ class Movie {
       this.backgroundImage,
       this.coverImage,
       this.torrents);
+
+  factory Movie.fromJson(Map<String, dynamic> json) {
+    var list = json['torrents'] as List;
+
+    List<Torrent> listTorrents = list.map((i) => Torrent.fromJson(i)).toList();
+
+    return Movie(
+        json['id'] as int,
+        json['title'] as String,
+        json['year'] as int,
+        json['summary'] as String,
+        json['genres'] as List<String>,
+        json['rating'] as num,
+        json['url'] as String,
+        json['imdb_code'] as String,
+        json['runtime'] as num,
+        json['background_image_original'] as String,
+        json['large_cover_image'] as String,
+        listTorrents);
+  }
 }
