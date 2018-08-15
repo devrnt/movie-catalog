@@ -1,42 +1,47 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
-import 'package:movie_catalog/data/dummy_data.dart';
+import 'package:movie_catalog/services/imovie_service.dart';
+
 import 'package:movie_catalog/models/movie.dart';
 
-const url = 'https://yts.am/api/v2/list_movies.json';
+class MovieService implements IMovieService {
+  final String apiUrl = 'https://yts.am/api/v2/list_movies.json';
+  // Fetch all the movies, the order of the api is kept
+  Future<List<Movie>> fetchLatestMovies(http.Client client, int currentPage) async {
+    // the defaut limit in the API is set to 20
 
-class MovieService {
-  List<Movie> listOfMovies;
-  MovieService() {
-    listOfMovies = movies;
-  }
+    String fetchUrl = apiUrl + '?limit=50' + '&page=' + currentPage.toString();
+    print('fetched link: ' + fetchUrl);
 
-  // Fetch all the movies
-  // Keep the order of the API
-  Future<List<Movie>> fetchAllMovies(http.Client client) async {
-    final response = await client.get(url);
+    final response = await client.get(fetchUrl);
 
     if (response.statusCode == 200) {
       // Use the compute function to run parsePhotos in a separate isolate
-      return parseMovies(response.body);
+      // ++++++++++++++++DEBUG++++++++++++++++++++
+      print('===========');
+      print(json.decode(response.body)['data']['movies'][0]['title']);
+      print('===========');
+      // +++++++++++++++++++++++++++++++++++++++++
+      var res = json.decode(response.body)['data']['movies'];
+      return compute(parseMovies, response.body);
     } else {
-      throw Exception(
-          'Failed to load movies: Check if the api ${url} is still online. If not the case check if the mapping is still correct.');
+      throw Exception('Failed to load movies: Check if the api' +
+          fetchUrl +
+          'is still online. If not the case check if the mapping is still correct.');
     }
   }
+}
 
-  // Convert the list of movies from API to list
-  List<Movie> parseMovies(String responseBody) {
-    final movies = json.decode(responseBody)['data']['movies'];
-    final parsed = movies.cast<Map<String, dynamic>>();
-    return parsed.map<Movie>((json) => Movie.fromJson(json)).toList();
-  }
+// THIS SHOULD BE A TOP LEVEL FUNCTION OTHEREWISE COMPUTE WILL GIVE ERRORS
+// Convert the list of movies from API to list
+List<Movie> parseMovies(String responseBody) {
+  // cut the useless data from the response body
+  final rightJson = json.decode(responseBody)['data']['movies'];
+  final parsed = rightJson.cast<Map<String, dynamic>>();
 
-  Movie getMovie(int id) {
-    return listOfMovies.where((movie) => movie.id == id).first;
-  }
+  return parsed.map<Movie>((json) => new Movie.fromJson(json)).toList();
 }

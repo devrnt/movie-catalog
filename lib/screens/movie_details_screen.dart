@@ -112,11 +112,16 @@ class MovieDetails extends StatelessWidget {
   Widget _buildGenres() {
     final String genreString = 'Genres:'.toUpperCase();
     String genres = '';
-    movie.genres.forEach((genre) {
-      genres += (genre + ', ');
-    });
+
+    String formattedGenres = '';
+    if (movie.genres.length > 0) {
+      movie.genres.forEach((genre) {
+        genres += (genre + ', ');
+      });
+      formattedGenres = genres.substring(0, genres.length - 2);
+    }
+
     // remove the last comma
-    String formattedGenres = genres.substring(0, genres.length - 2);
     return Container(
       margin: EdgeInsets.all(15.0),
       child: Row(
@@ -226,7 +231,6 @@ class MovieDetails extends StatelessWidget {
 
     String format =
         ' ' + amountOfHours.toString() + ':' + amountOfMinutes.toString();
-    print(format);
     return format;
   }
 }

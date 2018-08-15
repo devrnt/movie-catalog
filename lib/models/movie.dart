@@ -41,6 +41,7 @@ class Movie {
 
     num formattedRating =
         json['rating'].runtimeType == double ? json['rating'] : 0.0;
+
     return Movie(
         json['id'] as int,
         json['title'] as String,

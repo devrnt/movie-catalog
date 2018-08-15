@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:movie_catalog/screens/movie_details_screen.dart';
-import 'package:movie_catalog/services/movie_service.dart';
 
 import 'package:movie_catalog/models/movie.dart';
 
 class MovieCard extends StatefulWidget {
   final Movie movie;
-
-  final MovieService _movieService = new MovieService();
 
   MovieCard({this.movie});
 
@@ -58,9 +55,9 @@ class MovieCardState extends State<MovieCard> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 2.0),
                     child: Text(
-                      widget.movie.title.length < 15
+                      widget.movie.title.replaceAll(' ', '').trim().length < 14
                           ? widget.movie.title
-                          : widget.movie.title.substring(0,14) + '...',
+                          : widget.movie.title.substring(0,13) + '...',
                     ),
                   ),
                   Text(
