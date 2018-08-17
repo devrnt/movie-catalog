@@ -51,22 +51,33 @@ class MovieDetails extends StatelessWidget {
   Widget _buildBackgroundAndCover() {
     return Container(
       child: Stack(
-        alignment: Alignment(-0.9, 5.0),
+        fit: StackFit.loose,
+        alignment: Alignment(-0.90, 8.5),
         children: <Widget>[
-          Image.network(movie.backgroundImage),
-          Image.network(
-            movie.coverImage,
-            height: 170.0,
-          )
+          Container(
+            height: 200.0,
+            child: Image.network(
+              movie.backgroundImage,
+              fit: BoxFit.fill,
+            ),
+          ),
+          Positioned(
+            child: Container(
+              child: Image.network(
+                movie.coverImage,
+                height: 170.0,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildYearAndTitle() {
-    return Center(
-        child: Container(
-      padding: EdgeInsets.fromLTRB(0.0, 30.0, 70.0, 0.0),
+    return Container(
+      width: 100.0,
+      padding: EdgeInsets.fromLTRB(150.0, 30.0, 70.0, 0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -80,7 +91,7 @@ class MovieDetails extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 
   Widget _buildSummary() {
@@ -231,6 +242,6 @@ class MovieDetails extends StatelessWidget {
 
     String format =
         ' ' + amountOfHours.toString() + ':' + amountOfMinutes.toString();
-    return format;
+    return format+'h';
   }
 }
