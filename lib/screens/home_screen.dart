@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: !online()
-          ? showAlert()
+          ? noInternetConnection()
           : FutureBuilder<List<Movie>>(
               future: _movieService.fetchLatestMovies(http.Client(), 1),
               builder: (context, snapshot) {
@@ -106,17 +106,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget showAlert() {
+  Widget noInternetConnection() {
     print('Alert was shown');
-    _neverSatisfied();
-    return null;
+    _showAlert();
+    return Center(
+      child: Text('No internet connection'),
+    );
   }
 
   bool online() {
     return _connectionStatus == 'ConnectivityResult.none' ? false : true;
   }
 
-  Future<Null> _neverSatisfied() async {
+  Future<Null> _showAlert() async {
     return showDialog<Null>(
       context: context,
       barrierDismissible: false, // user must tap button!
