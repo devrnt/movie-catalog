@@ -35,7 +35,7 @@ class _MovieGridState extends State<MovieGrid> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.fromLTRB(2.0, 3.0, 2.0, 3.0),
+      padding: EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 3.0),
       controller: _scrollController,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,

@@ -70,40 +70,64 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Movie Catalog',
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // TODO
-              // Make a filtered list on the genre, title, year of the movies
-            },
-          ),
-        ],
-      ),
-      body: !online()
-          ? noInternetConnection()
-          : FutureBuilder<List<Movie>>(
-              future: _movieService.fetchLatestMovies(http.Client(), 1),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) print(snapshot.error);
-                return snapshot.hasData
-                    ? MovieGrid(movies: snapshot.data)
-                    : Center(child: CircularProgressIndicator());
-              },
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Movie Catalog',
             ),
-      // body: GridView.count(
-      //   primary: true,
-      //   padding: EdgeInsets.fromLTRB(2.0, 3.0, 2.0, 3.0),
-      //   crossAxisCount: 3,
-      //   childAspectRatio: 0.555,
-      //   children: _buildGridTiles(),
-      // ),
-    );
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  // TODO
+                  // Make a filtered list on the genre, title, year of the movies
+                },
+              ),
+            ],
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                  child: Text('LATEST'),
+                ),
+                Tab(
+                  child: Text('TOP RATED'),
+                ),
+              ],
+              indicatorColor: Theme.of(context).accentColor,
+            ),
+          ),
+          body: !online()
+              ? noInternetConnection()
+              : TabBarView(children: <Widget>[
+                  FutureBuilder<List<Movie>>(
+                    future: _movieService.fetchLatestMovies(http.Client(), 1),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) print(snapshot.error);
+                      return snapshot.hasData
+                          ? MovieGrid(movies: snapshot.data)
+                          : Center(child: CircularProgressIndicator());
+                    },
+                  ),
+                  FutureBuilder<List<Movie>>(
+                    future: _movieService.fetchPopularMovies(http.Client(), 1),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) print(snapshot.error);
+                      return snapshot.hasData
+                          ? MovieGrid(movies: snapshot.data)
+                          : Center(child: CircularProgressIndicator());
+                    },
+                  ),
+                ]),
+          // body: GridView.count(
+          //   primary: true,
+          //   padding: EdgeInsets.fromLTRB(2.0, 3.0, 2.0, 3.0),
+          //   crossAxisCount: 3,
+          //   childAspectRatio: 0.555,
+          //   children: _buildGridTiles(),
+          // ),
+        ));
   }
 
   Widget noInternetConnection() {
