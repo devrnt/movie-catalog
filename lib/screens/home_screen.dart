@@ -1,20 +1,12 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:flutter/services.dart';
-
-import 'package:movie_catalog/services/movie_service.dart';
-
-import 'package:movie_catalog/widgets/movie_card.dart';
-
-import 'package:movie_catalog/models/movie.dart';
-
-import 'package:movie_catalog/widgets/movie_grid.dart';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/services/movie_service.dart';
+import 'package:movie_catalog/widgets/movie_grid.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ScrollController _scrollController;
   MovieService _movieService;
 
   String _connectionStatus = 'Unknown';
@@ -31,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _scrollController = new ScrollController();
     _movieService = new MovieService();
     super.initState();
     initConnectivity();
@@ -71,36 +61,37 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Movie Catalog',
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Movie Catalog',
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                // TODO
+                // Make a filtered list on the genre, title, year of the movies
+              },
             ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  // TODO
-                  // Make a filtered list on the genre, title, year of the movies
-                },
+          ],
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                child: Text('LATEST'),
+              ),
+              Tab(
+                child: Text('TOP RATED'),
               ),
             ],
-            bottom: TabBar(
-              tabs: [
-                Tab(
-                  child: Text('LATEST'),
-                ),
-                Tab(
-                  child: Text('TOP RATED'),
-                ),
-              ],
-              indicatorColor: Theme.of(context).accentColor,
-            ),
+            indicatorColor: Theme.of(context).accentColor,
           ),
-          body: !online()
-              ? noInternetConnection()
-              : TabBarView(children: <Widget>[
+        ),
+        body: !online()
+            ? noInternetConnection()
+            : TabBarView(
+                children: <Widget>[
                   FutureBuilder<List<Movie>>(
                     future: _movieService.fetchLatestMovies(http.Client(), 1),
                     builder: (context, snapshot) {
@@ -119,19 +110,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Center(child: CircularProgressIndicator());
                     },
                   ),
-                ]),
-          // body: GridView.count(
-          //   primary: true,
-          //   padding: EdgeInsets.fromLTRB(2.0, 3.0, 2.0, 3.0),
-          //   crossAxisCount: 3,
-          //   childAspectRatio: 0.555,
-          //   children: _buildGridTiles(),
-          // ),
-        ));
+                ],
+              ),
+      ),
+    );
   }
 
   Widget noInternetConnection() {
-    print('Alert was shown');
     _showAlert();
     return Center(
       child: Text('No internet connection'),
@@ -148,11 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('No internet connection'),
+          title: Text('No Torrent app installed'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Please turn on your internet.'),
+                Text('Please install a torrent'),
                 Text(
                   'This app will be closed.',
                   style: TextStyle(color: Colors.grey, fontSize: 14.0),
