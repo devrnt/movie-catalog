@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.6"
+  connectivity:
+    dependency: "direct main"
+    description:
+      name: connectivity
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   convert:
     dependency: transitive
     description:
@@ -382,3 +389,4 @@ packages:
     version: "2.1.15"
 sdks:
   dart: ">=2.0.0-dev.58.0 <=2.0.0-dev.58.0.flutter-f981f09760"
+  flutter: ">=0.1.4 <2.0.0"
