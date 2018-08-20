@@ -6,4 +6,5 @@ import 'package:http/http.dart' as http;
 
 abstract class IMovieService {
   Future<List<Movie>> fetchLatestMovies(http.Client client, int currentPage);
+  Future<List<Movie>> fetchPopularMovies(http.Client client, int currentPage);
 }

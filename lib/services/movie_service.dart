@@ -10,24 +10,19 @@ import 'package:movie_catalog/models/movie.dart';
 
 class MovieService implements IMovieService {
   final String apiUrl = 'https://yts.am/api/v2/list_movies.json';
+
   // Fetch all the movies, the order of the api is kept
   Future<List<Movie>> fetchLatestMovies(
       http.Client client, int currentPage) async {
     // the defaut limit in the API is set to 20
-
     String fetchUrl = apiUrl + '?limit=50' + '&page=' + currentPage.toString();
+
     print('fetched link: ' + fetchUrl);
 
     final response = await client.get(fetchUrl);
 
     if (response.statusCode == 200) {
       // Use the compute function to run parsePhotos in a separate isolate
-      // ++++++++++++++++DEBUG++++++++++++++++++++
-      print('===========');
-      print(json.decode(response.body)['data']['movies'][0]['title']);
-      print('===========');
-      // +++++++++++++++++++++++++++++++++++++++++
-      var res = json.decode(response.body)['data']['movies'];
       return compute(parseMovies, response.body);
     } else {
       throw Exception('Failed to load movies: Check if the api' +
@@ -38,8 +33,6 @@ class MovieService implements IMovieService {
 
   Future<List<Movie>> fetchPopularMovies(
       http.Client client, int currentPage) async {
-    // the defaut limit in the API is set to 20
-
     String fetchUrl = apiUrl +
         '?limit=50' +
         '&sort_by=rating' +
@@ -51,12 +44,6 @@ class MovieService implements IMovieService {
 
     if (response.statusCode == 200) {
       // Use the compute function to run parsePhotos in a separate isolate
-      // ++++++++++++++++DEBUG++++++++++++++++++++
-      print('===========');
-      print(json.decode(response.body)['data']['movies'][0]['title']);
-      print('===========');
-      // +++++++++++++++++++++++++++++++++++++++++
-      var res = json.decode(response.body)['data']['movies'];
       return compute(parseMovies, response.body);
     } else {
       throw Exception('Failed to load movies: Check if the api' +
@@ -64,14 +51,14 @@ class MovieService implements IMovieService {
           'is still online. If not the case check if the mapping is still correct.');
     }
   }
-}
 
 // THIS SHOULD BE A TOP LEVEL FUNCTION OTHEREWISE COMPUTE WILL GIVE ERRORS
 // Convert the list of movies from API to list
-List<Movie> parseMovies(String responseBody) {
-  // cut the useless data from the response body
-  final rightJson = json.decode(responseBody)['data']['movies'];
-  final parsed = rightJson.cast<Map<String, dynamic>>();
+  List<Movie> parseMovies(String responseBody) {
+    // cut the useless data from the response body
+    final rightJson = json.decode(responseBody)['data']['movies'];
+    final parsed = rightJson.cast<Map<String, dynamic>>();
 
-  return parsed.map<Movie>((json) => new Movie.fromJson(json)).toList();
+    return parsed.map<Movie>((json) => new Movie.fromJson(json)).toList();
+  }
 }
