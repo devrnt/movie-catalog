@@ -24,12 +24,19 @@ class _MovieGridState extends State<MovieGrid> {
 
   @override
   void initState() {
+    super.initState();
     movies = widget.movies;
     _movieService = new MovieService();
 
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
-    super.initState();
+  }
+
+  @override
+  void deactivate() {
+    _scrollController.removeListener(() => _scrollController);
+    print('event removed!!!!!!!!!!!!!!!!');
+    super.deactivate();
   }
 
   @override
@@ -41,28 +48,31 @@ class _MovieGridState extends State<MovieGrid> {
         crossAxisCount: 3,
         childAspectRatio: 0.555,
       ),
-      itemCount: widget.movies.length,
+      itemCount: movies.length,
       itemBuilder: (context, index) {
+        print('Length that is inserted from the builder' + movies.length.toString());
         return MovieCard(
-          movie: widget.movies[index],
+          movie: movies[index],
         );
       },
     );
   }
 
   void _scrollListener() {
-    if (_scrollController.position.atEdge) {
+    print(_scrollController.position.pixels);
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      print('Scrolled to the end!');
       _movieService
           .fetchLatestMovies(http.Client(), currentPage)
           .then((newMovies) {
         setState(() {
           movies.addAll(newMovies);
         });
-
         newMovies.forEach((m) {
           print(m.title);
         });
-        print(movies.length);
+        print('length: ' + movies.length.toString());
       });
       currentPage++;
     }

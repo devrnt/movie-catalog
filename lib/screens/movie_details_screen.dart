@@ -69,7 +69,7 @@ class MovieDetails extends StatelessWidget {
           Positioned(
             child: Container(
               child: Image.network(
-                movie.coverImageLarge,
+                movie.coverImageMedium,
                 height: 170.0,
                 fit: BoxFit.fill,
               ),
