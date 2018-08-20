@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   FutureBuilder<List<Movie>>(
                     future: _movieService.fetchPopularMovies(http.Client(), 1),
                     builder: (context, snapshot) {
-                      print('First elem of snapshot '+ snapshot.data[0].title);
+                      print('First elem of snapshot ' + snapshot.data[0].title);
                       print('===============');
                       if (snapshot.hasError) print(snapshot.error);
                       return snapshot.hasData
@@ -135,11 +135,11 @@ class _HomeScreenState extends State<HomeScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('No Torrent app installed'),
+          title: Text('No internet connection'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Please install a torrent'),
+                Text('Please turn on your internet.'),
                 Text(
                   'This app will be closed.',
                   style: TextStyle(color: Colors.grey, fontSize: 14.0),
