@@ -3,6 +3,7 @@ import 'package:movie_catalog/models/torrent.dart';
 class Movie {
   int id;
   String title;
+  String titleLong;
   int year;
   String summary;
   List<dynamic> genres;
@@ -18,6 +19,7 @@ class Movie {
   Movie(
       this.id,
       this.title,
+      this.titleLong,
       this.year,
       this.summary,
       this.genres,
@@ -45,6 +47,7 @@ class Movie {
     return Movie(
         json['id'] as int,
         json['title'] as String,
+        json['title_long'] as String,
         json['year'] as int,
         json['summary'] as String,
         genresList,
