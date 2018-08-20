@@ -35,7 +35,7 @@ class MovieCard extends StatelessWidget {
         children: <Widget>[
           Center(
             child: Image.network(
-              movie.coverImage,
+              movie.coverImageMedium,
               fit: BoxFit.cover,
             ),
           ),
@@ -49,7 +49,7 @@ class MovieCard extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(bottom: 2.0),
                     child: Text(
-                      movie.title.replaceAll(' ', '').trim().length < 14
+                      movie.title.replaceAll(' ', '').trim().length < 13
                           ? movie.title
                           : movie.title.substring(0, 13) + '...',
                     ),

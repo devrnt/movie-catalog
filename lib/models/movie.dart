@@ -13,7 +13,8 @@ class Movie {
   int runtime;
   // Images
   String backgroundImage;
-  String coverImage;
+  String coverImageMedium;
+  String coverImageLarge;
   List<Torrent> torrents;
 
   Movie(
@@ -28,7 +29,8 @@ class Movie {
       this.imdbCode,
       this.runtime,
       this.backgroundImage,
-      this.coverImage,
+      this.coverImageMedium,
+      this.coverImageLarge,
       this.torrents);
 
   factory Movie.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class Movie {
         json['imdb_code'] as String,
         json['runtime'] as int,
         json['background_image_original'] as String,
+        json['medium_cover_image'] as String,
         json['large_cover_image'] as String,
         listTorrents);
   }

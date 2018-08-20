@@ -20,7 +20,7 @@ class MovieService implements IMovieService {
     print('fetched link: ' + fetchUrl);
 
     final response = await client.get(fetchUrl);
-
+    
     if (response.statusCode == 200) {
       // Use the compute function to run parsePhotos in a separate isolate
       return compute(parseMovies, response.body);
@@ -51,9 +51,10 @@ class MovieService implements IMovieService {
           'is still online. If not the case check if the mapping is still correct.');
     }
   }
+}
 
 // THIS SHOULD BE A TOP LEVEL FUNCTION OTHEREWISE COMPUTE WILL GIVE ERRORS
-// Convert the list of movies from API to list
+// Convert the list of movies from API to list of movies
   List<Movie> parseMovies(String responseBody) {
     // cut the useless data from the response body
     final rightJson = json.decode(responseBody)['data']['movies'];
@@ -61,4 +62,3 @@ class MovieService implements IMovieService {
 
     return parsed.map<Movie>((json) => new Movie.fromJson(json)).toList();
   }
-}

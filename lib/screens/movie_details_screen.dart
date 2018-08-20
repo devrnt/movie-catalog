@@ -60,6 +60,7 @@ class MovieDetails extends StatelessWidget {
         children: <Widget>[
           Container(
             height: 200.0,
+            width: double.infinity, // max width
             child: Image.network(
               movie.backgroundImage,
               fit: BoxFit.cover,
@@ -68,8 +69,9 @@ class MovieDetails extends StatelessWidget {
           Positioned(
             child: Container(
               child: Image.network(
-                movie.coverImage,
+                movie.coverImageLarge,
                 height: 170.0,
+                fit: BoxFit.fill,
               ),
             ),
           ),
@@ -224,8 +226,6 @@ class MovieDetails extends StatelessWidget {
                     color: Colors.black26,
                     onPressed: () {
                       String magnetLink = constructMagnetLink(torrent, movie);
-                      String link =
-                          'magnet:?xt=urn:btih:024DC9289725FEB3CCE6A321EAFF344B05A70855&dn=Running+for+Grace+%282018%29+%5B720p%5D+%5BYTS.AG%5D&tr=udp%3A%2F%2Fglotorrents.pw%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fp4p.arenabg.ch%3A1337&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337';
                       _launchLink(magnetLink, context);
                     },
                     child: Row(
@@ -316,12 +316,8 @@ class MovieDetails extends StatelessWidget {
   }
 
   String encodeMovie(Movie movie, Torrent torrent) {
-    String template = movie.titleLong +
-        ' ' +
-        '[' +
-        torrent.quality +
-        ']' +
-        ' [YTS.AG]';
+    String template =
+        movie.titleLong + ' ' + '[' + torrent.quality + ']' + ' [YTS.AG]';
     // this Uri.encodeFull does not provide all the needed replaces
     String encoded = Uri.encodeFull(template);
 
