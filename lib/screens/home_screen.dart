@@ -70,15 +70,15 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text(
             'Movie Catalog',
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                // TODO
-                // Make a filtered list on the genre, title, year of the movies
-              },
-            ),
-          ],
+          // actions: <Widget>[
+          //   IconButton(
+          //     icon: Icon(Icons.search),
+          //     onPressed: () {
+          //       // TODO
+          //       // Make a filtered list on the genre, title, year of the movies
+          //     },
+          //   ),
+          // ],
           bottom: TabBar(
             tabs: [
               Tab(
