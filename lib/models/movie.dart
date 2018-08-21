@@ -62,4 +62,21 @@ class Movie {
         json['large_cover_image'] as String,
         listTorrents);
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'titleLong': titleLong,
+        'year': year,
+        'summary': summary,
+        'genresList': genres,
+        'rating': rating,
+        'url': url,
+        'imdbCode': imdbCode,
+        'runtime': runtime,
+        'backgroundImage': backgroundImage,
+        'coverImageMedium': coverImageMedium,
+        'coverImageLarge': coverImageLarge,
+        'torrents': 'sexy'
+      };
 }

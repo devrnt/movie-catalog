@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/torrent.dart';
 import 'package:movie_catalog/services/movie_service.dart';
+import 'package:movie_catalog/services/storage_service.dart';
 import 'package:movie_catalog/widgets/movie_grid.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,11 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = new Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  StorageService storageService;
 
   @override
   void initState() {
     super.initState();
     _movieService = new MovieService();
+    storageService = new StorageService();
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
@@ -61,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -84,6 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Tab(
                 child: Text('TOP RATED'),
               ),
+              Tab(
+                child: Text('SAVED'),
+              ),
             ],
             indicatorColor: Theme.of(context).accentColor,
           ),
@@ -97,7 +104,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.hasError) print(snapshot.error);
                       return snapshot.hasData
-                          ? MovieGrid(movies: snapshot.data)
+                          ? MovieGrid(
+                              movies: snapshot.data,
+                              type: 'latest',
+                            )
                           : Center(child: CircularProgressIndicator());
                     },
                   ),
@@ -108,10 +118,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       print('===============');
                       if (snapshot.hasError) print(snapshot.error);
                       return snapshot.hasData
-                          ? MovieGrid(movies: snapshot.data)
+                          ? MovieGrid(
+                              movies: snapshot.data,
+                              type: 'popular',
+                            )
                           : Center(child: CircularProgressIndicator());
                     },
                   ),
+                  Row(children: <Widget>[
+                    FloatingActionButton(
+                      onPressed: () {},
+                      child: Text('Klik'),
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {},
+                      child: Text('Write'),
+                    )
+                  ])
                 ],
               ),
       ),
@@ -135,11 +158,11 @@ class _HomeScreenState extends State<HomeScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('No internet connection'),
+          title: Text('No Torrent app installed'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Please turn on your internet.'),
+                Text('Please install a torrent'),
                 Text(
                   'This app will be closed.',
                   style: TextStyle(color: Colors.grey, fontSize: 14.0),

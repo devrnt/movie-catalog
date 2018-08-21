@@ -8,8 +8,9 @@ import 'package:http/http.dart' as http;
 
 class MovieGrid extends StatefulWidget {
   List<Movie> movies;
+  String type;
 
-  MovieGrid({this.movies});
+  MovieGrid({this.movies, this.type});
 
   @override
   _MovieGridState createState() => _MovieGridState();
@@ -17,7 +18,8 @@ class MovieGrid extends StatefulWidget {
 
 class _MovieGridState extends State<MovieGrid> {
   List<Movie> movies;
-  int currentPage = 2;
+  int currentPageLatest = 2;
+  int currentPagePopular = 2;
 
   MovieService _movieService;
   ScrollController _scrollController;
@@ -50,7 +52,8 @@ class _MovieGridState extends State<MovieGrid> {
       ),
       itemCount: movies.length,
       itemBuilder: (context, index) {
-        print('Length that is inserted from the builder' + movies.length.toString());
+        print('Length that is inserted from the builder' +
+            movies.length.toString());
         return MovieCard(
           movie: movies[index],
         );
@@ -63,18 +66,35 @@ class _MovieGridState extends State<MovieGrid> {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       print('Scrolled to the end!');
-      _movieService
-          .fetchLatestMovies(http.Client(), currentPage)
-          .then((newMovies) {
-        setState(() {
-          movies.addAll(newMovies);
+      if (widget.type == 'latest') {
+        print('type is '+widget.type);
+        _movieService
+            .fetchLatestMovies(http.Client(), currentPageLatest)
+            .then((newMovies) {
+          setState(() {
+            movies.addAll(newMovies);
+          });
+          newMovies.forEach((m) {
+            print(m.title);
+          });
+          print('length: ' + movies.length.toString());
+          currentPageLatest++;
         });
-        newMovies.forEach((m) {
-          print(m.title);
+      }
+      if (widget.type == 'popular') {
+        _movieService
+            .fetchPopularMovies(http.Client(), currentPagePopular)
+            .then((newMovies) {
+          setState(() {
+            movies.addAll(newMovies);
+          });
+          newMovies.forEach((m) {
+            print(m.title);
+          });
+          print('length: ' + movies.length.toString());
+          currentPagePopular++;
         });
-        print('length: ' + movies.length.toString());
-      });
-      currentPage++;
+      }
     }
   }
   // if (_scrollController.position.atEdge) {
