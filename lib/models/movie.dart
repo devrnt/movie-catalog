@@ -35,7 +35,16 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) {
     var list = json['torrents'] as List;
-    List<Torrent> listTorrents = list.map((i) => Torrent.fromJson(i)).toList();
+     List<Torrent> listTorrents;
+    print('+++++++++++++++++++++++++');
+    if(list == null){
+      listTorrents = [];
+      // debug purpose
+
+    } else {
+
+    listTorrents = list.map((t) => Torrent.fromJson(t)).toList();
+    }
     var genres = json['genres'];
     // some movies have no genres (genres = null)
     // this is an extra check

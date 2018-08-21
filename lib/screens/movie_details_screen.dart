@@ -162,88 +162,97 @@ class MovieDetails extends StatelessWidget {
   List<Widget> _buildTorrents(
       List<Torrent> torrents, Color iconColor, BuildContext context) {
     List<Widget> torrentsWidgets = new List();
-
-    torrents.forEach((torrent) {
-      torrentsWidgets.add(
-        Expanded(
-          child: Center(
-            child: Container(
-              padding: EdgeInsets.all(17.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(right: 7.0),
-                        child: Icon(
-                          Icons.high_quality,
-                          color: iconColor,
-                          size: 20.0,
-                        ),
-                      ),
-                      Text(torrent.quality),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.0),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(right: 7.0),
-                        child: Icon(
-                          Icons.folder_open,
-                          color: iconColor,
-                          size: 20.0,
-                        ),
-                      ),
-                      Text((torrent.size / 1048576).floor().toString() + ' MB')
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.0),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(right: 7.0),
-                        child: Icon(
-                          Icons.high_quality,
-                          color: iconColor,
-                          size: 20.0,
-                        ),
-                      ),
-                      Text(torrent.seeds.toString()),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.0),
-                  ),
-                  RaisedButton(
-                    color: Colors.black26,
-                    onPressed: () {
-                      String magnetLink = constructMagnetLink(torrent, movie);
-                      _launchLink(magnetLink, context);
-                    },
-                    child: Row(
+    if (torrents.isEmpty) {
+      torrentsWidgets = [
+        Text(
+          'No torrent available at the moment.',
+          style: TextStyle(color: Colors.white70),
+        )
+      ];
+    } else {
+      torrents.forEach((torrent) {
+        torrentsWidgets.add(
+          Expanded(
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(17.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        Icon(Icons.link),
-                        Padding(padding: EdgeInsets.symmetric(horizontal: 7.0)),
-                        Text('Magnet'.toUpperCase())
+                        Padding(
+                          padding: EdgeInsets.only(right: 7.0),
+                          child: Icon(
+                            Icons.high_quality,
+                            color: iconColor,
+                            size: 20.0,
+                          ),
+                        ),
+                        Text(torrent.quality),
                       ],
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(right: 7.0),
+                          child: Icon(
+                            Icons.folder_open,
+                            color: iconColor,
+                            size: 20.0,
+                          ),
+                        ),
+                        Text(
+                            (torrent.size / 1048576).floor().toString() + ' MB')
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(right: 7.0),
+                          child: Icon(
+                            Icons.high_quality,
+                            color: iconColor,
+                            size: 20.0,
+                          ),
+                        ),
+                        Text(torrent.seeds.toString()),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                    ),
+                    RaisedButton(
+                      color: Colors.black26,
+                      onPressed: () {
+                        String magnetLink = constructMagnetLink(torrent, movie);
+                        _launchLink(magnetLink, context);
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.link),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 7.0)),
+                          Text('Magnet'.toUpperCase())
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    });
-
+        );
+      });
+    }
     return torrentsWidgets;
   }
 
