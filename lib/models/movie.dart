@@ -36,7 +36,6 @@ class Movie {
   factory Movie.fromJson(Map<String, dynamic> json) {
     var list = json['torrents'] as List;
      List<Torrent> listTorrents;
-    print('+++++++++++++++++++++++++');
     if(list == null){
       listTorrents = [];
       // debug purpose

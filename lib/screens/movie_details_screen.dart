@@ -216,22 +216,32 @@ class MovieDetails extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(right: 7.0),
                           child: Icon(
-                            Icons.high_quality,
+                            Icons.arrow_upward,
                             color: iconColor,
-                            size: 20.0,
+                            size: 22.0,
                           ),
                         ),
                         Text(torrent.seeds.toString()),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(right: 7.0),
+                          child: Icon(
+                            Icons.arrow_downward,
+                            color: iconColor,
+                            size: 22.0,
+                          ),
+                        ),
+                        Text(torrent.peers.toString()),
+                      ],
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                      padding: EdgeInsets.symmetric(vertical: 12.0),
                     ),
                     RaisedButton(
-                      color: Colors.black26,
+                      color: Theme.of(context).accentColor,
                       onPressed: () {
                         String magnetLink = constructMagnetLink(torrent, movie);
                         _launchLink(magnetLink, context);
