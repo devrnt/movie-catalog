@@ -6,50 +6,14 @@ import 'package:movie_catalog/models/torrent.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-class MovieDetails extends StatelessWidget {
+class MovieDetails extends StatefulWidget {
   final Movie movie;
 
   MovieDetails({this.movie});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(movie.title),
-      ),
-      body: ListView(
-        children: <Widget>[
-          _buildBackgroundAndCover(),
-          _buildYearAndTitle(),
-          Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 2 / 3,
-              padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  _buildTextIconWidget(
-                      _fromMinutesToHourNotation(movie.runtime),
-                      Icons.access_time,
-                      Theme.of(context).accentColor),
-                  _buildTextIconWidget(movie.rating.toString(), Icons.star,
-                      Theme.of(context).accentColor)
-                ],
-              ),
-            ),
-          ),
-          _buildSummary(),
-          _buildGenres(),
-          Container(
-            margin: EdgeInsets.all(15.0),
-            child: Row(
-              children: _buildTorrents(
-                  movie.torrents, Theme.of(context).accentColor, context),
-            ),
-          )
-        ],
-      ),
-    );
+  MovieDetailsState createState() {
+    return new MovieDetailsState();
   }
 
   Widget _buildBackgroundAndCover() {
@@ -224,6 +188,9 @@ class MovieDetails extends StatelessWidget {
                         Text(torrent.seeds.toString()),
                       ],
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                    ),
                     Row(
                       children: <Widget>[
                         Padding(
@@ -345,5 +312,64 @@ class MovieDetails extends StatelessWidget {
         .replaceAll('(', '%28')
         .replaceAll(')', '%29');
     return encoded;
+  }
+}
+
+class MovieDetailsState extends State<MovieDetails> {
+  // bool liked = false;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.movie.title),
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: Icon(
+        //       liked ? Icons.favorite : Icons.favorite_border,
+        //       color: Colors.red,
+        //     ),
+        //     onPressed: () {
+        //       print(liked);
+        //       setState(() {
+        //         liked = !liked;
+        //       });
+        //       // save the movie to the liked list
+        //     },
+        //   )
+        // ],
+      ),
+      body: ListView(
+        children: <Widget>[
+          widget._buildBackgroundAndCover(),
+          widget._buildYearAndTitle(),
+          Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 2 / 3,
+              padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  widget._buildTextIconWidget(
+                      widget._fromMinutesToHourNotation(widget.movie.runtime),
+                      Icons.access_time,
+                      Theme.of(context).accentColor),
+                  widget._buildTextIconWidget(widget.movie.rating.toString(),
+                      Icons.star, Theme.of(context).accentColor)
+                ],
+              ),
+            ),
+          ),
+          widget._buildSummary(),
+          widget._buildGenres(),
+          Container(
+            margin: EdgeInsets.all(15.0),
+            child: Row(
+              children: widget._buildTorrents(widget.movie.torrents,
+                  Theme.of(context).accentColor, context),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

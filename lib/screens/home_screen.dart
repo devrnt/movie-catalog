@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/models/torrent.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
 import 'package:movie_catalog/widgets/movie_grid.dart';
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -88,9 +87,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Tab(
                 child: Text('TOP RATED'),
               ),
-              Tab(
-                child: Text('SAVED'),
-              ),
+              // Tab(
+              //   child: Text('LIKED'),
+              // ),
             ],
             indicatorColor: Theme.of(context).accentColor,
           ),
@@ -125,16 +124,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Center(child: CircularProgressIndicator());
                     },
                   ),
-                  Row(children: <Widget>[
-                    FloatingActionButton(
-                      onPressed: () {},
-                      child: Text('Klik'),
-                    ),
-                    FloatingActionButton(
-                      onPressed: () {},
-                      child: Text('Write'),
-                    )
-                  ])
+                  // Row(children: <Widget>[
+                  //   FloatingActionButton(
+                  //     onPressed: () {},
+                  //     child: Text('Klik'),
+                  //   ),
+                  //   FloatingActionButton(
+                  //     onPressed: () {},
+                  //     child: Text('Write'),
+                  //   )
+                  // ])
                 ],
               ),
       ),
@@ -158,15 +157,11 @@ class _HomeScreenState extends State<HomeScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('No Torrent app installed'),
+          title: Text('Please turn on your internet.'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Please install a torrent'),
-                Text(
-                  'This app will be closed.',
-                  style: TextStyle(color: Colors.grey, fontSize: 14.0),
-                )
+                Text('Please turn on your internet.'),
               ],
             ),
           ),
