@@ -20,11 +20,11 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: "Movie-Catalog-Icon"
+  ios: "movie_catalog_icon"
   image_path: "assets/icon/icon.png"
   image_path_android: "assets/icon/icon_android.png"
   image_path_ios: "assets/icon/icon_ios.png"
-  adaptive_icon_background: "#FFFAFAFA"
+  adaptive_icon_background: "#FF212121"
   adaptive_icon_foreground: "assets/icon/icon-foreground.png"
 
 
