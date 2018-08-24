@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/screens/search_screen.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
 import 'package:movie_catalog/widgets/movie_grid.dart';
@@ -70,15 +71,19 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text(
             'Movie Catalog',
           ),
-          // actions: <Widget>[
-          //   IconButton(
-          //     icon: Icon(Icons.search),
-          //     onPressed: () {
-          //       // TODO
-          //       // Make a filtered list on the genre, title, year of the movies
-          //     },
-          //   ),
-          // ],
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
           bottom: TabBar(
             tabs: [
               Tab(
