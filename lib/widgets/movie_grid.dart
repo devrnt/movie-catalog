@@ -52,8 +52,6 @@ class _MovieGridState extends State<MovieGrid> {
       ),
       itemCount: movies.length,
       itemBuilder: (context, index) {
-        print('Length that is inserted from the builder' +
-            movies.length.toString());
         return MovieCard(
           movie: movies[index],
         );

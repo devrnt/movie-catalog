@@ -20,7 +20,7 @@ class MovieService implements IMovieService {
     print('fetched link: ' + fetchUrl);
 
     final response = await client.get(fetchUrl);
-    
+
     if (response.statusCode == 200) {
       // Use the compute function to run parsePhotos in a separate isolate
       return compute(parseMovies, response.body);
@@ -51,14 +51,45 @@ class MovieService implements IMovieService {
           'is still online. If not the case check if the mapping is still correct.');
     }
   }
+
+  @override
+  Future<List<Movie>> fetchMoviesByQuery(
+      http.Client client, String query, int currentPage) async {
+    String queryTerm = query.replaceAll(' ', '+');
+    String fetchUrl =
+        apiUrl + '?limit=50' + '&query_term=' + Uri.encodeFull(queryTerm) + '&sort_by=year&order_by=asc';
+    print('fetched link: ' + fetchUrl);
+
+    final response = await client.get(fetchUrl);
+
+    if (response.statusCode == 200) {
+      // Use the compute function to run parsePhotos in a separate isolate
+      return compute(parseMovies, response.body);
+    } else {
+      throw Exception('Failed to load movies: Check if the api' +
+          fetchUrl +
+          'is still online. If not the case check if the mapping is still correct.');
+    }
+  }
 }
 
 // THIS SHOULD BE A TOP LEVEL FUNCTION OTHEREWISE COMPUTE WILL GIVE ERRORS
 // Convert the list of movies from API to list of movies
-  List<Movie> parseMovies(String responseBody) {
-    // cut the useless data from the response body
-    final rightJson = json.decode(responseBody)['data']['movies'];
+List<Movie> parseMovies(String responseBody) {
+  // cut the useless data from the response body
+  final checkIfMovies = json.decode(responseBody)['data']['movie_count'];
+  var rightJson;
+  if (checkIfMovies != 0) {
+    rightJson = json.decode(responseBody)['data']['movies'];
+  } else {
+    rightJson = null;
+  }
+  if (rightJson != null) {
     final parsed = rightJson.cast<Map<String, dynamic>>();
 
     return parsed.map<Movie>((json) => new Movie.fromJson(json)).toList();
+    
+  } else {
+    return new List();
   }
+}

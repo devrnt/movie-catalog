@@ -13,6 +13,7 @@ class Movie {
   int runtime;
   // Images
   String backgroundImage;
+  String coverImageSmall;
   String coverImageMedium;
   String coverImageLarge;
   List<Torrent> torrents;
@@ -29,6 +30,7 @@ class Movie {
       this.imdbCode,
       this.runtime,
       this.backgroundImage,
+      this.coverImageSmall,
       this.coverImageMedium,
       this.coverImageLarge,
       this.torrents);
@@ -42,7 +44,7 @@ class Movie {
 
     } else {
 
-    listTorrents = list.map((t) => Torrent.fromJson(t)).toList();
+    listTorrents = list.map<Torrent>((t) => Torrent.fromJson(t)).toList();
     }
     var genres = json['genres'];
     // some movies have no genres (genres = null)
@@ -66,6 +68,7 @@ class Movie {
         json['imdb_code'] as String,
         json['runtime'] as int,
         json['background_image_original'] as String,
+        json['small_cover_image'] as String,
         json['medium_cover_image'] as String,
         json['large_cover_image'] as String,
         listTorrents);

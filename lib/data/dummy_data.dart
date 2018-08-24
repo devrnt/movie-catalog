@@ -14,8 +14,9 @@ List<Movie> movies = [
       'tt1440266',
       92,
       'https://yts.am/assets/images/movies/pina_2011/background.jpg',
-      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/small-cover.jpg',
       'https://yts.am/assets/images/movies/pina_2011/medium-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
       [
         new Torrent(
             'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
@@ -46,8 +47,9 @@ List<Movie> movies = [
       'tt1440266',
       92,
       'https://yts.am/assets/images/movies/pina_2011/background.jpg',
-      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/small-cover.jpg',
       'https://yts.am/assets/images/movies/pina_2011/medium-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
       [
         new Torrent(
             'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
@@ -78,8 +80,9 @@ List<Movie> movies = [
       'tt1440266',
       92,
       'https://yts.am/assets/images/movies/pina_2011/background.jpg',
-      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/small-cover.jpg',
       'https://yts.am/assets/images/movies/pina_2011/medium-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
       [
         new Torrent(
             'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
@@ -110,8 +113,9 @@ List<Movie> movies = [
       'tt1440266',
       92,
       'https://yts.am/assets/images/movies/pina_2011/background.jpg',
-      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/small-cover.jpg',
       'https://yts.am/assets/images/movies/pina_2011/medium-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
       [
         new Torrent(
             'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
@@ -142,8 +146,9 @@ List<Movie> movies = [
       'tt1440266',
       92,
       'https://yts.am/assets/images/movies/pina_2011/background.jpg',
-      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/small-cover.jpg',
       'https://yts.am/assets/images/movies/pina_2011/medium-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
       [
         new Torrent(
             'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
@@ -174,8 +179,9 @@ List<Movie> movies = [
       'tt1440266',
       92,
       'https://yts.am/assets/images/movies/pina_2011/background.jpg',
-      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/small-cover.jpg',
       'https://yts.am/assets/images/movies/pina_2011/medium-cover.jpg',
+      'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
       [
         new Torrent(
             'https://yts.am/assets/images/movies/pina_2011/large-cover.jpg',
