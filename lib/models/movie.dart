@@ -37,14 +37,16 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) {
     var list = json['torrents'] as List;
-     List<Torrent> listTorrents;
-    if(list == null){
+    List<Torrent> listTorrents;
+    if (list == null) {
       listTorrents = [];
       // debug purpose
 
     } else {
-
-    listTorrents = list.map<Torrent>((t) => Torrent.fromJson(t)).toList();
+      listTorrents = list.map<Torrent>((t) => Torrent.fromJson(t)).toList();
+      listTorrents.length > 2
+          ? listTorrents = listTorrents.sublist(0, 2)
+          : listTorrents;
     }
     var genres = json['genres'];
     // some movies have no genres (genres = null)

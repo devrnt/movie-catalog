@@ -60,7 +60,6 @@ class _MovieGridState extends State<MovieGrid> {
   }
 
   void _scrollListener() {
-    print(_scrollController.position.pixels);
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       print('Scrolled to the end!');

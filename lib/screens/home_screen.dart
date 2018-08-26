@@ -118,8 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   FutureBuilder<List<Movie>>(
                     future: _movieService.fetchPopularMovies(http.Client(), 1),
                     builder: (context, snapshot) {
-                      print('First elem of snapshot ' + snapshot.data[0].title);
-                      print('===============');
                       if (snapshot.hasError) print(snapshot.error);
                       return snapshot.hasData
                           ? MovieGrid(
