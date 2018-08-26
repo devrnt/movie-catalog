@@ -168,8 +168,7 @@ class MovieDetails extends StatefulWidget {
                             size: 20.0,
                           ),
                         ),
-                        Text(
-                            (torrent.size / 1048576).floor().toString() + ' MB')
+                        Text((torrent.size / 1048576).floor().toString() + 'MB')
                       ],
                     ),
                     Padding(
@@ -237,9 +236,14 @@ class MovieDetails extends StatefulWidget {
     int amountOfHours = (minutes / 60).floor();
     int amountOfMinutes = minutes % 60;
 
-    String format =
-        ' ' + amountOfHours.toString() + ':' + amountOfMinutes.toString();
-    return format + 'h';
+    String amountOfMinutesFormatted;
+    if (amountOfMinutes.toString().length < 2) {
+      amountOfMinutesFormatted = '0$amountOfMinutes';
+    } else {
+      amountOfMinutesFormatted = amountOfMinutes.toString();
+    }
+
+    return ' $amountOfHours:$amountOfMinutesFormatted';
   }
 
   void _launchLink(String link, BuildContext context) async {
