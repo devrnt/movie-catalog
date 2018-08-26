@@ -7,8 +7,8 @@ import 'package:movie_catalog/widgets/movie_card.dart';
 import 'package:http/http.dart' as http;
 
 class MovieGrid extends StatefulWidget {
-  List<Movie> movies;
-  String type;
+  final List<Movie> movies;
+  final String type;
 
   MovieGrid({this.movies, this.type});
 
@@ -27,7 +27,7 @@ class _MovieGridState extends State<MovieGrid> {
   @override
   void initState() {
     super.initState();
-    movies = widget.movies;
+    movies = widget.movies.where((movie) => movie.rating > 0).toList();
     _movieService = new MovieService();
 
     _scrollController = new ScrollController();
@@ -65,7 +65,7 @@ class _MovieGridState extends State<MovieGrid> {
         _scrollController.position.maxScrollExtent) {
       print('Scrolled to the end!');
       if (widget.type == 'latest') {
-        print('type is '+widget.type);
+        print('type is ' + widget.type);
         _movieService
             .fetchLatestMovies(http.Client(), currentPageLatest)
             .then((newMovies) {
