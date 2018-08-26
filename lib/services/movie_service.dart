@@ -17,7 +17,7 @@ class MovieService implements IMovieService {
     // the defaut limit in the API is set to 20
     String fetchUrl = apiUrl + '?limit=50' + '&page=' + currentPage.toString();
 
-    print('fetched link: ' + fetchUrl);
+    // print('fetched link: ' + fetchUrl);
 
     final response = await client.get(fetchUrl);
 
@@ -38,7 +38,7 @@ class MovieService implements IMovieService {
         '&sort_by=rating' +
         '&page=' +
         currentPage.toString();
-    print('fetched link: ' + fetchUrl);
+    // print('fetched link: ' + fetchUrl);
 
     final response = await client.get(fetchUrl);
 
@@ -58,7 +58,7 @@ class MovieService implements IMovieService {
     String queryTerm = query.replaceAll(' ', '+');
     String fetchUrl =
         apiUrl + '?limit=50' + '&query_term=' + Uri.encodeFull(queryTerm) + '&sort_by=year&order_by=asc';
-    print('fetched link: ' + fetchUrl);
+    // print('fetched link: ' + fetchUrl);
 
     final response = await client.get(fetchUrl);
 
