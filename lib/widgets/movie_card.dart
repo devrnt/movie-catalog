@@ -34,31 +34,31 @@ class MovieCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Center(
-            child: Image.network(
-              movie.coverImageMedium,
-              fit: BoxFit.cover,
+            child: FadeInImage.assetNetwork(
+              fadeInDuration: Duration(milliseconds: 750),
+              image: movie.coverImageMedium,
+              placeholder: 'assets/images/cover_placeholder.jpg',
+              fit: BoxFit.fill,
             ),
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(left: 7.0),
+              padding: EdgeInsets.fromLTRB(7.0, 3.0, 0.0, 3.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 2.0),
-                    child: Text(
-                      movie.title.replaceAll(' ', '').trim().length < 13
-                          ? movie.title
-                          : movie.title.substring(0, 13) + '...',
-                    ),
-                  ),
                   Text(
-                    movie.year.toString(),
-                    style: TextStyle(
-                        color: kIconColor,
-                        fontSize: 13.0),
+                    movie.title.replaceAll(' ', '').trim().length < 13
+                        ? movie.title
+                        : movie.title.substring(0, 13) + '...',
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 1.0),
+                    child: Text(
+                      movie.year.toString(),
+                      style: TextStyle(color: kIconColor, fontSize: 13.0),
+                    ),
                   )
                 ],
               ),

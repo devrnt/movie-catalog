@@ -48,7 +48,7 @@ class _MovieGridState extends State<MovieGrid> {
       controller: _scrollController,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        childAspectRatio: 0.555,
+        childAspectRatio: 0.545,
       ),
       itemCount: movies.length,
       itemBuilder: (context, index) {
