@@ -26,18 +26,23 @@ class MovieDetails extends StatefulWidget {
           Container(
             height: 200.0,
             width: double.infinity, // max width
-            child: Image.network(
-              movie.backgroundImage,
+            child: FadeInImage.assetNetwork(
+              fadeInDuration: Duration(milliseconds: 650),
+              image: movie.backgroundImage,
+              placeholder: 'assets/images/cover_placeholder.jpg',
               fit: BoxFit.cover,
             ),
           ),
           Positioned(
             child: Container(
-              child: Image.network(
-                movie.coverImageMedium,
-                height: 170.0,
-                fit: BoxFit.fill,
-              ),
+              child: FadeInImage.assetNetwork(
+              fadeInDuration: Duration(milliseconds: 100),
+              fadeInCurve: Curves.linear,
+              image: movie.coverImageLarge,
+              placeholder: 'assets/images/cover_placeholder.jpg',
+              fit: BoxFit.cover,
+              height: 170.0,
+            ),
             ),
           ),
         ],
