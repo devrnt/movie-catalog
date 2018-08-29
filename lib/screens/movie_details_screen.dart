@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/models/torrent.dart';
 
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/torrent.dart';
 
 class MovieDetails extends StatefulWidget {
   final Movie movie;
@@ -58,6 +59,8 @@ class MovieDetails extends StatefulWidget {
           Text(
             movie.title,
             style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -243,7 +246,7 @@ class MovieDetails extends StatefulWidget {
       amountOfMinutesFormatted = amountOfMinutes.toString();
     }
 
-    return ' $amountOfHours:$amountOfMinutesFormatted';
+    return ' $amountOfHours:${amountOfMinutesFormatted}h';
   }
 
   void _launchLink(String link, BuildContext context) async {

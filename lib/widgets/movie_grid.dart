@@ -16,7 +16,8 @@ class MovieGrid extends StatefulWidget {
   _MovieGridState createState() => _MovieGridState();
 }
 
-class _MovieGridState extends State<MovieGrid> with AutomaticKeepAliveClientMixin<MovieGrid> {
+class _MovieGridState extends State<MovieGrid>
+    with AutomaticKeepAliveClientMixin<MovieGrid> {
   List<Movie> movies;
   int currentPageLatest = 2;
   int currentPagePopular = 2;
@@ -65,19 +66,13 @@ class _MovieGridState extends State<MovieGrid> with AutomaticKeepAliveClientMixi
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      print('Scrolled to the end!');
       if (widget.type == 'latest') {
-        print('type is ' + widget.type);
         _movieService
             .fetchLatestMovies(http.Client(), currentPageLatest)
             .then((newMovies) {
           setState(() {
             movies.addAll(newMovies);
           });
-          newMovies.forEach((m) {
-            print(m.title);
-          });
-          print('length: ' + movies.length.toString());
           currentPageLatest++;
         });
       }
@@ -88,10 +83,6 @@ class _MovieGridState extends State<MovieGrid> with AutomaticKeepAliveClientMixi
           setState(() {
             movies.addAll(newMovies);
           });
-          newMovies.forEach((m) {
-            print(m.title);
-          });
-          print('length: ' + movies.length.toString());
           currentPagePopular++;
         });
       }

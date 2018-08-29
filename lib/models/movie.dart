@@ -36,24 +36,27 @@ class Movie {
       this.torrents);
 
   factory Movie.fromJson(Map<String, dynamic> json) {
-    var list = json['torrents'] as List;
+    // It's possible that there are no terrents provided yet
+    List<dynamic> jsonTorrentList = json['torrents'] as List;
     List<Torrent> listTorrents;
-    if (list == null) {
-      listTorrents = [];
-      // debug purpose
 
+    if (jsonTorrentList != null) {
+      listTorrents =
+          jsonTorrentList.map<Torrent>((t) => Torrent.fromJson(t)).toList();
+      if (listTorrents.length > 2) {
+        listTorrents = listTorrents.sublist(0, 2);
+      }
     } else {
-      listTorrents = list.map<Torrent>((t) => Torrent.fromJson(t)).toList();
-      listTorrents.length > 2
-          ? listTorrents = listTorrents.sublist(0, 2)
-          : listTorrents;
+      listTorrents = new List();
     }
-    var genres = json['genres'];
-    // some movies have no genres (genres = null)
-    // this is an extra check
-    List<String> genresList = json['genres'] != null
-        ? new List<String>.from(genres)
+
+    List<dynamic> jsonGenresList = json['genres'] as List;
+
+    // It's possible that there are no genres provided
+    jsonGenresList != null
+        ? new List<String>.from(jsonGenresList)
         : new List<String>();
+
 
     num formattedRating =
         json['rating'].runtimeType == double ? json['rating'] : 0.0;
@@ -64,7 +67,7 @@ class Movie {
         json['title_long'] as String,
         json['year'] as int,
         json['summary'] as String,
-        genresList,
+        jsonGenresList,
         formattedRating,
         json['url'] as String,
         json['imdb_code'] as String,

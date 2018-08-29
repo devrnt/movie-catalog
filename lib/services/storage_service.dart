@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'package:movie_catalog/models/movie.dart';
 import 'package:path_provider/path_provider.dart';
 
 class StorageService {

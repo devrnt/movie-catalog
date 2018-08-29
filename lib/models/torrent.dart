@@ -21,7 +21,7 @@ class Torrent {
         json['peers'] as int);
   }
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         'url': url,
         'hash': hash,
         'quality': quality,

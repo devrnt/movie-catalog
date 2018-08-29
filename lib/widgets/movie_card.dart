@@ -49,9 +49,9 @@ class MovieCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    movie.title.replaceAll(' ', '').trim().length < 13
-                        ? movie.title
-                        : movie.title.substring(0, 13) + '...',
+                    movie.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 1.0),

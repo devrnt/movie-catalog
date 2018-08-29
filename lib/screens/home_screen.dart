@@ -4,10 +4,13 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:movie_catalog/models/movie.dart';
+
 import 'package:movie_catalog/screens/search_screen.dart';
+
 import 'package:movie_catalog/services/movie_service.dart';
-import 'package:movie_catalog/services/storage_service.dart';
+
 import 'package:movie_catalog/widgets/movie_grid.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,55 +20,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   MovieService _movieService;
+  // StorageService _storageService;
 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = new Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  StorageService storageService;
 
-  @override
-  void initState() {
-    super.initState();
-    _movieService = new MovieService();
-    storageService = new StorageService();
-    initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-      setState(() => _connectionStatus = result.toString());
-    });
-  }
-
-  @override
-  void dispose() {
-    _connectivitySubscription.cancel();
-    super.dispose();
-  }
-
-  Future<Null> initConnectivity() async {
-    String connectionStatus;
-    try {
-      connectionStatus = (await _connectivity.checkConnectivity()).toString();
-    } on PlatformException catch (e) {
-      print('There occured an error: ' + e.toString());
-      connectionStatus = 'Failed to get connectivity';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _connectionStatus = connectionStatus;
-    });
-  }
+  final List<Tab> _tabs = [
+    Tab(
+      child: Text('LATEST'),
+    ),
+    Tab(
+      child: Text('TOP RATED'),
+    ),
+    // Tab(
+    //   child: Text('LIKED'),
+    // ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -85,17 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
           bottom: TabBar(
-            tabs: [
-              Tab(
-                child: Text('LATEST'),
-              ),
-              Tab(
-                child: Text('TOP RATED'),
-              ),
-              // Tab(
-              //   child: Text('LIKED'),
-              // ),
-            ],
+            tabs: _tabs,
             indicatorColor: Theme.of(context).accentColor,
           ),
         ),
@@ -141,6 +107,45 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _movieService = new MovieService();
+    // _storageService = new StorageService();
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      setState(() => _connectionStatus = result.toString());
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<Null> initConnectivity() async {
+    String connectionStatus;
+    try {
+      connectionStatus = (await _connectivity.checkConnectivity()).toString();
+    } on PlatformException catch (e) {
+      print('There occured an error: ' + e.toString());
+      connectionStatus = 'Failed to get connectivity';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _connectionStatus = connectionStatus;
+    });
   }
 
   Widget noInternetConnection() {

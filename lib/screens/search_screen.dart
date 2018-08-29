@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+
+import 'package:http/http.dart' as http;
+
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/screens/movie_details_screen.dart';
 
 import 'package:movie_catalog/services/movie_service.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:movie_catalog/screens/movie_details_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -66,14 +68,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               else
                                 return _createListView(context, snapshot);
                           }
-                          // if (snapshot.hasError) print(snapshot.error);
-
-                          // return snapshot.hasData
-                          //     ? _createListView(
-                          //         context,
-                          //         snapshot,
-                          //       )
-                          //     : Center(child: CircularProgressIndicator());
                         },
                       ),
                     ),
@@ -97,7 +91,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       movies[index].year.toString(),
                       style: TextStyle(color: Colors.grey),
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
                     leading: Image.network(
                       movies[index].coverImageMedium,
                       height: 65.0,
