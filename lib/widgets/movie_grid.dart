@@ -16,13 +16,16 @@ class MovieGrid extends StatefulWidget {
   _MovieGridState createState() => _MovieGridState();
 }
 
-class _MovieGridState extends State<MovieGrid> {
+class _MovieGridState extends State<MovieGrid> with AutomaticKeepAliveClientMixin<MovieGrid> {
   List<Movie> movies;
   int currentPageLatest = 2;
   int currentPagePopular = 2;
 
   MovieService _movieService;
   ScrollController _scrollController;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
