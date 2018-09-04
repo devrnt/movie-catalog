@@ -51,12 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchScreen(),
-                  ),
-                );
+                online()
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchScreen(),
+                        ),
+                      )
+                    : null;
               },
             ),
           ],
@@ -150,22 +152,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget noInternetConnection() {
     _showAlert();
-    return Padding(child:Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Text('No internet connection'),
-        Text(
-          'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.',
-          style: TextStyle(color: Colors.grey),
-        ),
-      ],
-    ), padding: EdgeInsets.symmetric(horizontal: 20.0),);
+    return Padding(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Text(
+            'No internet connection',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          Text(
+            'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+    );
   }
 
   bool online() {
-    print('Hier is de connectie: $_connectionStatus');
     return _connectionStatus == 'ConnectivityResult.none' ? false : true;
   }
 
