@@ -111,9 +111,13 @@ class _SearchScreenState extends State<SearchScreen> {
                         EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
                     leading: Image.network(
                       movies[index].coverImageMedium,
-                      height: 65.0,
+                      height: 66.0,
                     ),
-                    title: Text(movies[index].title),
+                    title: Text(
+                      movies[index].title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
