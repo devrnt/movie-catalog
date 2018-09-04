@@ -36,13 +36,13 @@ class MovieDetails extends StatefulWidget {
           Positioned(
             child: Container(
               child: FadeInImage.assetNetwork(
-              fadeInDuration: Duration(milliseconds: 100),
-              fadeInCurve: Curves.linear,
-              image: movie.coverImageLarge,
-              placeholder: 'assets/images/cover_placeholder.jpg',
-              fit: BoxFit.cover,
-              height: 170.0,
-            ),
+                fadeInDuration: Duration(milliseconds: 100),
+                fadeInCurve: Curves.linear,
+                image: movie.coverImageLarge,
+                placeholder: 'assets/images/cover_placeholder.jpg',
+                fit: BoxFit.cover,
+                height: 170.0,
+              ),
             ),
           ),
         ],
@@ -273,14 +273,17 @@ class MovieDetails extends StatefulWidget {
             child: ListBody(
               children: <Widget>[
                 Text('Please install a torrent client.'),
-                Text(
-                  'You could use BitTorrent.',
-                  style: TextStyle(color: Colors.grey, fontSize: 14.0),
-                )
               ],
             ),
           ),
           actions: <Widget>[
+            FlatButton(
+              child: Text('PLAY STORE'),
+              textColor: Colors.grey,
+              onPressed: () => _launchLink(
+                  'https://play.google.com/store/apps/details?id=com.bittorrent.client',
+                  context),
+            ),
             FlatButton(
               child: Text('CLOSE'),
               onPressed: () => Navigator.of(context).pop(),
