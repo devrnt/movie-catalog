@@ -9,8 +9,10 @@ import 'package:http/http.dart' as http;
 class MovieGrid extends StatefulWidget {
   final List<Movie> movies;
   final String type;
+  // config used for passing the filter config
+  dynamic config;
 
-  MovieGrid({this.movies, this.type});
+  MovieGrid(this.movies, this.type, [this.config]);
 
   @override
   _MovieGridState createState() => _MovieGridState();
@@ -19,8 +21,10 @@ class MovieGrid extends StatefulWidget {
 class _MovieGridState extends State<MovieGrid>
     with AutomaticKeepAliveClientMixin<MovieGrid> {
   List<Movie> movies;
+  dynamic config;
   int currentPageLatest = 2;
   int currentPagePopular = 2;
+  int currentPageConfig = 2;
 
   MovieService _movieService;
   ScrollController _scrollController;
@@ -33,6 +37,7 @@ class _MovieGridState extends State<MovieGrid>
     super.initState();
     movies = widget.movies.where((movie) => movie.rating > 0).toList();
     _movieService = new MovieService();
+    config = widget.config;
 
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
@@ -47,20 +52,22 @@ class _MovieGridState extends State<MovieGrid>
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 3.0),
-      controller: _scrollController,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 0.545,
-      ),
-      itemCount: movies.length,
-      itemBuilder: (context, index) {
-        return MovieCard(
-          movie: movies[index],
-        );
-      },
-    );
+    return movies.length > 0
+        ? GridView.builder(
+            padding: EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 3.0),
+            controller: _scrollController,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 0.545,
+            ),
+            itemCount: movies.length,
+            itemBuilder: (context, index) {
+              return MovieCard(
+                movie: movies[index],
+              );
+            },
+          )
+        : Center(child: Text('No search results'));
   }
 
   void _scrollListener() {
@@ -86,15 +93,18 @@ class _MovieGridState extends State<MovieGrid>
           currentPagePopular++;
         });
       }
+      if (widget.type == 'config') {
+        print(config);
+        _movieService
+            .fetchMoviesByConfig(http.Client(), currentPageConfig,
+                config['genre'], config['quality'], config['rating'])
+            .then((newMovies) {
+          setState(() {
+            movies.addAll(newMovies);
+          });
+          currentPageConfig++;
+        });
+      }
     }
   }
-  // if (_scrollController.position.atEdge) {
-  //   _movieService.fetchLatestMovies(http.Client(), 50).then((newMovies) {
-  //     print(newMovies);
-  //     setState(() {
-  //       movies.addAll(newMovies);
-  //     });
-  //   });
-  // }
-
 }

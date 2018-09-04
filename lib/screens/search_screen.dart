@@ -7,6 +7,7 @@ import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 
 import 'package:movie_catalog/screens/movie_details_screen.dart';
+import 'package:movie_catalog/screens/filter_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -39,13 +40,28 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search movies'),
+        title: _buildSearchInput(),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.filter_list,
+              color: Theme.of(context).accentColor,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FilterScreen(),
+                ),
+              );
+            },
+          )
+        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 10.0),
         child: Column(
           children: <Widget>[
-            _buildSearchInput(),
             Container(
               child: _searchText.isEmpty
                   ? Container(
@@ -123,16 +139,19 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildSearchInput() {
     return Padding(
-      padding: EdgeInsets.only(bottom: 7.0),
+      padding: EdgeInsets.only(bottom: 2.0),
       child: TextField(
         autofocus: true,
         controller: _searchQueryController,
         decoration: new InputDecoration(
-          hintText: 'Harry Potter, Batman...',
-          prefixIcon: new Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-            child: new Icon(Icons.search),
+          border: InputBorder.none,
+          hintText: 'Title, year...',
+          prefixIcon: Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+            child: Icon(
+              Icons.search,
+              color: Colors.grey,
+            ),
           ),
         ),
       ),

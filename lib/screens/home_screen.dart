@@ -72,11 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   FutureBuilder<List<Movie>>(
                     future: _movieService.fetchLatestMovies(http.Client(), 1),
                     builder: (context, snapshot) {
-                      if (snapshot.hasError) print(snapshot.error);
+                      if (snapshot.hasError) return Text('ffefefe');
                       return snapshot.hasData
                           ? MovieGrid(
-                              movies: snapshot.data,
-                              type: 'latest',
+                              snapshot.data,
+                              'latest',
                             )
                           : Center(child: CircularProgressIndicator());
                     },
@@ -87,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (snapshot.hasError) print(snapshot.error);
                       return snapshot.hasData
                           ? MovieGrid(
-                              movies: snapshot.data,
-                              type: 'popular',
+                              snapshot.data,
+                              'popular',
                             )
                           : Center(child: CircularProgressIndicator());
                     },
@@ -150,12 +150,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget noInternetConnection() {
     _showAlert();
-    return Center(
-      child: Text('No internet connection'),
-    );
+    return Padding(child:Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Text('No internet connection'),
+        Text(
+          'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.',
+          style: TextStyle(color: Colors.grey),
+        ),
+      ],
+    ), padding: EdgeInsets.symmetric(horizontal: 20.0),);
   }
 
   bool online() {
+    print('Hier is de connectie: $_connectionStatus');
     return _connectionStatus == 'ConnectivityResult.none' ? false : true;
   }
 

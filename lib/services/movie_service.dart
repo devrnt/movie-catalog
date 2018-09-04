@@ -56,10 +56,35 @@ class MovieService implements IMovieService {
   Future<List<Movie>> fetchMoviesByQuery(
       http.Client client, String query, int currentPage) async {
     String queryTerm = query.replaceAll(' ', '+');
-    String fetchUrl =
-        apiUrl + '?limit=50' + '&query_term=' + Uri.encodeFull(queryTerm) + '&sort_by=year&order_by=asc';
+    String fetchUrl = apiUrl +
+        '?limit=50' +
+        '&query_term=' +
+        Uri.encodeFull(queryTerm) +
+        '&sort_by=year&order_by=asc';
     // print('fetched link: ' + fetchUrl);
 
+    final response = await client.get(fetchUrl);
+
+    if (response.statusCode == 200) {
+      // Use the compute function to run parsePhotos in a separate isolate
+      return compute(parseMovies, response.body);
+    } else {
+      throw Exception('Failed to load movies: Check if the api' +
+          fetchUrl +
+          'is still online. If not the case check if the mapping is still correct.');
+    }
+  }
+
+  @override
+  Future<List<Movie>> fetchMoviesByConfig(http.Client client, int currentPage,
+      String genre, String quality, String rating) async {
+    String fetchUrl = apiUrl + '?limit=50' + '&page=$currentPage';
+
+    if (genre.length > 0) fetchUrl += '&genre=$genre';
+    if (quality.length > 0) fetchUrl += '&quality=$quality';
+    if (rating.length > 0) fetchUrl += '&minimum_rating=$rating';
+
+    print(fetchUrl);
     final response = await client.get(fetchUrl);
 
     if (response.statusCode == 200) {
@@ -88,7 +113,6 @@ List<Movie> parseMovies(String responseBody) {
     final parsed = rightJson.cast<Map<String, dynamic>>();
 
     return parsed.map<Movie>((json) => new Movie.fromJson(json)).toList();
-    
   } else {
     return new List();
   }
