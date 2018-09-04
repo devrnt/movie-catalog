@@ -7,7 +7,7 @@ class Movie {
   int year;
   String summary;
   List<dynamic> genres;
-  double rating;
+  num rating;
   String url;
   String imdbCode;
   int runtime;
@@ -57,9 +57,8 @@ class Movie {
         ? new List<String>.from(jsonGenresList)
         : new List<String>();
 
-
-    num formattedRating =
-        json['rating'].runtimeType == double ? json['rating'] : 0.0;
+    num formattedRating = json['rating'];
+    formattedRating = formattedRating?.toDouble();
 
     return Movie(
         json['id'] as int,
