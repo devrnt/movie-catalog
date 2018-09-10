@@ -78,7 +78,7 @@ class _MovieGridState extends State<MovieGrid>
         : Center(
             child: widget.type != 'liked'
                 ? Text('No search results')
-                : Text('There are no movies on your shelf.'));
+                : Text('Your shelf is empty'));
   }
 
   void _scrollListener() {
