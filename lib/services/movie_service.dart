@@ -10,6 +10,7 @@ import 'package:movie_catalog/models/movie.dart';
 
 class MovieService implements IMovieService {
   final String apiUrl = 'https://yts.am/api/v2/list_movies.json';
+  final String apiUrlDetails = 'https://yts.am/api/v2/movie_details.json';
 
   // Fetch all the movies, the order of the api is kept
   Future<List<Movie>> fetchLatestMovies(
@@ -18,7 +19,6 @@ class MovieService implements IMovieService {
     String fetchUrl = apiUrl + '?limit=50' + '&page=' + currentPage.toString();
 
     // print('fetched link: ' + fetchUrl);
-
     final response = await client.get(fetchUrl);
 
     if (response.statusCode == 200) {
@@ -96,6 +96,22 @@ class MovieService implements IMovieService {
           'is still online. If not the case check if the mapping is still correct.');
     }
   }
+
+  @override
+  Future<Movie> fetchMovieById(http.Client client, int id) async {
+    String fetchUrl = apiUrlDetails + '?movie_id=$id';
+    print(fetchUrl);
+    final response = await client.get(fetchUrl);
+
+    if (response.statusCode == 200) {
+      // Use the compute function to run parseMovies in a separate isolate
+      return compute(parseMovie, response.body);
+    } else {
+      throw Exception('Failed to load movies: Check if the api' +
+          fetchUrl +
+          'is still online. If not the case check if the mapping is still correct.');
+    }
+  }
 }
 
 // THIS SHOULD BE A TOP LEVEL FUNCTION OTHEREWISE COMPUTE WILL GIVE ERRORS
@@ -115,5 +131,17 @@ List<Movie> parseMovies(String responseBody) {
     return parsed.map<Movie>((json) => new Movie.fromJson(json)).toList();
   } else {
     return new List();
+  }
+}
+
+Movie parseMovie(String responseBody) {
+  // cut the useless data from the response body
+  var rightJson = json.decode(responseBody)['data']['movie'];
+
+  if (rightJson != null) {
+    Movie movie = Movie.fromJson(rightJson);
+    return movie;
+  } else {
+    return null;
   }
 }

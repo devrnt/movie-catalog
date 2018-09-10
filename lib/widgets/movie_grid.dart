@@ -7,7 +7,7 @@ import 'package:movie_catalog/widgets/movie_card.dart';
 import 'package:http/http.dart' as http;
 
 class MovieGrid extends StatefulWidget {
-  final List<Movie> movies;
+  List<Movie> movies;
   final String type;
   // config used for passing the filter config
   dynamic config;
@@ -35,7 +35,7 @@ class _MovieGridState extends State<MovieGrid>
   @override
   void initState() {
     super.initState();
-    movies = widget.movies.where((movie) => movie.rating > 0).toList();
+    widget.movies = widget.movies.where((movie) => movie.rating > 0).toList();
     _movieService = new MovieService();
     config = widget.config;
 
@@ -44,15 +44,23 @@ class _MovieGridState extends State<MovieGrid>
   }
 
   @override
+  void didUpdateWidget(MovieGrid oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      print('setstate should be called');
+    });
+  }
+
+  @override
   void deactivate() {
     _scrollController.removeListener(() => _scrollController);
-    print('event removed!!!!!!!!!!!!!!!!');
     super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-    return movies.length > 0
+    return widget.movies.length > 0
         ? GridView.builder(
             padding: EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 3.0),
             controller: _scrollController,
@@ -60,14 +68,17 @@ class _MovieGridState extends State<MovieGrid>
               crossAxisCount: 3,
               childAspectRatio: 0.545,
             ),
-            itemCount: movies.length,
+            itemCount: widget.movies.length,
             itemBuilder: (context, index) {
               return MovieCard(
-                movie: movies[index],
+                movie: widget.movies[index],
               );
             },
           )
-        : Center(child: Text('No search results'));
+        : Center(
+            child: widget.type != 'liked'
+                ? Text('No search results')
+                : Text('There are no movies on your shelf.'));
   }
 
   void _scrollListener() {
@@ -78,7 +89,8 @@ class _MovieGridState extends State<MovieGrid>
             .fetchLatestMovies(http.Client(), currentPageLatest)
             .then((newMovies) {
           setState(() {
-            movies.addAll(newMovies);
+            print('got hereeeee');
+            widget.movies.addAll(newMovies);
           });
           currentPageLatest++;
         });
@@ -88,7 +100,7 @@ class _MovieGridState extends State<MovieGrid>
             .fetchPopularMovies(http.Client(), currentPagePopular)
             .then((newMovies) {
           setState(() {
-            movies.addAll(newMovies);
+            widget.movies.addAll(newMovies);
           });
           currentPagePopular++;
         });
@@ -100,7 +112,7 @@ class _MovieGridState extends State<MovieGrid>
                 config['genre'], config['quality'], config['rating'])
             .then((newMovies) {
           setState(() {
-            movies.addAll(newMovies);
+            widget.movies.addAll(newMovies);
           });
           currentPageConfig++;
         });

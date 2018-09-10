@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_catalog/services/storage_service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,6 +9,7 @@ import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/models/torrent.dart';
 
 class MovieDetails extends StatefulWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final Movie movie;
 
   MovieDetails({this.movie});
@@ -108,6 +110,8 @@ class MovieDetails extends StatefulWidget {
         genres += (genre + ', ');
       });
       formattedGenres = genres.substring(0, genres.length - 2);
+    } else {
+      formattedGenres = '';
     }
 
     // remove the last comma
@@ -331,27 +335,46 @@ class MovieDetails extends StatefulWidget {
 }
 
 class MovieDetailsState extends State<MovieDetails> {
-  // bool liked = false;
+  StorageService _storageService;
+  bool liked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: widget._scaffoldKey,
       appBar: AppBar(
-        title: Text(widget.movie.title),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: Icon(
-        //       liked ? Icons.favorite : Icons.favorite_border,
-        //       color: Colors.red,
-        //     ),
-        //     onPressed: () {
-        //       print(liked);
-        //       setState(() {
-        //         liked = !liked;
-        //       });
-        //       // save the movie to the liked list
-        //     },
-        //   )
-        // ],
+        title: Text(widget.movie.title, style: TextStyle(fontSize: 17.0)),
+        actions: <Widget>[
+          IconButton(
+            iconSize: 20.0,
+            icon: Icon(
+              liked ? Icons.favorite : Icons.favorite_border,
+              color: liked ? Theme.of(context).accentColor : Colors.grey,
+            ),
+            onPressed: () {
+              if (!liked) {
+                setState(() {
+                  _storageService.writeToFile(widget.movie);
+                  liked = !liked;
+                });
+                _showSnackBar(
+                    title: 'Added to your shelf',
+                    color: Theme.of(context).accentColor,
+                    icon: Icons.done);
+              } else {
+                setState(() {
+                  _storageService.removeFromFile(widget.movie);
+                  liked = !liked;
+                });
+
+                _showSnackBar(
+                    title: 'Removed from your shelf',
+                    color: Colors.red,
+                    icon: Icons.delete);
+              }
+              // save the movie to the liked list
+            },
+          )
+        ],
       ),
       body: ListView(
         children: <Widget>[
@@ -386,5 +409,38 @@ class MovieDetailsState extends State<MovieDetails> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _storageService = new StorageService();
+    _storageService.liked(widget.movie).then((result) {
+      print('The result is $result');
+      setState(() {
+        liked = result;
+      });
+    });
+  }
+
+  void _showSnackBar({String title, Color color, IconData icon}) {
+    final snackbar = SnackBar(
+      content: Row(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 10.0),
+            child: Icon(icon, size: 20.0,),
+          ),
+          Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+      duration: Duration(seconds: 2),
+      backgroundColor: color,
+    );
+    widget._scaffoldKey.currentState.showSnackBar(snackbar);
   }
 }

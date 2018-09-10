@@ -50,12 +50,14 @@ class Movie {
       listTorrents = new List();
     }
 
-    List<dynamic> jsonGenresList = json['genres'] as List;
+    List jsonGenresList = json['genres'] as List;
 
     // It's possible that there are no genres provided
-    jsonGenresList != null
-        ? new List<String>.from(jsonGenresList)
-        : new List<String>();
+    if(jsonGenresList==null){
+      jsonGenresList=[];
+    } else {
+      new List<String>.from(jsonGenresList);
+    }
 
     num formattedRating = json['rating'];
     formattedRating = formattedRating?.toDouble();
@@ -81,17 +83,17 @@ class Movie {
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
-        'titleLong': titleLong,
+        'title_long': titleLong,
         'year': year,
         'summary': summary,
-        'genresList': genres,
+        'genres': genres,
         'rating': rating,
         'url': url,
-        'imdbCode': imdbCode,
+        'imdb_code': imdbCode,
         'runtime': runtime,
-        'backgroundImage': backgroundImage,
-        'coverImageMedium': coverImageMedium,
-        'coverImageLarge': coverImageLarge,
-        'torrents': 'sexy'
+        'background_image_original': backgroundImage,
+        'medium_cover_image': coverImageMedium,
+        'large_cover_image': coverImageLarge,
+        'torrents': null
       };
 }
