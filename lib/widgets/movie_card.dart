@@ -19,7 +19,6 @@ class MovieCard extends StatelessWidget {
     // if the movies are stored on the users phone
     // we check on torrents legth equals 0 because torrents are not stored on the phone
     if (movie.torrents.length == 0) {
-      print('jup hebt vlaggen');
       addMovieDetails(movie.id)
           .then((Movie updated) => movie.torrents = updated.torrents);
     }

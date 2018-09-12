@@ -1,18 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/services/movie_service.dart';
+import 'package:movie_catalog/services/storage_service.dart';
 import 'package:movie_catalog/widgets/movie_card.dart';
 
 import 'package:http/http.dart' as http;
 
 class MovieGrid extends StatefulWidget {
+  StorageService _storageService;
   List<Movie> movies;
   final String type;
   // config used for passing the filter config
   dynamic config;
 
-  MovieGrid(this.movies, this.type, [this.config]);
+  MovieGrid(this.movies, this.type, [this.config]) {
+    _storageService = new StorageService();
+    if (type == 'liked') {
+      print('old ${movies.length}');
+      _fetchSavedMovies()
+          .then((movies) => print(movies.length.toString() + '\n======'));
+      print('moviegrid constructor is called $type');
+      if (type == 'liked') {
+        print('true');
+        createState().mounted;
+      }
+    }
+  }
+
+  Future<List<Movie>> _fetchSavedMovies() async {
+    List<Movie> movies = await _storageService.readFile();
+    return movies;
+  }
 
   @override
   _MovieGridState createState() => _MovieGridState();
@@ -21,35 +42,26 @@ class MovieGrid extends StatefulWidget {
 class _MovieGridState extends State<MovieGrid>
     with AutomaticKeepAliveClientMixin<MovieGrid> {
   List<Movie> movies;
-  dynamic config;
+  MovieService _movieService;
+  ScrollController _scrollController;
+
   int currentPageLatest = 2;
   int currentPagePopular = 2;
   int currentPageConfig = 2;
-
-  MovieService _movieService;
-  ScrollController _scrollController;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
+    print('moviegrid state is called ${widget.type}');
+
     super.initState();
-    widget.movies = widget.movies.where((movie) => movie.rating > 0).toList();
+    movies = widget.movies;
     _movieService = new MovieService();
-    config = widget.config;
 
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
-  }
-
-  @override
-  void didUpdateWidget(MovieGrid oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      print('setstate should be called');
-    });
   }
 
   @override
@@ -60,7 +72,7 @@ class _MovieGridState extends State<MovieGrid>
 
   @override
   Widget build(BuildContext context) {
-    return widget.movies.length > 0
+    return movies.length > 0
         ? GridView.builder(
             padding: EdgeInsets.fromLTRB(2.0, 5.0, 2.0, 3.0),
             controller: _scrollController,
@@ -68,10 +80,10 @@ class _MovieGridState extends State<MovieGrid>
               crossAxisCount: 3,
               childAspectRatio: 0.545,
             ),
-            itemCount: widget.movies.length,
+            itemCount: movies.length,
             itemBuilder: (context, index) {
               return MovieCard(
-                movie: widget.movies[index],
+                movie: movies[index],
               );
             },
           )
@@ -89,8 +101,7 @@ class _MovieGridState extends State<MovieGrid>
             .fetchLatestMovies(http.Client(), currentPageLatest)
             .then((newMovies) {
           setState(() {
-            print('got hereeeee');
-            widget.movies.addAll(newMovies);
+            movies.addAll(newMovies);
           });
           currentPageLatest++;
         });
@@ -100,16 +111,19 @@ class _MovieGridState extends State<MovieGrid>
             .fetchPopularMovies(http.Client(), currentPagePopular)
             .then((newMovies) {
           setState(() {
-            widget.movies.addAll(newMovies);
+            movies.addAll(newMovies);
           });
           currentPagePopular++;
         });
       }
       if (widget.type == 'config') {
-        print(config);
         _movieService
-            .fetchMoviesByConfig(http.Client(), currentPageConfig,
-                config['genre'], config['quality'], config['rating'])
+            .fetchMoviesByConfig(
+                http.Client(),
+                currentPageConfig,
+                widget.config['genre'],
+                widget.config['quality'],
+                widget.config['rating'])
             .then((newMovies) {
           setState(() {
             widget.movies.addAll(newMovies);

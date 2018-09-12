@@ -29,7 +29,7 @@ class MovieDetails extends StatefulWidget {
             height: 200.0,
             width: double.infinity, // max width
             child: FadeInImage.assetNetwork(
-              fadeInDuration: Duration(milliseconds: 650),
+              fadeInDuration: Duration(milliseconds: 350),
               image: movie.backgroundImage,
               placeholder: 'assets/images/cover_placeholder.jpg',
               fit: BoxFit.cover,
@@ -357,7 +357,7 @@ class MovieDetailsState extends State<MovieDetails> {
                   liked = !liked;
                 });
                 _showSnackBar(
-                    title: 'Added to your shelf',
+                    title: 'Added to your library',
                     color: Theme.of(context).accentColor,
                     icon: Icons.done);
               } else {
@@ -367,7 +367,7 @@ class MovieDetailsState extends State<MovieDetails> {
                 });
 
                 _showSnackBar(
-                    title: 'Removed from your shelf',
+                    title: 'Removed from your library',
                     color: Colors.red,
                     icon: Icons.delete);
               }
@@ -416,7 +416,6 @@ class MovieDetailsState extends State<MovieDetails> {
     super.initState();
     _storageService = new StorageService();
     _storageService.liked(widget.movie).then((result) {
-      print('The result is $result');
       setState(() {
         liked = result;
       });

@@ -84,7 +84,6 @@ class MovieService implements IMovieService {
     if (quality.length > 0) fetchUrl += '&quality=$quality';
     if (rating.length > 0) fetchUrl += '&minimum_rating=$rating';
 
-    print(fetchUrl);
     final response = await client.get(fetchUrl);
 
     if (response.statusCode == 200) {
@@ -100,7 +99,7 @@ class MovieService implements IMovieService {
   @override
   Future<Movie> fetchMovieById(http.Client client, int id) async {
     String fetchUrl = apiUrlDetails + '?movie_id=$id';
-    print(fetchUrl);
+    
     final response = await client.get(fetchUrl);
 
     if (response.statusCode == 200) {
