@@ -65,7 +65,7 @@ class MovieDetails extends StatefulWidget {
           ),
           Text(
             movie.title,
-            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

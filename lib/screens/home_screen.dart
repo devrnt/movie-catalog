@@ -14,6 +14,7 @@ import 'package:movie_catalog/services/storage_service.dart';
 
 import 'package:movie_catalog/widgets/movie_grid.dart';
 import 'package:movie_catalog/widgets/movie_grid_saved.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -26,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   MovieService _movieService;
   StorageService _storageService;
-  StreamController _streamController;
 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = new Connectivity();
@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen>
 
     _movieService = new MovieService();
     _storageService = new StorageService();
-    _streamController = new StreamController();
 
     initConnectivity();
     _connectivitySubscription =
@@ -65,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _buildAppBar(),
+        drawer: _buildDrawer(),
         body: online() ? _buildTabBarView() : noInternetConnection());
   }
 
@@ -244,4 +244,110 @@ class _HomeScreenState extends State<HomeScreen>
   Future<List<Movie>> _fetchSavedMovies() {
     return _storageService.readFile();
   }
+
+  Widget _buildDrawer() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / (3 / 2),
+      child: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              margin: EdgeInsets.only(bottom: 2.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/icon/icon.png',
+                    fit: BoxFit.cover,
+                    height: 75.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 7.0),
+                    child: Text(
+                      'Movie Catalog',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: <Color>[
+                    Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColorDark,
+                  ])),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.search,
+                color: Theme.of(context).accentColor,
+                size: 21.0,
+              ),
+              title: Text('Search'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SearchScreen()));
+              },
+            ),
+            Divider(
+              color: Colors.white30,
+              height: 1.0,
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.star,
+                color: Theme.of(context).accentColor,
+                size: 21.0,
+              ),
+              title: Text('Rate on Google Play'),
+              onTap: () {
+                _launchLink(
+                    'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.reply,
+                textDirection: TextDirection.rtl,
+                color: Theme.of(context).accentColor,
+              ),
+              title: Text('Feedback'),
+              onTap: () {
+                String mail = 'contact@jonasdevrient.be';
+                String subject = 'Movie Catalog - Feedback';
+
+                _launchLink('mailto:$mail?subject=$subject');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.share,
+                color: Theme.of(context).accentColor,
+                size: 21.0,
+              ),
+              title: Text('Share Movie Catalog'),
+              onTap: () {
+                _launchLink(
+                    'https://app.jonasdevrient.be');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void _launchLink(String link) async {
+  if (await canLaunch(link)) {
+    await launch(link);
+  }
+  print('lel');
 }
