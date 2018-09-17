@@ -15,9 +15,7 @@ class MovieDetails extends StatefulWidget {
   MovieDetails({this.movie});
 
   @override
-  MovieDetailsState createState() {
-    return new MovieDetailsState();
-  }
+  MovieDetailsState createState() => new MovieDetailsState();
 
   Widget _buildBackgroundAndCover() {
     return Container(
@@ -428,7 +426,10 @@ class MovieDetailsState extends State<MovieDetails> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 10.0),
-            child: Icon(icon, size: 20.0,),
+            child: Icon(
+              icon,
+              size: 20.0,
+            ),
           ),
           Text(
             title,

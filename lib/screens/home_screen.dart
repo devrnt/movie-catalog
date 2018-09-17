@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen>
   MovieService _movieService;
   StorageService _storageService;
 
+  // String result of the connection, gets updated by the subscription 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = new Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -49,8 +50,6 @@ class _HomeScreenState extends State<HomeScreen>
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-      print('Connectivity changed from $_connectionStatus to $result');
-      print('======');
       setState(() => _connectionStatus = result.toString());
     });
   }
@@ -87,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen>
       return;
     }
 
-    setState(() {
+    setState(() { 
       _connectionStatus = connectionStatus;
     });
   }
@@ -117,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           Row(
             children: <Widget>[
-              Icon(Icons.help_outline, color: Colors.white70,),
+              Icon(Icons.help_outline),
               Text(' What can I do?'),
             ],
           ),
@@ -131,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen>
                 style: TextStyle(color: Colors.grey),
               ),
               Text(
-                '2. Turn both wifi/mobile network off and turn back on.',
+                '2. Turn off wifi/mobile network and turn back on.',
                 style: TextStyle(color: Colors.grey),
               ),
               Text(
@@ -151,30 +150,30 @@ class _HomeScreenState extends State<HomeScreen>
     return _connectionStatus == 'ConnectivityResult.none' ? false : true;
   }
 
-  Future<Null> _showAlert() async {
-    return showDialog<Null>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Please turn on your internet.'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Please turn on your internet.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('EXIT'),
-              onPressed: () => SystemNavigator.pop(),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Future<Null> _showAlert() async {
+  //   return showDialog<Null>(
+  //     context: context,
+  //     barrierDismissible: false, // user must tap button!
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Please turn on your internet.'),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text('Please turn on your internet.'),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             child: Text('EXIT'),
+  //             onPressed: () => SystemNavigator.pop(),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -384,4 +383,5 @@ void _launchLink(String link) async {
   if (await canLaunch(link)) {
     await launch(link);
   }
+  print('lel');
 }
