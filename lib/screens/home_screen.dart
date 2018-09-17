@@ -49,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen>
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      print('Connectivity changed from $_connectionStatus to $result');
+      print('======');
       setState(() => _connectionStatus = result.toString());
     });
   }
@@ -63,9 +65,10 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _buildAppBar(),
-        drawer: _buildDrawer(),
-        body: online() ? _buildTabBarView() : noInternetConnection());
+      appBar: _buildAppBar(),
+      drawer: _buildDrawer(),
+      body: online() ? _buildTabBarView() : noInternetConnection(),
+    );
   }
 
   Future<Null> initConnectivity() async {
@@ -90,21 +93,54 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget noInternetConnection() {
-    _showAlert();
     return Padding(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Text(
-            'No internet connection',
-            style: TextStyle(fontSize: 16.0),
+          Center(
+            child: Text(
+              'No internet connection',
+              style: TextStyle(fontSize: 18.0),
+            ),
           ),
-          Text(
-            'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.\nTry turning your WiFi on and off.',
-            style: TextStyle(color: Colors.grey),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
           ),
+          Center(
+            child: Icon(
+              Icons.signal_wifi_off,
+              size: 40.0,
+              color: Colors.grey,
+            ),
+          ),
+          Row(
+            children: <Widget>[
+              Icon(Icons.help_outline, color: Colors.white70,),
+              Text(' What can I do?'),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Text(
+                '1. Make sure you have an internet connection. (VPN not supported)',
+                style: TextStyle(color: Colors.grey),
+              ),
+              Text(
+                '2. Turn both wifi/mobile network off and turn back on.',
+                style: TextStyle(color: Colors.grey),
+              ),
+              Text(
+                // 'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.\nTry turning your WiFi on and off.',
+                '3. App should auto-reload when connected.',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ],
+          )
         ],
       ),
       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -334,8 +370,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text('Share Movie Catalog'),
               onTap: () {
-                _launchLink(
-                    'https://app.jonasdevrient.be');
+                _launchLink('https://app.jonasdevrient.be');
               },
             ),
           ],
@@ -349,5 +384,4 @@ void _launchLink(String link) async {
   if (await canLaunch(link)) {
     await launch(link);
   }
-  print('lel');
 }

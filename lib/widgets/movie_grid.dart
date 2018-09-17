@@ -54,8 +54,6 @@ class _MovieGridState extends State<MovieGrid>
 
   @override
   void initState() {
-    print('moviegrid state is called ${widget.type}');
-
     super.initState();
     movies = widget.movies;
     _movieService = new MovieService();
