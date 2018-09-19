@@ -84,8 +84,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
           ),
         ),
         floatingActionButton: _likedMovies?.isNotEmpty ??
-                false || _likedMovies?.length == 1 ??
-                false
+                false || _likedMovies?.length != 1 ?? false
             ? FloatingActionButton(
                 backgroundColor: Theme.of(context).primaryColorDark,
                 child: Icon(
