@@ -51,7 +51,9 @@ class MovieCard extends StatelessWidget {
           Center(
             child: FadeInImage.assetNetwork(
               fadeInDuration: Duration(milliseconds: 750),
-              image: movie.coverImageMedium,
+              image: movie.coverImageMedium ??
+                  movie.coverImageLarge ??
+                  'assets/images/cover_placeholder.jpg',
               placeholder: 'assets/images/cover_placeholder.jpg',
               fit: BoxFit.fill,
             ),
@@ -88,4 +90,4 @@ class MovieCard extends StatelessWidget {
     Movie movie = await _movieService.fetchMovieById(http.Client(), id);
     return movie;
   }
-} 
+}

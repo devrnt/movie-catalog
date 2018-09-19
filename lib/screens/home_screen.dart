@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/movie.dart';
 
 import 'package:movie_catalog/screens/search_screen.dart';
+import 'package:movie_catalog/screens/suggestions_screen.dart';
 
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
@@ -329,6 +330,18 @@ class _HomeScreenState extends State<HomeScreen>
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SearchScreen()));
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.lightbulb_outline,
+                color: Theme.of(context).accentColor,
+                size: 20.0,
+              ),
+              title: Text('Suggestions'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SuggestionsScreen()));
               },
             ),
             Divider(

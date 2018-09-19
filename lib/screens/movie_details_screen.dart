@@ -38,7 +38,7 @@ class MovieDetails extends StatefulWidget {
               child: FadeInImage.assetNetwork(
                 fadeInDuration: Duration(milliseconds: 100),
                 fadeInCurve: Curves.linear,
-                image: movie.coverImageLarge,
+                image: movie.coverImageLarge??movie.coverImageMedium,
                 placeholder: 'assets/images/cover_placeholder.jpg',
                 fit: BoxFit.cover,
                 height: 170.0,
