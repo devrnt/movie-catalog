@@ -17,6 +17,8 @@ import 'package:movie_catalog/widgets/movie_grid.dart';
 import 'package:movie_catalog/widgets/movie_grid_saved.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -29,7 +31,9 @@ class _HomeScreenState extends State<HomeScreen>
   MovieService _movieService;
   StorageService _storageService;
 
-  // String result of the connection, gets updated by the subscription 
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
+  // String result of the connection, gets updated by the subscription
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = new Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -47,6 +51,17 @@ class _HomeScreenState extends State<HomeScreen>
 
     _movieService = new MovieService();
     _storageService = new StorageService();
+
+    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+      print('onMessage $message');
+    }, onResume: (Map<String, dynamic> message) {
+      print('oneResume $message');
+    }, onLaunch: (Map<String, dynamic> message) {
+      print('onLaunch $message');
+    });
+    _firebaseMessaging.getToken().then((token) {
+      print(token);
+    });
 
     initConnectivity();
     _connectivitySubscription =
@@ -87,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen>
       return;
     }
 
-    setState(() { 
+    setState(() {
       _connectionStatus = connectionStatus;
     });
   }
@@ -340,8 +355,10 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text('Suggestions'),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SuggestionsScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SuggestionsScreen()));
               },
             ),
             Divider(

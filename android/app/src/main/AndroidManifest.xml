@@ -16,6 +16,9 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Movie Catalog"
         android:icon="@mipmap/ic_launcher">
+         <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_firebase_message_icon" />      
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -33,6 +36,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+             <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
