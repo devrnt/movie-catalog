@@ -1,15 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_catalog/models/subtitle.dart';
 import 'package:movie_catalog/services/storage_service.dart';
+import 'package:movie_catalog/services/subtitle_service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/models/torrent.dart';
 
+import 'package:simple_permissions/simple_permissions.dart';
+
 class MovieDetails extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final Movie movie;
 
   MovieDetails({this.movie});
@@ -38,7 +43,7 @@ class MovieDetails extends StatefulWidget {
               child: FadeInImage.assetNetwork(
                 fadeInDuration: Duration(milliseconds: 100),
                 fadeInCurve: Curves.linear,
-                image: movie.coverImageLarge??movie.coverImageMedium,
+                image: movie.coverImageLarge ?? movie.coverImageMedium,
                 placeholder: 'assets/images/cover_placeholder.jpg',
                 fit: BoxFit.cover,
                 height: 170.0,
@@ -109,7 +114,7 @@ class MovieDetails extends StatefulWidget {
       });
       formattedGenres = genres.substring(0, genres.length - 2);
     } else {
-      formattedGenres = '';
+      formattedGenres = 'No genres';
     }
 
     // remove the last comma
@@ -334,7 +339,17 @@ class MovieDetails extends StatefulWidget {
 
 class MovieDetailsState extends State<MovieDetails> {
   StorageService _storageService;
+  SubtitleService _subtitleService;
+  Subtitle _selectedSubtitle;
+  Future<List<Subtitle>> _subtitles;
+
+  // permissions
+  String _platformVersion = 'Unknown';
+  Permission permission = Permission.WriteExternalStorage;
+
   bool liked = false;
+
+  bool _subtitlesAvailable = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -343,6 +358,7 @@ class MovieDetailsState extends State<MovieDetails> {
         title: Text(widget.movie.title, style: TextStyle(fontSize: 17.0)),
         actions: <Widget>[
           IconButton(
+            tooltip: 'Add movie to your library',
             iconSize: 20.0,
             icon: Icon(
               liked ? Icons.favorite : Icons.favorite_border,
@@ -397,13 +413,14 @@ class MovieDetailsState extends State<MovieDetails> {
           ),
           widget._buildSummary(),
           widget._buildGenres(),
+          _buildSubtitles(),
           Container(
             margin: EdgeInsets.all(15.0),
             child: Row(
               children: widget._buildTorrents(widget.movie.torrents,
                   Theme.of(context).accentColor, context),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -413,11 +430,14 @@ class MovieDetailsState extends State<MovieDetails> {
   void initState() {
     super.initState();
     _storageService = new StorageService();
+    _subtitleService = new SubtitleService();
+    _subtitles = _subtitleService.getSubtitles(widget.movie.imdbCode);
     _storageService.liked(widget.movie).then((result) {
       setState(() {
         liked = result;
       });
     });
+    initPlatformState();
   }
 
   void _showSnackBar({String title, Color color, IconData icon}) {
@@ -442,5 +462,146 @@ class MovieDetailsState extends State<MovieDetails> {
       backgroundColor: color,
     );
     widget._scaffoldKey.currentState.showSnackBar(snackbar);
+  }
+
+  Widget _buildSubtitles() {
+    final String subtitleString = 'subtitles:'.toUpperCase();
+    return Container(
+      margin: EdgeInsets.all(15.0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            subtitleString,
+            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+          ),
+          FutureBuilder(
+              future: _subtitles,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) print(snapshot.error);
+                if (snapshot.hasData) {
+                  if (snapshot.data.isEmpty) {
+                    return Text('No subtitles available');
+                  } else {
+                    return _buildSubtitleDropDown(snapshot.data);
+                  }
+                } else {
+                  return Center(
+                    child: SizedBox(
+                      height: 12.0,
+                      width: 12.0,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.0,
+                      ),
+                    ),
+                  );
+                }
+              }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubtitleDropDown(List<Subtitle> subtitles) {
+    return Row(
+      children: <Widget>[
+        DropdownButton(
+          style: TextStyle(fontSize: 16.0),
+          value: _selectedSubtitle,
+          hint: Text('Language'),
+          isDense: true,
+          onChanged: (Subtitle subtitle) {
+            print(subtitle.language);
+            setState(() {
+              _selectedSubtitle = subtitle;
+            });
+          },
+          items: subtitles
+              .map(
+                (sub) => DropdownMenuItem(
+                      value: sub,
+                      child: Row(
+                        children: <Widget>[
+                          FadeInImage.assetNetwork(
+                            image:
+                                'https://www.countryflags.io/${sub.countryCode}/flat/32.png',
+                            height: 22.0,
+                            placeholder: 'assets/images/flag_placeholder.jpg',
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 12.0),
+                          ),
+                          Text(sub.language),
+                        ],
+                      ),
+                    ),
+              )
+              .toList(),
+        ),
+        _selectedSubtitle != null
+            ? Container(
+                alignment: Alignment.center,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.save_alt,
+                    color: Theme.of(context).accentColor,
+                  ),
+                  onPressed: () {
+                    _downloadFile(_selectedSubtitle.downloadUrl);
+                  },
+                ),
+              )
+            : Container(),
+      ],
+    );
+  }
+
+  void _downloadFile(String url) async {
+    if (await checkPermission()) {
+      await _subtitleService.downloadSubtitle(url);
+      _showSnackBar(
+          color: Theme.of(context).accentColor,
+          icon: Icons.done,
+          title: 'Subtitle downloaded in your Downloads folder');
+    } else {
+      await requestPermission();
+      if (await checkPermission() == false) {
+        _showSnackBar(
+            color: Colors.amber[700],
+            icon: Icons.warning,
+            title: 'Please accept the permission');
+        //
+      } else {
+        _downloadFile(url);
+      }
+    }
+  }
+
+  // permissions
+  void initPlatformState() async {
+    String platformVersion;
+    try {
+      platformVersion = await SimplePermissions.platformVersion;
+    } on Exception {
+      platformVersion = 'Failed to get platform version';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    _platformVersion = platformVersion;
+  }
+
+  requestPermission() async {
+    final res = await SimplePermissions.requestPermission(permission);
+  }
+
+  Future<bool> checkPermission() async {
+    bool res = await SimplePermissions.checkPermission(permission);
+    return res;
   }
 }

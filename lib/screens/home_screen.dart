@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   TabBarView _buildTabBarView() {
-    _fetchLatestMovies();
+    // _fetchLatestMovies();
     return TabBarView(
       controller: _tabController,
       children: <Widget>[
@@ -279,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen>
                   )
                 : Center(child: CircularProgressIndicator());
           },
-        )
+        ),
       ],
     );
   }

@@ -13,7 +13,6 @@ class StorageService {
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-
     return directory.path;
   }
 
@@ -54,5 +53,10 @@ class StorageService {
     bool flag =
         movies.any((movieFromStorage) => movieFromStorage.id == movie.id);
     return flag;
+  }
+
+  Future<String> get downloadsPath async {
+    final directoryTemp = await getExternalStorageDirectory();
+    return '${directoryTemp.path}/Download';
   }
 }
