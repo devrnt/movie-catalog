@@ -526,7 +526,8 @@ class MovieDetailsState extends State<MovieDetails> {
                         children: <Widget>[
                           FadeInImage.assetNetwork(
                             image:
-                                'https://www.countryflags.io/${sub.countryCode}/flat/32.png',
+                            'https://www.geoips.com/assets/img/flag/128/${sub.countryCode.toLowerCase()}.png',
+                                // 'https://www.countryflags.io/${sub.countryCode}/flat/32.png',
                             height: 22.0,
                             placeholder: 'assets/images/flag_placeholder.jpg',
                           ),
