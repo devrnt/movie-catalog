@@ -21,25 +21,19 @@ class MovieCatalog extends StatelessWidget {
   ThemeData _buildBlackTheme() {
     final ThemeData base = ThemeData.dark();
     return base.copyWith(
-      accentColor: kAccentColor,
-      primaryColor: kPrimaryColor,
-      primaryColorLight: kPrimaryLight,
-      primaryColorDark: kPrimaryDark,
-      scaffoldBackgroundColor: kPrimaryColor,
-      cardColor: kPrimaryDark,
-      textSelectionColor: kAccentColor,
-
-      textTheme: _buildBlackTextTheme(base.textTheme),
-      primaryTextTheme: _buildBlackTextTheme(base.primaryTextTheme),
-      accentTextTheme: _buildBlackTextTheme(base.accentTextTheme),
-
-      primaryIconTheme: base.iconTheme.copyWith(
-        color: kIconColor
-      )
-
-      // TODO: Add the icon themes (103)
-      // TODO: Decorate the inputs (103)
-    );
+        accentColor: kAccentColor,
+        primaryColor: kPrimaryColor,
+        primaryColorLight: kPrimaryLight,
+        primaryColorDark: kPrimaryDark,
+        scaffoldBackgroundColor: kPrimaryColor,
+        cardColor: kPrimaryDark,
+        textSelectionColor: kAccentColor,
+        textTheme: _buildBlackTextTheme(base.textTheme),
+        primaryTextTheme: _buildBlackTextTheme(base.primaryTextTheme),
+        accentTextTheme: _buildBlackTextTheme(base.accentTextTheme),
+        primaryIconTheme: base.iconTheme.copyWith(color: kIconColor),
+        canvasColor: kPrimaryLight,
+        );
   }
 
   TextTheme _buildBlackTextTheme(TextTheme base) {
@@ -55,7 +49,6 @@ class MovieCatalog extends StatelessWidget {
           ),
         )
         .apply(
-          fontFamily: 'OpenSans',
           displayColor: kPrimaryColor,
           bodyColor: kSecondaryColor,
         );

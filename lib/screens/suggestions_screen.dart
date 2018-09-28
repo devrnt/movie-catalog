@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/screens/movie_list.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
-import 'package:movie_catalog/widgets/movie_grid_saved.dart';
 
 class SuggestionsScreen extends StatefulWidget {
   @override
@@ -49,7 +49,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
           ],
         ),
         body: Container(
-          padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 10.0),
+          padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 0.0),
           child: Column(
             children: <Widget>[
               Container(
@@ -115,7 +115,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
       children: <Widget>[
         Row(children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 6.0),
+            padding: EdgeInsets.only(left: 12.0),
           ),
           Text('Based on'),
           Padding(
@@ -123,11 +123,11 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
           ),
           Chip(
             label: Text(_selectedMovie?.title ?? '*'),
-            backgroundColor: Theme.of(context).accentColor,
+            backgroundColor: Theme.of(context).primaryColorLight,
           ),
         ]),
         Expanded(
-          child: MovieGridSaved(movies: movies),
+          child: MovieList(movies, 'd'),
         )
       ],
     );

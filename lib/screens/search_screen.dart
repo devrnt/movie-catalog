@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/screens/movie_list.dart';
 
 import 'package:movie_catalog/services/movie_service.dart';
 
-import 'package:movie_catalog/screens/movie_details_screen.dart';
 import 'package:movie_catalog/screens/filter_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -59,7 +59,6 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 10.0),
         child: Column(
           children: <Widget>[
             Container(
@@ -82,7 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               if (snapshot.hasError)
                                 return Text('Error: ${snapshot.error}');
                               else
-                                return _createListView(context, snapshot);
+                                return MovieList(snapshot.data, 'search');
                           }
                         },
                       ),
@@ -92,53 +91,6 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
-  }
-
-  Widget _createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List<Movie> movies = snapshot.data;
-    return movies.length != 0
-        ? ListView.builder(
-            itemCount: movies.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: <Widget>[
-                  ListTile(
-                    subtitle: Text(
-                      movies[index].year.toString(),
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
-                    leading: Image.network(
-                      movies[index].coverImageMedium,
-                      height: 66.0,
-                    ),
-                    title: Text(
-                      movies[index].title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MovieDetails(
-                                movie: movies[index],
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  Divider(
-                    height: 2.0,
-                  ),
-                ],
-              );
-            },
-          )
-        : Center(
-            child: Text('No search results'),
-          );
   }
 
   Widget _buildSearchInput() {

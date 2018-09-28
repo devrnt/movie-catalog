@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/screens/movie_list.dart';
 
 import 'package:movie_catalog/screens/search_screen.dart';
 import 'package:movie_catalog/screens/suggestions_screen.dart';
@@ -26,6 +27,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  bool grid = false;
+
   TabController _tabController;
 
   MovieService _movieService;
@@ -109,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget noInternetConnection() {
     return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -121,20 +125,34 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 20.0),
+            padding: EdgeInsets.only(bottom: 15.0),
           ),
           Center(
             child: Icon(
               Icons.signal_wifi_off,
-              size: 40.0,
-              color: Colors.grey,
+              size: 32.0,
+              color: Colors.white.withOpacity(0.75),
             ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 7.0),
           ),
           Row(
             children: <Widget>[
-              Icon(Icons.help_outline),
-              Text(' What can I do?'),
+              Icon(
+                Icons.help_outline,
+                size: 22.0,
+                color: Colors.white.withOpacity(0.9),
+              ),
+              Text(
+                ' What can I do?',
+                style: TextStyle(
+                    fontSize: 15.0, color: Colors.white.withOpacity(0.9)),
+              ),
             ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -142,23 +160,28 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Text(
-                '1. Make sure you have an internet connection. (VPN not supported)',
+                '1. Make sure you have an internet connection. (VPN not supported  yet)',
                 style: TextStyle(color: Colors.grey),
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 3.0),
+              ),
               Text(
-                '2. Turn off wifi/mobile network and turn back on.',
+                '2. Turn off wifi/mobile network.',
                 style: TextStyle(color: Colors.grey),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 3.0),
               ),
               Text(
                 // 'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.\nTry turning your WiFi on and off.',
-                '3. App should auto-reload when connected.',
+                '3. Turn wifi/mobile network back on.',
                 style: TextStyle(color: Colors.grey),
               ),
             ],
           )
         ],
       ),
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
     );
   }
 
@@ -198,6 +221,19 @@ class _HomeScreenState extends State<HomeScreen>
         'Movie Catalog',
       ),
       actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            grid ? Icons.grid_on : Icons.grid_off,
+            size: 20.0,
+          ),
+          onPressed: () {
+            print('do the switch');
+            setState(() {
+              grid = !grid;
+              print(grid);
+            });
+          },
+        ),
         IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
@@ -244,42 +280,75 @@ class _HomeScreenState extends State<HomeScreen>
         //     }
         //   },
         // ),
-        FutureBuilder<List<Movie>>(
-          future: _fetchLatestMovies(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError)
-              return Text('There was an error: ${snapshot.error}');
-            return snapshot.hasData
-                ? MovieGrid(
-                    snapshot.data,
-                    'latest',
-                  )
-                : Center(child: CircularProgressIndicator());
-          },
-        ),
-        FutureBuilder<List<Movie>>(
-          future: _fetchPopularMovies(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
-            return snapshot.hasData
-                ? MovieGrid(
-                    snapshot.data,
-                    'popular',
-                  )
-                : Center(child: CircularProgressIndicator());
-          },
-        ),
-        FutureBuilder<List<Movie>>(
-          future: _fetchSavedMovies(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
-            return snapshot.hasData
-                ? MovieGridSaved(
-                    movies: snapshot.data,
-                  )
-                : Center(child: CircularProgressIndicator());
-          },
-        ),
+        !grid
+            ? FutureBuilder<List<Movie>>(
+                future: _fetchLatestMovies(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return Text('There was an error: ${snapshot.error}');
+                  return snapshot.hasData
+                      ? MovieList(snapshot.data, 'latest')
+                      : Center(child: CircularProgressIndicator());
+                },
+              )
+            : FutureBuilder<List<Movie>>(
+                future: _fetchLatestMovies(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return Text('There was an error: ${snapshot.error}');
+                  return snapshot.hasData
+                      ? MovieGrid(snapshot.data, 'latest')
+                      : Center(child: CircularProgressIndicator());
+                },
+              ),
+
+        !grid
+            ? FutureBuilder<List<Movie>>(
+                future: _fetchPopularMovies(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData
+                      ? MovieList(
+                          snapshot.data,
+                          'popular',
+                        )
+                      : Center(child: CircularProgressIndicator());
+                },
+              )
+            : FutureBuilder<List<Movie>>(
+                future: _fetchPopularMovies(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData
+                      ? MovieGrid(
+                          snapshot.data,
+                          'popular',
+                        )
+                      : Center(child: CircularProgressIndicator());
+                },
+              ),
+
+        !grid
+            ? FutureBuilder<List<Movie>>(
+                future: _fetchSavedMovies(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData
+                      ? MovieList(snapshot.data, 'w')
+                      : Center(child: CircularProgressIndicator());
+                },
+              )
+            : FutureBuilder<List<Movie>>(
+                future: _fetchSavedMovies(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData
+                      ? MovieGridSaved(
+                          movies: snapshot.data,
+                        )
+                      : Center(child: CircularProgressIndicator());
+                },
+              ),
       ],
     );
   }
@@ -315,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen>
                     height: 75.0,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 7.0),
+                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
                     child: Text(
                       'Movie Catalog',
                       style: TextStyle(
@@ -327,13 +396,15 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: <Color>[
-                    Theme.of(context).primaryColor,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
                     Theme.of(context).primaryColorDark,
-                  ])),
+                    Theme.of(context).primaryColor,
+                  ],
+                ),
+              ),
             ),
             ListTile(
               leading: Icon(
@@ -343,8 +414,14 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text('Search'),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SearchScreen()));
+                online()
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchScreen(),
+                        ),
+                      )
+                    : print('Not online, searching is unavailable');
               },
             ),
             ListTile(
@@ -355,10 +432,14 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text('Suggestions'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SuggestionsScreen()));
+                online()
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SuggestionsScreen(),
+                        ),
+                      )
+                    : print('Not online, suggestions are unavailable');
               },
             ),
             Divider(
@@ -407,6 +488,16 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
+
+  // Widget _createListView(
+  //     BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+  //   return ListView.builder(
+  //     itemCount: snapshot.data.length,
+  //     itemBuilder: (context, index) {
+
+  //     },
+  //   );
+  // }
 }
 
 void _launchLink(String link) async {

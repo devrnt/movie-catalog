@@ -7,16 +7,16 @@ import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:movie_catalog/widgets/movie_card_grid.dart';
+import 'package:movie_catalog/widgets/movie_card_design.dart';
 
-class MovieGrid extends StatefulWidget {
+class MovieList extends StatefulWidget {
   StorageService _storageService;
   List<Movie> movies;
   final String type;
   // config used for passing the filter config
   dynamic config;
 
-  MovieGrid(this.movies, this.type, [this.config]) {
+  MovieList(this.movies, this.type, [this.config]) {
     _storageService = new StorageService();
     if (type == 'liked') {
       print('old ${movies.length}');
@@ -36,11 +36,11 @@ class MovieGrid extends StatefulWidget {
   }
 
   @override
-  _MovieGridState createState() => _MovieGridState();
+  _MovieListState createState() => _MovieListState();
 }
 
-class _MovieGridState extends State<MovieGrid>
-    with AutomaticKeepAliveClientMixin<MovieGrid> {
+class _MovieListState extends State<MovieList>
+    with AutomaticKeepAliveClientMixin<MovieList> {
   List<Movie> movies;
   MovieService _movieService;
   ScrollController _scrollController;
@@ -71,18 +71,18 @@ class _MovieGridState extends State<MovieGrid>
   @override
   Widget build(BuildContext context) {
     return movies.length > 0
-        ? GridView.builder(
-            padding: EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 0.0),
+        ? ListView.builder(
+            padding: EdgeInsets.fromLTRB(0.0, 12.0, 2.0, 0.0),
             controller: _scrollController,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.58,
-            ),
+            // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //   crossAxisCount: 3,
+            //   childAspectRatio: 0.545,
+            // ),
             itemCount: movies.length,
             itemBuilder: (context, index) {
               return new Column(
                 children: <Widget>[
-                  MovieCardGrid(
+                  MovieCardDesign(
                     movie: movies[index],
                   ),
                 ],
@@ -91,7 +91,7 @@ class _MovieGridState extends State<MovieGrid>
           )
         : Center(
             child: widget.type != 'liked'
-                ? Text('No search results')
+                ? Text('Your library is empty')
                 : Text('Your shelf is empty'));
   }
 
