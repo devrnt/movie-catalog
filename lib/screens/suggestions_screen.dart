@@ -72,7 +72,20 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                                   child: Text(
                                       'No suggestions available.\nClick the help icon for more info.'));
                             }
-                            return Text('Error: ${snapshot.error}');
+                            return Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(Icons.error),
+                                  Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 3.0)),
+                                  Text(
+                                      'Could not reach the server. Try again later.'),
+                                ],
+                              ),
+                            );
+                            ;
                           } else
                             return _createListView(context, snapshot);
                       }
@@ -84,7 +97,8 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
           ),
         ),
         floatingActionButton: _likedMovies?.isNotEmpty ??
-                false || _likedMovies?.length != 1 ?? false
+                false || _likedMovies?.length != 1 ??
+                false
             ? FloatingActionButton(
                 backgroundColor: Theme.of(context).primaryColorDark,
                 child: Icon(

@@ -78,9 +78,21 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             default:
-                              if (snapshot.hasError)
-                                return Text('Error: ${snapshot.error}');
-                              else
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.error),
+                                      Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 3.0)),
+                                      Text(
+                                          'Could not reach the server. Try again later.'),
+                                    ],
+                                  ),
+                                );
+                              } else
                                 return MovieList(snapshot.data, 'search');
                           }
                         },

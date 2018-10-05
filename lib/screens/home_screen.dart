@@ -284,8 +284,19 @@ class _HomeScreenState extends State<HomeScreen>
             ? FutureBuilder<List<Movie>>(
                 future: _fetchLatestMovies(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return Text('There was an error: ${snapshot.error}');
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.error),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
+                          Text('Could not reach the server. Try again later.'),
+                        ],
+                      ),
+                    );
+                  }
                   return snapshot.hasData
                       ? MovieList(snapshot.data, 'latest')
                       : Center(child: CircularProgressIndicator());
@@ -294,8 +305,19 @@ class _HomeScreenState extends State<HomeScreen>
             : FutureBuilder<List<Movie>>(
                 future: _fetchLatestMovies(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return Text('There was an error: ${snapshot.error}');
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.error),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
+                          Text('Could not reach the server. Try again later.'),
+                        ],
+                      ),
+                    );
+                  }
                   return snapshot.hasData
                       ? MovieGrid(snapshot.data, 'latest')
                       : Center(child: CircularProgressIndicator());
@@ -306,7 +328,19 @@ class _HomeScreenState extends State<HomeScreen>
             ? FutureBuilder<List<Movie>>(
                 future: _fetchPopularMovies(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.error),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
+                          Text('Could not reach the server. Try again later.'),
+                        ],
+                      ),
+                    );
+                  }
                   return snapshot.hasData
                       ? MovieList(
                           snapshot.data,
@@ -318,7 +352,19 @@ class _HomeScreenState extends State<HomeScreen>
             : FutureBuilder<List<Movie>>(
                 future: _fetchPopularMovies(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.error),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
+                          Text('Could not reach the server. Try again later.'),
+                        ],
+                      ),
+                    );
+                  }
                   return snapshot.hasData
                       ? MovieGrid(
                           snapshot.data,
