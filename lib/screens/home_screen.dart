@@ -20,6 +20,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+import 'package:firebase_admob/firebase_admob.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -71,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen>
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       setState(() => _connectionStatus = result.toString());
     });
+
+    FirebaseAdMob.instance
+        .initialize(appId: 'ca-app-pub-1624549113750524~5244789023');
   }
 
   @override

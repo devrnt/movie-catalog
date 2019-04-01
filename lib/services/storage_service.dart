@@ -29,6 +29,7 @@ class StorageService {
       List movies = listOfMaps.map((map) => Movie.fromJson(map)).toList();
       return movies;
     } catch (e) {
+      // Probably a FileSystemException exception
       print(e);
       return new List();
     }

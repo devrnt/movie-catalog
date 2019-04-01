@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/screens/home_screen.dart';
 import 'package:movie_catalog/screens/movie_details_screen_design.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
@@ -11,13 +12,39 @@ import 'package:http/http.dart' as http;
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:movie_catalog/colors.dart';
 
+import 'package:firebase_admob/firebase_admob.dart';
+
 class MovieCardDesign extends StatelessWidget {
   Movie movie;
   MovieService _movieService;
   StorageService storageService = new StorageService();
 
+  static final MobileAdTargetingInfo targetingInfo = new MobileAdTargetingInfo(
+    childDirected: false,
+    testDevices: ['FCF4540BC12076FAF1490A4C6AC03170'],
+    keywords: [
+      'Movie',
+      'Movies',
+      'Cinema',
+      'Download',
+      'Yify',
+      'YTS',
+      'Watching',
+      'Netflix',
+      'Popcorn Time'
+    ],
+  );
+
+  final InterstitialAd interstitialAd = new InterstitialAd(
+      adUnitId: 'ca-app-pub-1624549113750524/5253207122',
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print('InterstitialAd event is $event');
+      });
+
   MovieCardDesign({this.movie}) {
     _movieService = new MovieService();
+
     if (movie.torrents.length == 0) {
       addMovieDetails(movie.id)
           .then((Movie updated) => movie.torrents = updated.torrents);
@@ -27,15 +54,20 @@ class MovieCardDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              maintainState: true,
-              builder: (context) => MovieDetailsDesign(
-                    movie: movie,
-                  ),
-            ),
-          ),
+      onTap: () => {
+            interstitialAd
+              ..load()
+              ..show(),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                maintainState: true,
+                builder: (context) => MovieDetailsDesign(
+                      movie: movie,
+                    ),
+              ),
+            )
+          },
       child: _buildCard(context: context),
     );
   }
