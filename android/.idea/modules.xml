@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/connectivity-0.4.2/android/connectivity.iml" filepath="C:/flutter/.pub-cache/hosted/pub.dartlang.org/connectivity-0.4.2/android/connectivity.iml" />
+      <module fileurl="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-2.2.0+1/android/firebase_messaging.iml" filepath="C:/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-2.2.0+1/android/firebase_messaging.iml" />
+      <module fileurl="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/android/path_provider.iml" filepath="C:/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/android/path_provider.iml" />
+      <module fileurl="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/simple_permissions-0.1.9/android/simple_permissions.iml" filepath="C:/flutter/.pub-cache/hosted/pub.dartlang.org/simple_permissions-0.1.9/android/simple_permissions.iml" />
+      <module fileurl="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-5.0.2/android/url_launcher.iml" filepath="C:/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-5.0.2/android/url_launcher.iml" />
+    </modules>
+  </component>
+</project>
