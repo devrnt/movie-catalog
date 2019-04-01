@@ -8,9 +8,8 @@ import 'package:movie_catalog/screens/home_screen.dart';
 
 import 'package:sentry/sentry.dart';
 
-import 'package:movie_catalog/sentry_dsn_key.dart';
-
-final SentryClient _sentry = new SentryClient(dsn: dsn);
+final SentryClient _sentry = new SentryClient(
+    dsn: 'https://44ee1a5fe98040a2b2258a32f4cf31f4@sentry.io/1295373');
 
 void main() {
   runApp(new MovieCatalog());
