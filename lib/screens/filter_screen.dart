@@ -114,7 +114,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       ),
                       RaisedButton(
                         color: Theme.of(context).accentColor,
-                        child: Text('APPLY'),
+                        child: Text('SEARCH'),
                         onPressed: () {
                           _searchByConfig();
                         },

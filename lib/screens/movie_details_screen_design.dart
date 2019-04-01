@@ -363,7 +363,6 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
   Future<List<Subtitle>> _subtitles;
 
   // permissions
-  String _platformVersion = 'Unknown';
   PermissionGroup permission = PermissionGroup.storage;
 
   bool liked = false;
@@ -454,7 +453,6 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
         liked = result;
       });
     });
-    initPlatformState();
   }
 
   Widget _buildSummary() {
@@ -634,23 +632,6 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
         _downloadFile(url);
       }
     }
-  }
-
-  // permissions
-  void initPlatformState() async {
-    String platformVersion;
-    try {
-      // platformVersion = await SimplePermissions.platformVersion;
-    } on Exception {
-      platformVersion = 'Failed to get platform version';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    _platformVersion = platformVersion;
   }
 
   requestPermission() async {

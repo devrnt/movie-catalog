@@ -85,7 +85,6 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                                 ],
                               ),
                             );
-                            ;
                           } else
                             return _createListView(context, snapshot);
                       }

@@ -10,14 +10,13 @@ import 'package:http/http.dart' as http;
 import 'package:movie_catalog/widgets/movie_card_design.dart';
 
 class MovieList extends StatefulWidget {
-  StorageService _storageService;
-  List<Movie> movies;
+  final StorageService _storageService = new StorageService();
+  final List<Movie> movies;
   final String type;
   // config used for passing the filter config
-  dynamic config;
+  final dynamic config;
 
   MovieList(this.movies, this.type, [this.config]) {
-    _storageService = new StorageService();
     if (type == 'liked') {
       print('old ${movies.length}');
       _fetchSavedMovies()

@@ -136,7 +136,6 @@ class _SearchScreenState extends State<SearchScreen> {
       print(_searchQueryController.text != _searchText);
       if (_searchQueryController.text != _searchText) {
         setState(() {
-          print('event listerner called NOT EMPTY');
           _searchText = _searchQueryController.text;
         });
       } else {

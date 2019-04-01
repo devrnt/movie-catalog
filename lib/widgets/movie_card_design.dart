@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/screens/home_screen.dart';
 import 'package:movie_catalog/screens/movie_details_screen_design.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
@@ -15,9 +14,9 @@ import 'package:movie_catalog/colors.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
 class MovieCardDesign extends StatelessWidget {
-  Movie movie;
-  MovieService _movieService;
-  StorageService storageService = new StorageService();
+  final Movie movie;
+  final MovieService _movieService = new MovieService();
+  final StorageService storageService = new StorageService();
 
   static final MobileAdTargetingInfo targetingInfo = new MobileAdTargetingInfo(
     childDirected: false,
@@ -43,8 +42,6 @@ class MovieCardDesign extends StatelessWidget {
       });
 
   MovieCardDesign({this.movie}) {
-    _movieService = new MovieService();
-
     if (movie.torrents.length == 0) {
       addMovieDetails(movie.id)
           .then((Movie updated) => movie.torrents = updated.torrents);
@@ -146,7 +143,6 @@ class MovieCardDesign extends StatelessWidget {
   }
 
   Widget _buildCategoriesLabel() {
-    final String genreString = 'Genres:'.toUpperCase();
     String genres = '';
 
     String formattedGenres = '';
@@ -201,16 +197,6 @@ class MovieCardDesign extends StatelessWidget {
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget _buildArrow() {
-    return Padding(
-      padding: EdgeInsets.only(right: 15.0),
-      child: Icon(
-        Icons.arrow_right,
-        color: Colors.grey[700],
       ),
     );
   }

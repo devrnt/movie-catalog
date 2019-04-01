@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/screens/movie_details_screen.dart';
 import 'package:movie_catalog/screens/movie_details_screen_design.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/services/storage_service.dart';
@@ -13,12 +12,11 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:movie_catalog/colors.dart';
 
 class MovieCardGrid extends StatelessWidget {
-  Movie movie;
-  MovieService _movieService;
-  StorageService storageService = new StorageService();
+  final Movie movie;
+  final MovieService _movieService = new MovieService();
+  final StorageService storageService = new StorageService();
 
   MovieCardGrid({this.movie}) {
-    _movieService = new MovieService();
     if (movie.torrents.length == 0) {
       addMovieDetails(movie.id)
           .then((Movie updated) => movie.torrents = updated.torrents);
@@ -136,7 +134,6 @@ class MovieCardGrid extends StatelessWidget {
   }
 
   Widget _buildCategoriesLabel() {
-    final String genreString = 'Genres:'.toUpperCase();
     String genres = '';
 
     String formattedGenres = '';

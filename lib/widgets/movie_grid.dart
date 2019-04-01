@@ -10,16 +10,14 @@ import 'package:http/http.dart' as http;
 import 'package:movie_catalog/widgets/movie_card_grid.dart';
 
 class MovieGrid extends StatefulWidget {
-  StorageService _storageService;
-  List<Movie> movies;
+  final StorageService _storageService = new StorageService();
+  final List<Movie> movies;
   final String type;
   // config used for passing the filter config
-  dynamic config;
+  final dynamic config;
 
   MovieGrid(this.movies, this.type, [this.config]) {
-    _storageService = new StorageService();
     if (type == 'liked') {
-      print('old ${movies.length}');
       _fetchSavedMovies()
           .then((movies) => print(movies.length.toString() + '\n======'));
       print('moviegrid constructor is called $type');
@@ -80,7 +78,7 @@ class _MovieGridState extends State<MovieGrid>
             ),
             itemCount: movies.length,
             itemBuilder: (context, index) {
-              return new Column(
+              return Column(
                 children: <Widget>[
                   MovieCardGrid(
                     movie: movies[index],
