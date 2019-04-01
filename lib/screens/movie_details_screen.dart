@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/models/torrent.dart';
 
-import 'package:simple_permissions/simple_permissions.dart';
+// import 'package:simple_permissions/simple_permissions.dart';
 
 class MovieDetails extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -345,7 +345,7 @@ class MovieDetailsState extends State<MovieDetails> {
 
   // permissions
   String _platformVersion = 'Unknown';
-  Permission permission = Permission.WriteExternalStorage;
+  // Permission permission = Permission.WriteExternalStorage;
 
   bool liked = false;
 
@@ -584,7 +584,7 @@ class MovieDetailsState extends State<MovieDetails> {
   void initPlatformState() async {
     String platformVersion;
     try {
-      platformVersion = await SimplePermissions.platformVersion;
+      // platformVersion = await SimplePermissions.platformVersion;
     } on Exception {
       platformVersion = 'Failed to get platform version';
     }
@@ -598,11 +598,11 @@ class MovieDetailsState extends State<MovieDetails> {
   }
 
   requestPermission() async {
-    final res = await SimplePermissions.requestPermission(permission);
+    // final res = await SimplePermissions.requestPermission(permission);
   }
 
   Future<bool> checkPermission() async {
-    bool res = await SimplePermissions.checkPermission(permission);
-    return res;
+    // bool res = await SimplePermissions.checkPermission(permission);
+    return true;
   }
 }

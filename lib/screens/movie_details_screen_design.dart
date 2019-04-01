@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/models/torrent.dart';
 
-import 'package:simple_permissions/simple_permissions.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MovieDetailsDesign extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -23,7 +23,9 @@ class MovieDetailsDesign extends StatefulWidget {
   MovieDetailsState createState() => new MovieDetailsState();
 
   Widget _buildGenres() {
-    final String genreString = movie.genres.length > 1 ? 'Genres:'.toUpperCase():'Genre:'.toUpperCase();
+    final String genreString = movie.genres.length > 1
+        ? 'Genres:'.toUpperCase()
+        : 'Genre:'.toUpperCase();
     String genres = '';
 
     String formattedGenres = '';
@@ -362,7 +364,7 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
 
   // permissions
   String _platformVersion = 'Unknown';
-  Permission permission = Permission.WriteExternalStorage;
+  PermissionGroup permission = PermissionGroup.storage;
 
   bool liked = false;
 
@@ -543,8 +545,7 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
                   }
                 } else {
                   return Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 15.0),
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
                     child: SizedBox(
                       height: 12.0,
                       width: 12.0,
@@ -639,7 +640,7 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
   void initPlatformState() async {
     String platformVersion;
     try {
-      platformVersion = await SimplePermissions.platformVersion;
+      // platformVersion = await SimplePermissions.platformVersion;
     } on Exception {
       platformVersion = 'Failed to get platform version';
     }
@@ -653,12 +654,13 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
   }
 
   requestPermission() async {
-    final res = await SimplePermissions.requestPermission(permission);
+    await PermissionHandler().requestPermissions([permission]);
   }
 
   Future<bool> checkPermission() async {
-    bool res = await SimplePermissions.checkPermission(permission);
-    return res;
+    PermissionStatus permissionStatus =
+        await PermissionHandler().checkPermissionStatus(permission);
+    return permissionStatus == PermissionStatus.granted;
   }
 
   Widget _buildBackgroundAndCover() {
