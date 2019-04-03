@@ -1,4 +1,4 @@
-package com.example.moviecatalog;
+package com.devrnt.moviecatalog;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
