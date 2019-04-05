@@ -51,9 +51,10 @@ class MovieCardDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-            interstitialAd
-              ..load()
+      onTap: () {
+        if (!DebugMode.isInDebugMode) {
+          interstitialAd
+            ..load()
               ..show(),
             Navigator.push(
               context,
