@@ -39,7 +39,8 @@ class MovieList extends StatefulWidget {
   _MovieListState createState() => _MovieListState();
 }
 
-class _MovieListState extends State<MovieList> {
+class _MovieListState extends State<MovieList>
+    with AutomaticKeepAliveClientMixin<MovieList> {
   MovieService _movieService;
   ScrollController _scrollController;
 
@@ -55,6 +56,9 @@ class _MovieListState extends State<MovieList> {
     _scrollController = new ScrollController();
     //_scrollController.addListener(_scrollListener);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void deactivate() {
