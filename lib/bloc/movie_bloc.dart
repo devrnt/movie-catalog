@@ -94,6 +94,15 @@ class MovieBloc extends BlocBase {
 
   void _handleNextPage(MovieType movieType) {
     if (!loading) {
+      switch (movieType) {
+        case MovieType.latest:
+          _latestMoviesPage++;
+          break;
+        case MovieType.popular:
+          _popularMoviesPage++;
+          break;
+      }
+
       getMovies(movieType);
     }
   }
