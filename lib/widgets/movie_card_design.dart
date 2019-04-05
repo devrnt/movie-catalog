@@ -68,7 +68,7 @@ class MovieCardDesign extends StatelessWidget {
             builder: (context) => MovieDetailsDesign(
                   movie: movie,
                   likedMoviesStream:
-                      BlocProvider.of<LikedBloc>(context).likedMoviesStream,
+                      BlocProvider.of<LikedBloc>(context).likedMoviesOut,
                 ),
           ),
         );

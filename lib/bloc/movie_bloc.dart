@@ -39,16 +39,15 @@ class MovieBloc extends BlocBase {
   Stream<List<Movie>> get popularMoviesOut => _popularstMoviesController.stream;
 
   /// [PublishSubject] is the same as a [StreamController] but from the rxDart library
-  PublishSubject<MovieType> _fetchNextPageController =
-      new PublishSubject<MovieType>();
+  PublishSubject<MovieType> _fetchNextPageController = new PublishSubject();
 
   /// The [Sink] is the input to increment the [_latestMoviesPage] or [_popularMoviesPage]
   Sink<MovieType> get fetchNextPageIn => _fetchNextPageController.sink;
 
-  /// Keeps track of the latest movies to pass to the publishSubject
+  /// Keeps track of the latest movies
   List<Movie> _latestMovies = [];
 
-  /// Keeps track of the popularst movies to pass to the publishSubject
+  /// Keeps track of the popularst movies
   List<Movie> _popularMovies = [];
 
   final MovieService _movieService = new MovieService();
@@ -61,6 +60,12 @@ class MovieBloc extends BlocBase {
     getMovies(MovieType.popular);
 
     _fetchNextPageController.stream.listen(_handleNextPage);
+  }
+
+  void dispose() {
+    _latestMoviesController.close();
+    _popularstMoviesController.close();
+    _fetchNextPageController.close();
   }
 
   void getMovies(MovieType movieType) async {
@@ -85,12 +90,6 @@ class MovieBloc extends BlocBase {
       default:
     }
     loading = false;
-  }
-
-  void dispose() {
-    _latestMoviesController.close();
-    _popularstMoviesController.close();
-    _fetchNextPageController.close();
   }
 
   void _handleNextPage(MovieType movieType) {

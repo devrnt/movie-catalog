@@ -316,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
 
         StreamBuilder<List<Movie>>(
-          stream: likedBloc.likedMoviesStream,
+          stream: likedBloc.likedMoviesOut,
           initialData: [],
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
             if (snapshot.hasError) {

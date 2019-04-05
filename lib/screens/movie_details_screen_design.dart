@@ -402,14 +402,14 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
                 onPressed: () {
                   print(snapshot.data);
                   if (snapshot.data) {
-                    bloc.removeLikedSink.add(widget.movie);
+                    bloc.removeLikedIn.add(widget.movie);
 
                     _showSnackBar(
                         title: 'Removed from your library',
                         color: Colors.red,
                         icon: Icons.delete);
                   } else {
-                    bloc.addLikedSink.add(widget.movie);
+                    bloc.addLikedIn.add(widget.movie);
                     _showSnackBar(
                         title: 'Added to your library',
                         color: Colors.green,
