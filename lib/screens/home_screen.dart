@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/liked_bloc.dart';
+import 'package:movie_catalog/bloc/movie_bloc.dart';
 
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_list.dart';
@@ -52,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+
     _tabController = new TabController(vsync: this, length: _tabs.length);
 
     _movieService = new MovieService();
@@ -194,31 +197,6 @@ class _HomeScreenState extends State<HomeScreen>
     return _connectionStatus == 'ConnectivityResult.none' ? false : true;
   }
 
-  // Future<Null> _showAlert() async {
-  //   return showDialog<Null>(
-  //     context: context,
-  //     barrierDismissible: false, // user must tap button!
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Please turn on your internet.'),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               Text('Please turn on your internet.'),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: Text('EXIT'),
-  //             onPressed: () => SystemNavigator.pop(),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 5.0,
@@ -262,158 +240,126 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   TabBarView _buildTabBarView() {
-    // _fetchLatestMovies();
+    final MovieBloc movieBloc = BlocProvider.of<MovieBloc>(context);
+    final LikedBloc likedBloc = BlocProvider.of<LikedBloc>(context);
+
     return TabBarView(
       controller: _tabController,
       children: <Widget>[
-        // StreamBuilder(
-        //   stream: _streamController.stream.asBroadcastStream(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasError)
-        //       return Center(child:Text('There was an error. Please try again later.'));
-        //     switch (snapshot.connectionState) {
-        //       case ConnectionState.waiting:
-        //         return Center(child: CircularProgressIndicator());
-        //         break;
-        //       case ConnectionState.active:
-        //         return MovieGrid(snapshot.data, 'latest');
-        //         break;
-        //       default:
-        //         print(
-        //             'ConnectionState of the snapshot is ${snapshot.connectionState}');
-        //             return Text('Implemnt this further');
-        //     }
-        //   },
-        // ),
-        !grid
-            ? FutureBuilder<List<Movie>>(
-                future: _fetchLatestMovies(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.error),
-                          Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                          Text('Could not reach the server. Try again later.'),
-                        ],
-                      ),
-                    );
+        StreamBuilder<List<Movie>>(
+          stream: movieBloc.latestMoviesStream,
+          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.error),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
+                    Text('Could not reach the server. Please try again later.'),
+                  ],
+                ),
+              );
+            } else {
+              return NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    // second page should fetch
+                    movieBloc.fetchNextPageSink.add(MovieType.latest);
                   }
-                  return snapshot.hasData
-                      ? MovieList(snapshot.data, 'latest')
-                      : Center(child: CircularProgressIndicator());
                 },
-              )
-            : FutureBuilder<List<Movie>>(
-                future: _fetchLatestMovies(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.error),
-                          Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                          Text('Could not reach the server. Try again later.'),
-                        ],
+                child: snapshot.hasData
+                    ? !grid
+                        ? MovieList(
+                            snapshot.data,
+                            'latest',
+                          )
+                        : MovieGrid(snapshot.data, 'latest')
+                    : Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    );
-                  }
-                  return snapshot.hasData
-                      ? MovieGrid(snapshot.data, 'latest')
-                      : Center(child: CircularProgressIndicator());
-                },
-              ),
+              );
+            }
+          },
+        ),
+        StreamBuilder<List<Movie>>(
+          stream: movieBloc.popularMoviesStream,
+          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.error),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
+                    Text('Could not reach the server. Please try again later.'),
+                  ],
+                ),
+              );
+            }
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent) {
+                  // second page should fetch
+                  movieBloc.fetchNextPageSink.add(MovieType.popular);
+                }
+              },
+              child: snapshot.hasData
+                  ? !grid
+                      ? MovieList(snapshot.data, 'popular')
+                      : MovieGrid(snapshot.data, 'popular')
+                  : Center(child: Text('dzdzijdiz')),
+            );
+          },
+        ),
 
-        !grid
-            ? FutureBuilder<List<Movie>>(
-                future: _fetchPopularMovies(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.error),
-                          Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                          Text('Could not reach the server. Try again later.'),
-                        ],
-                      ),
-                    );
-                  }
-                  return snapshot.hasData
-                      ? MovieList(
-                          snapshot.data,
-                          'popular',
-                        )
-                      : Center(child: CircularProgressIndicator());
-                },
-              )
-            : FutureBuilder<List<Movie>>(
-                future: _fetchPopularMovies(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.error),
-                          Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                          Text('Could not reach the server. Try again later.'),
-                        ],
-                      ),
-                    );
-                  }
-                  return snapshot.hasData
-                      ? MovieGrid(
-                          snapshot.data,
-                          'popular',
-                        )
-                      : Center(child: CircularProgressIndicator());
-                },
-              ),
+        StreamBuilder<List<Movie>>(
+          stream: likedBloc.likedMoviesStream,
+          initialData: [],
+          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.error),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
+                    Text('There went something wrong'),
+                  ],
+                ),
+              );
+            }
+            return !grid
+                ? MovieList(snapshot.data, 'liked')
+                : MovieGridSaved(movies: snapshot.data);
+          },
+        ),
 
-        !grid
-            ? FutureBuilder<List<Movie>>(
-                future: _fetchSavedMovies(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData
-                      ? MovieList(snapshot.data, 'w')
-                      : Center(child: CircularProgressIndicator());
-                },
-              )
-            : FutureBuilder<List<Movie>>(
-                future: _fetchSavedMovies(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData
-                      ? MovieGridSaved(
-                          movies: snapshot.data,
-                        )
-                      : Center(child: CircularProgressIndicator());
-                },
-              ),
+        // !grid
+        //     ? FutureBuilder<List<Movie>>(
+        //         future: _fetchSavedMovies(),
+        //         builder: (context, snapshot) {
+        //           if (snapshot.hasError) print(snapshot.error);
+        //           return snapshot.hasData
+        //               ? MovieList(snapshot.data, 'w')
+        //               : Center(child: CircularProgressIndicator());
+        //         },
+        //       )
+        //     : FutureBuilder<List<Movie>>(
+        //         future: _fetchSavedMovies(),
+        //         builder: (context, snapshot) {
+        //           if (snapshot.hasError) print(snapshot.error);
+        //           return snapshot.hasData
+        //               ? MovieGridSaved(
+        //                   movies: snapshot.data,
+        //                 )
+        //               : Center(child: CircularProgressIndicator());
+        //         },
+        //       ),
       ],
     );
-  }
-
-  Future<List<Movie>> _fetchLatestMovies() {
-    return _movieService.fetchLatestMovies(http.Client(), 1);
-  }
-
-  Future<List<Movie>> _fetchPopularMovies() {
-    return _movieService.fetchPopularMovies(http.Client(), 1);
-  }
-
-  Future<List<Movie>> _fetchSavedMovies() {
-    return _storageService.readFile();
   }
 
   Widget _buildDrawer() {
@@ -539,16 +485,6 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
-
-  // Widget _createListView(
-  //     BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-  //   return ListView.builder(
-  //     itemCount: snapshot.data.length,
-  //     itemBuilder: (context, index) {
-
-  //     },
-  //   );
-  // }
 }
 
 void _launchLink(String link) async {
