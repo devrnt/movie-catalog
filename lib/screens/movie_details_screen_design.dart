@@ -389,7 +389,7 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
         title: Text(widget.movie.title, style: TextStyle(fontSize: 17.0)),
         actions: <Widget>[
           StreamBuilder<bool>(
-            stream: _bloc.isLikedStream,
+            stream: _bloc.isLikedOut,
             initialData: false,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return IconButton(
@@ -532,7 +532,7 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
     _bloc = new LikedMovieBloc(movie: widget.movie);
     // Simple pipe from the stream that lists all the favorites into
     // the BLoC that processes THIS particular movie
-    _subscription = widget.likedMoviesStream.listen(_bloc.likedMoviesSink.add);
+    _subscription = widget.likedMoviesStream.listen(_bloc.likedMovieIn.add);
   }
 
   Widget _buildSummary() {
