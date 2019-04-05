@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_details_screen_design.dart';
 import 'package:movie_catalog/services/movie_service.dart';
@@ -32,6 +34,8 @@ class MovieCardGrid extends StatelessWidget {
               maintainState: true,
               builder: (context) => MovieDetailsDesign(
                     movie: movie,
+                    likedMoviesStream:
+                        BlocProvider.of<LikedBloc>(context).likedMoviesStream,
                   ),
             ),
           ),
@@ -90,7 +94,6 @@ class MovieCardGrid extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildLabels() {
     return Expanded(
@@ -191,7 +194,6 @@ class MovieCardGrid extends StatelessWidget {
       ),
     );
   }
-
 
   Future<Movie> addMovieDetails(int id) async {
     Movie movie = await _movieService.fetchMovieById(http.Client(), id);

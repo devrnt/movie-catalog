@@ -17,16 +17,17 @@ class MovieList extends StatefulWidget {
   final dynamic config;
 
   MovieList(this.movies, this.type, [this.config]) {
-    if (type == 'liked') {
-      print('old ${movies.length}');
-      _fetchSavedMovies()
-          .then((movies) => print(movies.length.toString() + '\n======'));
-      print('moviegrid constructor is called $type');
-      if (type == 'liked') {
-        print('true');
-        createState().mounted;
-      }
-    }
+    print('Received movies: ${this.movies?.length}');
+    // if (type == 'liked') {
+    //   print('old ${movies?.length}');
+    //   _fetchSavedMovies()
+    //       .then((movies) => print(movies.length.toString() + '\n======'));
+    //   print('moviegrid constructor is called $type');
+    //   if (type == 'liked') {
+    //     print('true');
+    //     createState().mounted;
+    //   }
+    // }
   }
 
   Future<List<Movie>> _fetchSavedMovies() async {
@@ -38,9 +39,7 @@ class MovieList extends StatefulWidget {
   _MovieListState createState() => _MovieListState();
 }
 
-class _MovieListState extends State<MovieList>
-    with AutomaticKeepAliveClientMixin<MovieList> {
-  List<Movie> movies;
+class _MovieListState extends State<MovieList> {
   MovieService _movieService;
   ScrollController _scrollController;
 
@@ -49,16 +48,12 @@ class _MovieListState extends State<MovieList>
   int currentPageConfig = 2;
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   void initState() {
     super.initState();
-    movies = widget.movies;
     _movieService = new MovieService();
 
     _scrollController = new ScrollController();
-    _scrollController.addListener(_scrollListener);
+    //_scrollController.addListener(_scrollListener);
   }
 
   @override
@@ -69,20 +64,15 @@ class _MovieListState extends State<MovieList>
 
   @override
   Widget build(BuildContext context) {
-    return movies.length > 0
+    return widget.movies.length > 0
         ? ListView.builder(
             padding: EdgeInsets.fromLTRB(0.0, 12.0, 2.0, 0.0),
-            controller: _scrollController,
-            // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //   crossAxisCount: 3,
-            //   childAspectRatio: 0.545,
-            // ),
-            itemCount: movies.length,
-            itemBuilder: (context, index) {
+            itemCount: widget.movies.length,
+            itemBuilder: (BuildContext context, int index) {
               return new Column(
                 children: <Widget>[
                   MovieCardDesign(
-                    movie: movies[index],
+                    movie: widget.movies[index],
                   ),
                 ],
               );
@@ -94,6 +84,7 @@ class _MovieListState extends State<MovieList>
                 : Text('Your shelf is empty'));
   }
 
+// TODO: remove not used methods
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -102,7 +93,7 @@ class _MovieListState extends State<MovieList>
             .fetchLatestMovies(http.Client(), currentPageLatest)
             .then((newMovies) {
           setState(() {
-            movies.addAll(newMovies);
+            widget.movies.addAll(newMovies);
           });
           currentPageLatest++;
         });
@@ -112,7 +103,7 @@ class _MovieListState extends State<MovieList>
             .fetchPopularMovies(http.Client(), currentPagePopular)
             .then((newMovies) {
           setState(() {
-            movies.addAll(newMovies);
+            widget.movies.addAll(newMovies);
           });
           currentPagePopular++;
         });
