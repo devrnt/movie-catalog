@@ -1,37 +1,16 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/services/movie_service.dart';
-import 'package:movie_catalog/services/storage_service.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:movie_catalog/widgets/movie_card_grid.dart';
 
 class MovieGrid extends StatefulWidget {
-  final StorageService _storageService = new StorageService();
   final List<Movie> movies;
   final String type;
   // config used for passing the filter config
   final dynamic config;
 
-  MovieGrid(this.movies, this.type, [this.config]) {
-    if (type == 'liked') {
-      _fetchSavedMovies()
-          .then((movies) => print(movies.length.toString() + '\n======'));
-      print('moviegrid constructor is called $type');
-      if (type == 'liked') {
-        print('true');
-        createState().mounted;
-      }
-    }
-  }
-
-  Future<List<Movie>> _fetchSavedMovies() async {
-    List<Movie> movies = await _storageService.readFile();
-    return movies;
-  }
+  MovieGrid(this.movies, this.type, [this.config]);
 
   @override
   _MovieGridState createState() => _MovieGridState();
@@ -40,11 +19,7 @@ class MovieGrid extends StatefulWidget {
 class _MovieGridState extends State<MovieGrid>
     with AutomaticKeepAliveClientMixin<MovieGrid> {
   List<Movie> movies;
-  MovieService _movieService;
-  ScrollController _scrollController;
 
-  int currentPageLatest = 2;
-  int currentPagePopular = 2;
   int currentPageConfig = 2;
 
   @override
@@ -54,16 +29,6 @@ class _MovieGridState extends State<MovieGrid>
   void initState() {
     super.initState();
     movies = widget.movies;
-    _movieService = new MovieService();
-
-    _scrollController = new ScrollController();
-    _scrollController.addListener(_scrollListener);
-  }
-
-  @override
-  void deactivate() {
-    _scrollController.removeListener(() => _scrollController);
-    super.deactivate();
   }
 
   @override
@@ -71,7 +36,6 @@ class _MovieGridState extends State<MovieGrid>
     return movies.length > 0
         ? GridView.builder(
             padding: EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 0.0),
-            controller: _scrollController,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               childAspectRatio: 0.58,
@@ -91,46 +55,5 @@ class _MovieGridState extends State<MovieGrid>
             child: widget.type != 'liked'
                 ? Text('No search results')
                 : Text('Your shelf is empty'));
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      if (widget.type == 'latest') {
-        _movieService
-            .fetchLatestMovies(http.Client(), currentPageLatest)
-            .then((newMovies) {
-          setState(() {
-            movies.addAll(newMovies);
-          });
-          currentPageLatest++;
-        });
-      }
-      if (widget.type == 'popular') {
-        _movieService
-            .fetchPopularMovies(http.Client(), currentPagePopular)
-            .then((newMovies) {
-          setState(() {
-            movies.addAll(newMovies);
-          });
-          currentPagePopular++;
-        });
-      }
-      if (widget.type == 'config') {
-        _movieService
-            .fetchMoviesByConfig(
-                http.Client(),
-                currentPageConfig,
-                widget.config['genre'],
-                widget.config['quality'],
-                widget.config['rating'])
-            .then((newMovies) {
-          setState(() {
-            widget.movies.addAll(newMovies);
-          });
-          currentPageConfig++;
-        });
-      }
-    }
   }
 }

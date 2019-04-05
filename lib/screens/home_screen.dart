@@ -13,9 +13,6 @@ import 'package:movie_catalog/screens/movie_list.dart';
 import 'package:movie_catalog/screens/search_screen.dart';
 import 'package:movie_catalog/screens/suggestions_screen.dart';
 
-import 'package:movie_catalog/services/movie_service.dart';
-import 'package:movie_catalog/services/storage_service.dart';
-
 import 'package:movie_catalog/widgets/movie_grid.dart';
 import 'package:movie_catalog/widgets/movie_grid_saved.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,9 +32,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   TabController _tabController;
 
-  MovieService _movieService;
-  StorageService _storageService;
-
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
   // String result of the connection, gets updated by the subscription
@@ -56,9 +50,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
 
     _tabController = new TabController(vsync: this, length: _tabs.length);
-
-    _movieService = new MovieService();
-    _storageService = new StorageService();
 
     _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       print('onMessage $message');

@@ -5,7 +5,6 @@ import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 
 import 'package:movie_catalog/bloc/liked_movie_bloc.dart';
-import 'package:movie_catalog/bloc/movie_bloc.dart';
 import 'package:movie_catalog/models/subtitle.dart';
 import 'package:movie_catalog/services/storage_service.dart';
 import 'package:movie_catalog/services/subtitle_service.dart';
