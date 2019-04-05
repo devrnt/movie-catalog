@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_details_screen_design.dart';
 import 'package:movie_catalog/services/movie_service.dart';
@@ -13,26 +15,27 @@ import 'package:movie_catalog/colors.dart';
 
 import 'package:firebase_admob/firebase_admob.dart';
 
+import 'package:debug_mode/debug_mode.dart';
+
 class MovieCardDesign extends StatelessWidget {
   final Movie movie;
   final MovieService _movieService = new MovieService();
   final StorageService storageService = new StorageService();
 
-  static final MobileAdTargetingInfo targetingInfo = new MobileAdTargetingInfo(
-    childDirected: false,
-    testDevices: ['FCF4540BC12076FAF1490A4C6AC03170'],
-    keywords: [
-      'Movie',
-      'Movies',
-      'Cinema',
-      'Download',
-      'Yify',
-      'YTS',
-      'Watching',
-      'Netflix',
-      'Popcorn Time'
-    ],
-  );
+  static final MobileAdTargetingInfo targetingInfo =
+      new MobileAdTargetingInfo(childDirected: false, testDevices: [
+    'FCF4540BC12076FAF1490A4C6AC03170'
+  ], keywords: [
+    'Movie',
+    'Movies',
+    'Cinema',
+    'Download',
+    'Yify',
+    'YTS',
+    'Watching',
+    'Netflix',
+    'Popcorn Time'
+  ]);
 
   final InterstitialAd interstitialAd = new InterstitialAd(
       adUnitId: 'ca-app-pub-1624549113750524/5253207122',
@@ -51,20 +54,24 @@ class MovieCardDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-            interstitialAd
-              ..load()
-              ..show(),
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                maintainState: true,
-                builder: (context) => MovieDetailsDesign(
-                      movie: movie,
-                    ),
-              ),
-            )
-          },
+      onTap: () {
+        if (!DebugMode.isInDebugMode) {
+          interstitialAd
+            ..load()
+            ..show();
+        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            maintainState: true,
+            builder: (context) => MovieDetailsDesign(
+                  movie: movie,
+                  likedMoviesStream:
+                      BlocProvider.of<LikedBloc>(context).likedMoviesOut,
+                ),
+          ),
+        );
+      },
       child: _buildCard(context: context),
     );
   }

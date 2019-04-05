@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/liked_bloc.dart';
+import 'package:movie_catalog/bloc/movie_bloc.dart';
 
 import 'package:movie_catalog/colors.dart';
 
@@ -18,10 +21,16 @@ void main() {
 class MovieCatalog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Movie Catalog',
-      home: new HomeScreen(),
-      theme: _buildBlackTheme(),
+    return BlocProvider<MovieBloc>(
+      bloc: MovieBloc(),
+      child: BlocProvider<LikedBloc>(
+        bloc: LikedBloc(),
+        child: MaterialApp(
+          title: 'Movie Catalog',
+          home: HomeScreen(),
+          theme: _buildBlackTheme(),
+        ),
+      ),
     );
   }
 

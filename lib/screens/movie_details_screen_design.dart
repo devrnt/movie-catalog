@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/liked_bloc.dart';
+
+import 'package:movie_catalog/bloc/liked_movie_bloc.dart';
 import 'package:movie_catalog/models/subtitle.dart';
 import 'package:movie_catalog/services/storage_service.dart';
 import 'package:movie_catalog/services/subtitle_service.dart';
@@ -16,8 +20,12 @@ class MovieDetailsDesign extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final Movie movie;
+  final Stream<List<Movie>> likedMoviesStream;
 
-  MovieDetailsDesign({this.movie});
+  MovieDetailsDesign({
+    this.movie,
+    @required this.likedMoviesStream,
+  });
 
   @override
   MovieDetailsState createState() => new MovieDetailsState();
@@ -366,45 +374,100 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
   PermissionGroup permission = PermissionGroup.storage;
 
   bool liked = false;
+  LikedMovieBloc _bloc;
+
+  StreamSubscription _subscription;
 
   @override
   Widget build(BuildContext context) {
+    final LikedBloc bloc = BlocProvider.of<LikedBloc>(context);
+
     return Scaffold(
       key: widget._scaffoldKey,
       appBar: AppBar(
         title: Text(widget.movie.title, style: TextStyle(fontSize: 17.0)),
         actions: <Widget>[
-          IconButton(
-            tooltip: 'Add movie to your library',
-            iconSize: 20.0,
-            icon: Icon(
-              liked ? Icons.favorite : Icons.favorite_border,
-              color: liked ? Colors.white : Colors.grey,
-            ),
-            onPressed: () {
-              if (!liked) {
-                setState(() {
-                  _storageService.writeToFile(widget.movie);
-                  liked = !liked;
-                });
-                _showSnackBar(
-                    title: 'Added to your library',
-                    color: Colors.green,
-                    icon: Icons.done);
-              } else {
-                setState(() {
-                  _storageService.removeFromFile(widget.movie);
-                  liked = !liked;
-                });
+          StreamBuilder<bool>(
+            stream: _bloc.isLikedOut,
+            initialData: false,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              return IconButton(
+                tooltip: 'Add movie to your library',
+                iconSize: 20.0,
+                icon: Icon(
+                  snapshot.data ? Icons.favorite : Icons.favorite_border,
+                  color: snapshot.data ? Colors.white : Colors.grey,
+                ),
+                onPressed: () {
+                  print(snapshot.data);
+                  if (snapshot.data) {
+                    bloc.removeLikedIn.add(widget.movie);
 
-                _showSnackBar(
-                    title: 'Removed from your library',
-                    color: Colors.red,
-                    icon: Icons.delete);
-              }
-              // save the movie to the liked list
+                    _showSnackBar(
+                        title: 'Removed from your library',
+                        color: Colors.red,
+                        icon: Icons.delete);
+                  } else {
+                    bloc.addLikedIn.add(widget.movie);
+                    _showSnackBar(
+                        title: 'Added to your library',
+                        color: Colors.green,
+                        icon: Icons.done);
+                  }
+                  // if (!liked) {
+                  //   setState(() {
+                  //     _storageService.writeToFile(widget.movie);
+                  //     liked = !liked;
+                  //   });
+                  //   _showSnackBar(
+                  //       title: 'Added to your library',
+                  //       color: Colors.green,
+                  //       icon: Icons.done);
+                  // } else {
+                  //   setState(() {
+                  //     _storageService.removeFromFile(widget.movie);
+                  //     liked = !liked;
+                  //   });
+
+                  //   _showSnackBar(
+                  //       title: 'Removed from your library',
+                  //       color: Colors.red,
+                  //       icon: Icons.delete);
+                },
+              );
             },
-          )
+          ),
+          // IconButton(
+          //   tooltip: 'Add movie to your library',
+          //   iconSize: 20.0,
+          //   icon: Icon(
+          //     liked ? Icons.favorite : Icons.favorite_border,
+          //     color: liked ? Colors.white : Colors.grey,
+          //   ),
+          //   onPressed: () {
+          //     if (!liked) {
+          //       setState(() {
+          //         _storageService.writeToFile(widget.movie);
+          //         liked = !liked;
+          //       });
+          //       _showSnackBar(
+          //           title: 'Added to your library',
+          //           color: Colors.green,
+          //           icon: Icons.done);
+          //     } else {
+          //       setState(() {
+          //         _storageService.removeFromFile(widget.movie);
+          //         liked = !liked;
+          //       });
+
+          //       _showSnackBar(
+          //           title: 'Removed from your library',
+          //           color: Colors.red,
+          //           icon: Icons.delete);
+          //     }
+          //     // save the movie to the liked list
+          //   },
+          // )
         ],
       ),
       body: Container(
@@ -447,12 +510,28 @@ class MovieDetailsState extends State<MovieDetailsDesign> {
     super.initState();
     _storageService = new StorageService();
     _subtitleService = new SubtitleService();
+    _createBloc();
     _subtitles = _subtitleService.getSubtitles(widget.movie.imdbCode);
+
     _storageService.liked(widget.movie).then((result) {
       setState(() {
         liked = result;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    _bloc.dispose();
+    super.dispose();
+  }
+
+  void _createBloc() {
+    _bloc = new LikedMovieBloc(movie: widget.movie);
+    // Simple pipe from the stream that lists all the favorites into
+    // the BLoC that processes THIS particular movie
+    _subscription = widget.likedMoviesStream.listen(_bloc.likedMovieIn.add);
   }
 
   Widget _buildSummary() {
