@@ -247,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen>
       controller: _tabController,
       children: <Widget>[
         StreamBuilder<List<Movie>>(
-          stream: movieBloc.latestMoviesStream,
+          stream: movieBloc.latestMoviesOut,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -266,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen>
                   if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent) {
                     // second page should fetch
-                    movieBloc.fetchNextPageSink.add(MovieType.latest);
+                    movieBloc.fetchNextPageIn.add(MovieType.latest);
                   }
                 },
                 child: snapshot.hasData
@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen>
           },
         ),
         StreamBuilder<List<Movie>>(
-          stream: movieBloc.popularMoviesStream,
+          stream: movieBloc.popularMoviesOut,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -303,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen>
                 if (scrollInfo.metrics.pixels ==
                     scrollInfo.metrics.maxScrollExtent) {
                   // second page should fetch
-                  movieBloc.fetchNextPageSink.add(MovieType.popular);
+                  movieBloc.fetchNextPageIn.add(MovieType.popular);
                 }
               },
               child: snapshot.hasData

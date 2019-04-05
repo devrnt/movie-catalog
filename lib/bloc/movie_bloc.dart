@@ -1,142 +1,102 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:movie_catalog/bloc/bloc_provider.dart';
-import 'package:movie_catalog/services/storage_service.dart';
 import 'package:rxdart/rxdart.dart';
-
 import 'package:http/http.dart' as http;
 
+import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/models/movie.dart';
 
 class MovieBloc extends BlocBase {
-  int latestPage = 1;
-  int popularPage = 1;
+  /// Keeps track of the page to fetch the latest movies from the api
+  int _latestMoviesPage = 1;
+
+  /// Keeps track of the page to fetch the popularst movies from the api
+  int _popularMoviesPage = 1;
 
   // Latest movies
-  BehaviorSubject<List<Movie>> _latestMoviesController =
-      BehaviorSubject<List<Movie>>();
-  Sink<List<Movie>> get latestMoviesSink => _latestMoviesController.sink;
-  Stream<List<Movie>> get latestMoviesStream => _latestMoviesController.stream;
+  /// The [BehaviorSubject] is a [StreamController]
+  /// The controller has the latest 50 fetched movies
+  BehaviorSubject<List<Movie>> _latestMoviesController = new BehaviorSubject();
+
+  /// The [Sink] is the input for the [_latestMoviesController]
+  Sink<List<Movie>> get latestMoviesIn => _latestMoviesController.sink;
+
+  /// The [Stream] is the output for the [_latestMoviesController]
+  Stream<List<Movie>> get latestMoviesOut => _latestMoviesController.stream;
 
   // Popular movies
-  // TODO: figure out why this must be a replaySubject or Behviour
-  // Does not work with a PublishSubject, must be ReplaySubject or Behviour
-  BehaviorSubject<List<Movie>> _popularMoviesController =
-      BehaviorSubject<List<Movie>>();
-  Sink<List<Movie>> get popularMoviesSink => _popularMoviesController.sink;
-  Stream<List<Movie>> get popularMoviesStream =>
-      _popularMoviesController.stream;
+  /// The [BehaviorSubject] is a [StreamController]
+  /// The controller has the popularst 50 fetched movies
+  BehaviorSubject<List<Movie>> _popularstMoviesController =
+      new BehaviorSubject();
 
-  // Saved movies
-  BehaviorSubject<List<Movie>> _savedMoviesController =
-      BehaviorSubject<List<Movie>>();
-  Sink<List<Movie>> get savedMoviesSink => _savedMoviesController.sink;
-  Stream<List<Movie>> get savedMoviesStream => _savedMoviesController.stream;
+  /// The [Sink] is the input for the [_popularstMoviesController]
+  Sink<List<Movie>> get popularstMoviesIn => _popularstMoviesController.sink;
 
-  //  Future<List<Movie>> _fetchSavedMovies() {
-  //   return _storageService.readFile();
-  // }
+  /// The [Stream] is the output for the [_popularstMoviesController]
+  Stream<List<Movie>> get popularMoviesOut => _popularstMoviesController.stream;
 
-  // Used to update the page counter
-  // Looks at the MovieType that is passed
-  BehaviorSubject<MovieType> _fetchNextPage = BehaviorSubject<MovieType>();
-  Sink<MovieType> get fetchNextPageSink => _fetchNextPage.sink;
+  /// [PublishSubject] is the same as a [StreamController] but from the rxDart library
+  PublishSubject<MovieType> _fetchNextPageController =
+      new PublishSubject<MovieType>();
 
-  // Add new movie to saved movies list
-  BehaviorSubject<Movie> _likeMovie = BehaviorSubject<Movie>();
-  Sink<Movie> get likeMovieSink => _likeMovie.sink;
+  /// The [Sink] is the input to increment the [_latestMoviesPage] or [_popularMoviesPage]
+  Sink<MovieType> get fetchNextPageIn => _fetchNextPageController.sink;
 
-  // Keep track of the movies to pass to the publishSubject
-  List<Movie> latestMovies = [];
-  List<Movie> popularMovies = [];
-  List<Movie> savedMovies = [];
+  /// Keeps track of the latest movies to pass to the publishSubject
+  List<Movie> _latestMovies = [];
+
+  /// Keeps track of the popularst movies to pass to the publishSubject
+  List<Movie> _popularMovies = [];
 
   final MovieService _movieService = new MovieService();
-  final StorageService _storageService = new StorageService();
 
-  // Protection so the scroll notification won't spam the 'load more' method
+  /// Keeps track if there is already a handle request in progress to protect from to many requests
   bool loading = false;
 
   MovieBloc() {
-    getLatestMovies();
-    getPopularMovies();
-    getSavedMovies();
-    _fetchNextPage.stream.listen(_handleLogic);
-    _likeMovie.stream.listen(_handleLikeMovie);
+    getMovies(MovieType.latest);
+    getMovies(MovieType.popular);
+
+    _fetchNextPageController.stream.listen(_handleNextPage);
   }
 
-  void getSavedMovies() async {
-    List<Movie> movies = await _storageService.readFile();
-
-    savedMovies.addAll(UnmodifiableListView(movies));
-
-    print(savedMovies.length);
-    savedMoviesSink.add(savedMovies);
-  }
-
-  void getPopularMovies() async {
+  void getMovies(MovieType movieType) async {
+    List<Movie> fetchedMovies;
     loading = true;
-    List<Movie> fetchedMovies =
-        await _movieService.fetchPopularMovies(http.Client(), popularPage);
 
-    popularMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
+    switch (movieType) {
+      case MovieType.latest:
+        fetchedMovies = await _movieService.fetchLatestMovies(
+            http.Client(), _latestMoviesPage);
+        _latestMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
 
-    popularMoviesSink.add(popularMovies);
-    loading = false;
-  }
+        latestMoviesIn.add(_latestMovies);
+        break;
+      case MovieType.popular:
+        fetchedMovies = await _movieService.fetchPopularMovies(
+            http.Client(), _popularMoviesPage);
+        _popularMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
 
-  void getLatestMovies() async {
-    loading = true;
-    List<Movie> fetchedMovies =
-        await _movieService.fetchLatestMovies(http.Client(), latestPage);
-
-    latestMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
-
-    latestMoviesSink.add(latestMovies);
+        popularstMoviesIn.add(_popularMovies);
+        break;
+      default:
+    }
     loading = false;
   }
 
   void dispose() {
     _latestMoviesController.close();
-    _popularMoviesController.close();
-    _savedMoviesController.close();
-    _fetchNextPage.close();
-    _likeMovie.close();
+    _popularstMoviesController.close();
+    _fetchNextPageController.close();
   }
 
-  void _handleLogic(MovieType movieType) {
+  void _handleNextPage(MovieType movieType) {
     if (!loading) {
-      print(movieType);
-      print('-----------');
-      switch (movieType) {
-        case MovieType.latest:
-          latestPage++;
-          getLatestMovies();
-          break;
-        case MovieType.popular:
-          popularPage++;
-          getPopularMovies();
-          print('going to fetch pop movies');
-          break;
-        default:
-        // Do nothing
-      }
-      print('SCROLLING JUST BY MYSELF');
+      getMovies(movieType);
     }
-  }
-
-  void _handleLikeMovie(Movie movie) async {
-    _storageService.writeToFile(movie);
-
-    List<Movie> movies = await _storageService.readFile();
-    print(movies.length);
-
-    savedMovies = movies;
-    print(savedMovies.length);
-
-    savedMoviesSink.add(savedMovies);
   }
 }
 
