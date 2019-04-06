@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
+import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_list.dart';
@@ -14,7 +15,7 @@ import 'package:movie_catalog/screens/search_screen.dart';
 import 'package:movie_catalog/screens/suggestions_screen.dart';
 
 import 'package:movie_catalog/widgets/movie_grid.dart';
-import 'package:movie_catalog/widgets/movie_grid_saved.dart';
+import 'package:movie_catalog/widgets/no_internet_connection.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -28,22 +29,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  bool grid = false;
-
   TabController _tabController;
-
-  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging;
 
   // String result of the connection, gets updated by the subscription
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = new Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
+  bool get online =>
+      _connectionStatus == 'ConnectivityResult.none' ? false : true;
+
   final List<Tab> _tabs = [
-    Tab(child: Text('latest'.toUpperCase())),
-    Tab(child: Text('top rated'.toUpperCase())),
-    Tab(child: Text('library'.toUpperCase())),
+    Tab(child: Text(Strings.tabLatest.toUpperCase())),
+    Tab(child: Text(Strings.tabTopRated.toUpperCase())),
+    Tab(child: Text(Strings.tabLibrary.toUpperCase())),
   ];
+
+  bool grid = false;
 
   @override
   void initState() {
@@ -51,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _tabController = new TabController(vsync: this, length: _tabs.length);
 
+    _firebaseMessaging = new FirebaseMessaging();
     _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       print('onMessage $message');
     }, onResume: (Map<String, dynamic> message) {
@@ -84,139 +88,30 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: _buildAppBar(),
       drawer: _buildDrawer(),
-      body: online() ? _buildTabBarView() : noInternetConnection(),
+      body: online ? _buildBody() : NoInternetConnection(),
     );
-  }
-
-  Future<Null> initConnectivity() async {
-    String connectionStatus;
-    try {
-      connectionStatus = (await _connectivity.checkConnectivity()).toString();
-    } on PlatformException catch (e) {
-      print('There occured an error: ' + e.toString());
-      connectionStatus = 'Failed to get connectivity';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _connectionStatus = connectionStatus;
-    });
-  }
-
-  Widget noInternetConnection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Center(
-            child: Text(
-              'No internet connection',
-              style: TextStyle(fontSize: 18.0),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 15.0),
-          ),
-          Center(
-            child: Icon(
-              Icons.signal_wifi_off,
-              size: 32.0,
-              color: Colors.white.withOpacity(0.75),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 7.0),
-          ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.help_outline,
-                size: 22.0,
-                color: Colors.white.withOpacity(0.9),
-              ),
-              Text(
-                ' What can I do?',
-                style: TextStyle(
-                    fontSize: 15.0, color: Colors.white.withOpacity(0.9)),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 4.0),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Text(
-                '1. Make sure you have an internet connection. (VPN not supported  yet)',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 3.0),
-              ),
-              Text(
-                '2. Turn off wifi/mobile network.',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 3.0),
-              ),
-              Text(
-                // 'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.\nTry turning your WiFi on and off.',
-                '3. Turn wifi/mobile network back on.',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  bool online() {
-    return _connectionStatus == 'ConnectivityResult.none' ? false : true;
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 5.0,
-      title: Text(
-        'Movie Catalog',
-      ),
+      title: Text(Strings.appName),
       actions: <Widget>[
         IconButton(
-          icon: Icon(
-            grid ? Icons.grid_on : Icons.grid_off,
-            size: 20.0,
-          ),
+          icon: Icon(grid ? Icons.grid_on : Icons.grid_off, size: 20.0),
           onPressed: () {
-            print('do the switch');
             setState(() {
               grid = !grid;
-              print(grid);
             });
           },
         ),
         IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
-            online()
+            online
                 ? Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => SearchScreen()),
                   )
                 : print('Not online, searching is unavailable');
           },
@@ -230,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  TabBarView _buildTabBarView() {
+  Widget _buildBody() {
     final MovieBloc movieBloc = BlocProvider.of<MovieBloc>(context);
     final LikedBloc likedBloc = BlocProvider.of<LikedBloc>(context);
 
@@ -247,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen>
                   children: <Widget>[
                     Icon(Icons.error),
                     Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                    Text('Could not reach the server. Please try again later.'),
+                    Text(Strings.serverUnavailable),
                   ],
                 ),
               );
@@ -256,17 +151,16 @@ class _HomeScreenState extends State<HomeScreen>
                 onNotification: (ScrollNotification scrollInfo) {
                   if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent) {
-                    // second page should fetch
+                    // next page should fetch
                     movieBloc.fetchNextPageIn.add(MovieType.latest);
                   }
                 },
                 child: snapshot.hasData
                     ? !grid
                         ? MovieList(
-                            snapshot.data,
-                            'latest',
+                            movies: snapshot.data,
                           )
-                        : MovieGrid(snapshot.data, 'latest')
+                        : MovieGrid(movies: snapshot.data)
                     : Center(
                         child: CircularProgressIndicator(),
                       ),
@@ -299,8 +193,10 @@ class _HomeScreenState extends State<HomeScreen>
               },
               child: snapshot.hasData
                   ? !grid
-                      ? MovieList(snapshot.data, 'popular')
-                      : MovieGrid(snapshot.data, 'popular')
+                      ? MovieList(
+                          movies: snapshot.data,
+                        )
+                      : MovieGrid(movies: snapshot.data)
                   : Center(child: Text('dzdzijdiz')),
             );
           },
@@ -323,8 +219,10 @@ class _HomeScreenState extends State<HomeScreen>
               );
             }
             return !grid
-                ? MovieList(snapshot.data, 'liked')
-                : MovieGridSaved(movies: snapshot.data);
+                ? MovieList(
+                    movies: snapshot.data,
+                  )
+                : MovieGrid(movies: snapshot.data);
           },
         ),
 
@@ -402,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text('Search'),
               onTap: () {
-                online()
+                online
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -420,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text('Suggestions'),
               onTap: () {
-                online()
+                online
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -475,6 +373,27 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       ),
     );
+  }
+
+  Future<Null> initConnectivity() async {
+    String connectionStatus;
+    try {
+      connectionStatus = (await _connectivity.checkConnectivity()).toString();
+    } on PlatformException catch (e) {
+      print('There occured an error: ' + e.toString());
+      connectionStatus = 'Failed to get connectivity';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _connectionStatus = connectionStatus;
+    });
   }
 }
 

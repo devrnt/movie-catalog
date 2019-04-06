@@ -13,4 +13,5 @@ abstract class IMovieService {
       String genre, String quality, String rating);
   Future<Movie> fetchMovieById(http.Client client, int id);
   Future<List<Movie>> fetchSuggestions(http.Client client, int movieId);
+  Future<List<Movie>> fetchAllSuggestions(http.Client client, List<int> movieIds);
 }

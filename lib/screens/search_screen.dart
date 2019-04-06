@@ -93,7 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                 );
                               } else
-                                return MovieList(snapshot.data, 'search');
+                                return MovieList(movies: snapshot.data);
                           }
                         },
                       ),

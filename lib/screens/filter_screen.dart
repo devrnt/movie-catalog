@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/widgets/sortable_movie_grid.dart';
+import 'package:movie_catalog/widgets/movie_grid.dart';
 
 import 'package:movie_catalog/services/movie_service.dart';
 
@@ -204,14 +204,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.hasError) print(snapshot.error);
                     return snapshot.hasData
-                        ? SortableMovieGrid(
-                            movies: snapshot.data,
-                            config: {
-                              'genre': genre,
-                              'quality': quality,
-                              'rating': rating
-                            },
-                          )
+                        ? MovieGrid(movies: snapshot.data)
                         : Center(child: CircularProgressIndicator());
                   },
                 )),

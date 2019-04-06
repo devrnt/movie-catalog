@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/services/movie_service.dart';
 
 import 'package:movie_catalog/widgets/movie_card_design.dart';
 import 'package:movie_catalog/widgets/movie_card_grid.dart';

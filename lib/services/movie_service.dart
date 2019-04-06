@@ -115,10 +115,8 @@ class MovieService implements IMovieService {
   }
 
   @override
-  Future<List<Movie>> fetchSuggestions(
-      http.Client client, int movieId) async {
-    
-
+  Future<List<Movie>> fetchSuggestions(http.Client client, int movieId) async {
+    fetchAllSuggestions(client, [1, 2, 3]);
     String fetchUrl = '$apiUrlSuggestions?movie_id=$movieId';
     print(fetchUrl);
 
@@ -132,6 +130,33 @@ class MovieService implements IMovieService {
           fetchUrl +
           'is still online. If not the case check if the mapping is still correct.');
     }
+  }
+
+  @override
+  Future<List<Movie>> fetchAllSuggestions(
+      http.Client client, List<int> movieIds) async {
+    List<String> allEndpoints = [];
+
+    movieIds.forEach(
+        (movieId) => allEndpoints.add('$apiUrlSuggestions?movie_id=$movieId'));
+
+    List<Future> futures =
+        allEndpoints.map((endpoint) => client.get(endpoint)).toList();
+
+    List allResponses = await Future.wait(futures);
+
+    List<Movie> movies = [];
+    allResponses.forEach((response) {
+      if (response.statusCode == 200) {
+        // Use the compute function to run parseMovies in a separate isolate
+        movies.addAll(parseMovies(response.body));
+      } else {
+        throw Exception('Failed to load movies: Check if the api' +
+            // fetchUrl +
+            'is still online. If not the case check if the mapping is still correct.');
+      }
+    });
+    return movies;
   }
 }
 
