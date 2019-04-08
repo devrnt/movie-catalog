@@ -6,22 +6,20 @@ import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_details_screen_design.dart';
 import 'package:movie_catalog/services/movie_service.dart';
-import 'package:movie_catalog/services/storage_service.dart';
 
 import 'package:http/http.dart' as http;
 
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:movie_catalog/colors.dart';
 
 class MovieCardGrid extends StatelessWidget {
   final Movie movie;
   final MovieService _movieService = new MovieService();
-  final StorageService storageService = new StorageService();
 
   MovieCardGrid({this.movie}) {
+    // Movie comes from storage
     if (movie.torrents.length == 0) {
       addMovieDetails(movie.id)
-          .then((Movie updated) => movie.torrents = updated.torrents);
+          .then((Movie updatedMovie) => movie.torrents = updatedMovie.torrents);
     }
   }
 
@@ -91,106 +89,6 @@ class MovieCardGrid extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildLabels() {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          _buildYearLabel(),
-          _buildTitleLabel(),
-          _buildRating(),
-          _buildCategoriesLabel(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildYearLabel() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.0),
-      child: Text(
-        movie.year.toString().toUpperCase(),
-        style: TextStyle(
-            color: Colors.grey[500],
-            fontSize: 15.0,
-            fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  Widget _buildTitleLabel() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7.0),
-      child: Text(
-        movie.title.toString(),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        style: TextStyle(
-            color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w500),
-      ),
-    );
-  }
-
-  Widget _buildCategoriesLabel() {
-    String genres = '';
-
-    String formattedGenres = '';
-    if (movie.genres.length > 0) {
-      movie.genres.forEach((genre) {
-        genres += (genre + ', ');
-      });
-      formattedGenres = genres.substring(0, genres.length - 2);
-    } else {
-      formattedGenres = 'No genres';
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.0),
-      child: Text(
-        formattedGenres,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-        style: TextStyle(
-            color: Colors.grey[500],
-            fontSize: 15.0,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 0.2),
-      ),
-    );
-  }
-
-  Widget _buildRating() {
-    double amountOfStars = movie.rating / 2;
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.5),
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 3.0),
-            child: SmoothStarRating(
-                allowHalfRating: true,
-                starCount: 5,
-                rating: amountOfStars,
-                size: 17.0,
-                color: kAccentColor,
-                borderColor: Colors.grey[600]),
-          ),
-          Container(
-            padding: EdgeInsets.only(
-              left: 7.0,
-            ),
-            alignment: Alignment.center,
-            height: 20.0,
-            child: Text(
-              movie.rating.toString(),
-              style: TextStyle(color: Colors.grey),
-            ),
-          )
-        ],
       ),
     );
   }

@@ -6,7 +6,6 @@ import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_details_screen_design.dart';
 import 'package:movie_catalog/services/movie_service.dart';
-import 'package:movie_catalog/services/storage_service.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -20,7 +19,6 @@ import 'package:debug_mode/debug_mode.dart';
 class MovieCardDesign extends StatelessWidget {
   final Movie movie;
   final MovieService _movieService = new MovieService();
-  final StorageService storageService = new StorageService();
 
   static final MobileAdTargetingInfo targetingInfo =
       new MobileAdTargetingInfo(childDirected: false, testDevices: [
@@ -47,7 +45,7 @@ class MovieCardDesign extends StatelessWidget {
   MovieCardDesign({this.movie}) {
     if (movie.torrents.length == 0) {
       addMovieDetails(movie.id)
-          .then((Movie updated) => movie.torrents = updated.torrents);
+          .then((Movie updatedMovie) => movie.torrents = updatedMovie.torrents);
     }
   }
 
