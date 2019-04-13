@@ -20,12 +20,6 @@ class SuggestionsBloc extends BlocBase {
   /// The [Stream] is the output for the [_suggestionsController]
   Stream<List<Movie>> get suggestionsOut => _suggestionsController.stream;
 
-  // /// [PublishSubject] is the same as a [StreamController] but from the rxDart library
-  // PublishSubject<MovieType> _fetchNextPageController = new PublishSubject();
-
-  // /// The [Sink] is the input to increment the [_latestMoviesPage] or [_popularMoviesPage]
-  // Sink<MovieType> get fetchNextPageIn => _fetchNextPageController.sink;
-
   /// Keeps track of the latest movies
   List<Movie> _suggestions = [];
 
@@ -54,5 +48,6 @@ class SuggestionsBloc extends BlocBase {
     _suggestions = UnmodifiableListView<Movie>(fetchedMovies);
 
     suggestionsIn.add(_suggestions);
+    loading = false;
   }
 }
