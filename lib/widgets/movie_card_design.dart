@@ -16,7 +16,7 @@ import 'package:firebase_admob/firebase_admob.dart';
 
 import 'package:debug_mode/debug_mode.dart';
 
-class MovieCardDesign extends StatelessWidget {
+class MovieCard extends StatelessWidget {
   final Movie movie;
   final MovieService _movieService = new MovieService();
 
@@ -42,7 +42,7 @@ class MovieCardDesign extends StatelessWidget {
         print('InterstitialAd event is $event');
       });
 
-  MovieCardDesign({this.movie}) {
+  MovieCard({this.movie}) {
     if (movie.torrents.length == 0) {
       addMovieDetails(movie.id)
           .then((Movie updatedMovie) => movie.torrents = updatedMovie.torrents);

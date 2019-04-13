@@ -26,7 +26,7 @@ class _MovieListState extends State<MovieList>
             padding: EdgeInsets.fromLTRB(0.0, 12.0, 2.0, 0.0),
             itemCount: widget.movies.length,
             itemBuilder: (BuildContext context, int index) =>
-                MovieCardDesign(movie: widget.movies[index]))
+                MovieCard(movie: widget.movies[index]))
         : Center(child: Text(Strings.emptyLibrary));
   }
 }
