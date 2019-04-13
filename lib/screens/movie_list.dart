@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/widgets/movie_card_design.dart';
+import 'package:movie_catalog/widgets/movie_card.dart';
 
 class MovieList extends StatefulWidget {
   final List<Movie> movies;

@@ -16,13 +16,13 @@ import 'package:movie_catalog/models/torrent.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-class MovieDetailsDesign extends StatefulWidget {
+class MovieDetails extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final Movie movie;
   final Stream<List<Movie>> likedMoviesStream;
 
-  MovieDetailsDesign({
+  MovieDetails({
     this.movie,
     @required this.likedMoviesStream,
   });
@@ -364,7 +364,7 @@ class MovieDetailsDesign extends StatefulWidget {
   }
 }
 
-class MovieDetailsState extends State<MovieDetailsDesign> {
+class MovieDetailsState extends State<MovieDetails> {
   StorageService _storageService;
   SubtitleService _subtitleService;
   Subtitle _selectedSubtitle;
