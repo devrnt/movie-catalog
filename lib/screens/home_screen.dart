@@ -111,7 +111,9 @@ class _HomeScreenState extends State<HomeScreen>
             online
                 ? Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SearchScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => SearchScreen(),
+                    ),
                   )
                 : print('Not online, searching is unavailable');
           },

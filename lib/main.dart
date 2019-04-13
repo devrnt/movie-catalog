@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
+import 'package:movie_catalog/bloc/search_bloc.dart';
 import 'package:movie_catalog/bloc/suggestions_bloc.dart';
 
 import 'package:movie_catalog/colors.dart';
@@ -28,10 +29,13 @@ class MovieCatalog extends StatelessWidget {
         bloc: LikedBloc(),
         child: BlocProvider<SuggestionsBloc>(
           bloc: SuggestionsBloc(),
-          child: MaterialApp(
-            title: 'Movie Catalog',
-            home: HomeScreen(),
-            theme: _buildBlackTheme(),
+          child: BlocProvider<SearchBloc>(
+            bloc: SearchBloc(),
+            child: MaterialApp(
+              title: 'Movie Catalog',
+              home: HomeScreen(),
+              theme: _buildBlackTheme(),
+            ),
           ),
         ),
       ),

@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/search_bloc.dart';
+import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_list.dart';
-
-import 'package:movie_catalog/services/movie_service.dart';
 
 import 'package:movie_catalog/screens/filter_screen.dart';
 
@@ -15,18 +17,16 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  MovieService _movieService;
+  SearchBloc _bloc;
 
   TextEditingController _searchQueryController = new TextEditingController();
-
-  String _searchText;
+  Timer _debounce;
 
   @override
   void initState() {
     super.initState();
-    _movieService = new MovieService();
-    _searchText = '';
     _searchQueryController.addListener(_textInputListener);
+    _bloc = BlocProvider.of<SearchBloc>(context);
   }
 
   @override
@@ -59,47 +59,42 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
       body: Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: _searchText.isEmpty
-                  ? Container(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                    )
-                  : Expanded(
-                      child: FutureBuilder<List<Movie>>(
-                        future: _movieService.fetchMoviesByQuery(
-                            http.Client(), _searchText, 1),
-                        builder: (context, snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            default:
-                              if (snapshot.hasError) {
-                                return Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(Icons.error),
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 3.0)),
-                                      Text(
-                                          'Could not reach the server. Try again later.'),
-                                    ],
-                                  ),
-                                );
-                              } else
-                                return MovieList(movies: snapshot.data);
-                          }
-                        },
-                      ),
-                    ),
-            )
-          ],
+        child: StreamBuilder<bool>(
+          stream: _bloc.loadingOut,
+          builder: (context, snapshot) {
+            bool loading = snapshot?.data ?? false;
+            return loading
+                ? Center(child: CircularProgressIndicator())
+                : StreamBuilder<List<Movie>>(
+                    stream: _bloc.searchResultsOut,
+                    initialData: [],
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Movie>> snapshot) {
+                      return snapshot.hasError
+                          ? Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(Icons.error),
+                                  Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 3.0)),
+                                  Text(Strings.serverUnavailable),
+                                ],
+                              ),
+                            )
+                          : snapshot.hasData
+                              ? snapshot.data.isEmpty
+                                  ? _searchQueryController.text.isEmpty
+                                      ? Center(
+                                          child: Text(Strings.searchForAMovie))
+                                      : Center(
+                                          child: Text(Strings.noSearchResults))
+                                  : MovieList(movies: snapshot.data)
+                              : Center(child: CircularProgressIndicator());
+                    },
+                  );
+          },
         ),
       ),
     );
@@ -127,20 +122,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _textInputListener() {
-    if (_searchQueryController.text.isEmpty) {
-      print('event listerner called EMPTY');
-      setState(() {
-        _searchText = '';
-      });
-    } else {
-      print(_searchQueryController.text != _searchText);
-      if (_searchQueryController.text != _searchText) {
-        setState(() {
-          _searchText = _searchQueryController.text;
-        });
-      } else {
-        print('setstat not called');
-      }
+    if (_debounce?.isActive ?? false) {
+      _debounce.cancel();
     }
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _bloc.searchTextIn.add(_searchQueryController.text);
+    });
   }
 }
