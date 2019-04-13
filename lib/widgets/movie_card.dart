@@ -52,6 +52,7 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: new Key(movie.id.toString()),
       onTap: () {
         if (!DebugMode.isInDebugMode) {
           interstitialAd
