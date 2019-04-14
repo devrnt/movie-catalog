@@ -52,6 +52,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "version"
+    productFlavors {
+        free {
+            dimension "version"
+            manifestPlaceholders = [app_name:"Movie Catalog"]
+        }
+        pro {
+            dimension "version"
+            applicationIdSuffix ".pro"
+            versionNameSuffix "-pro"
+            manifestPlaceholders = [app_name:"Movie Catalog Pro"]
+        }
+    }
 }
 
 flutter {
