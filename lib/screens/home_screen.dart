@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
+import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/movie.dart';
@@ -203,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen>
             );
           },
         ),
-
         StreamBuilder<List<Movie>>(
           stream: likedBloc.likedMoviesOut,
           initialData: [],
@@ -227,28 +227,6 @@ class _HomeScreenState extends State<HomeScreen>
                 : MovieGrid(movies: snapshot.data);
           },
         ),
-
-        // !grid
-        //     ? FutureBuilder<List<Movie>>(
-        //         future: _fetchSavedMovies(),
-        //         builder: (context, snapshot) {
-        //           if (snapshot.hasError) print(snapshot.error);
-        //           return snapshot.hasData
-        //               ? MovieList(snapshot.data, 'w')
-        //               : Center(child: CircularProgressIndicator());
-        //         },
-        //       )
-        //     : FutureBuilder<List<Movie>>(
-        //         future: _fetchSavedMovies(),
-        //         builder: (context, snapshot) {
-        //           if (snapshot.hasError) print(snapshot.error);
-        //           return snapshot.hasData
-        //               ? MovieGridSaved(
-        //                   movies: snapshot.data,
-        //                 )
-        //               : Center(child: CircularProgressIndicator());
-        //         },
-        //       ),
       ],
     );
   }
@@ -261,6 +239,7 @@ class _HomeScreenState extends State<HomeScreen>
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
+              curve: ElasticInCurve(),
               margin: EdgeInsets.only(bottom: 2.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -305,9 +284,7 @@ class _HomeScreenState extends State<HomeScreen>
                 online
                     ? Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => SearchScreen()),
                       )
                     : print('Not online, searching is unavailable');
               },
@@ -324,12 +301,24 @@ class _HomeScreenState extends State<HomeScreen>
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SuggestionsScreen(),
-                        ),
+                            builder: (context) => SuggestionsScreen()),
                       )
                     : print('Not online, suggestions are unavailable');
               },
             ),
+            FlavorConfig.of(context).flavorBuild == FlavorBuild.Free
+                ? ListTile(
+                    leading: Icon(
+                      Icons.redeem,
+                      color: Theme.of(context).accentColor,
+                      size: 20.0,
+                    ),
+                    title: Text('Pro version'),
+                    onTap: () {
+                      _showProVersionDialog();
+                    },
+                  ) // Return empty widget
+                : SizedBox(),
             Divider(
               color: Colors.white30,
               height: 1.0,
@@ -397,11 +386,32 @@ class _HomeScreenState extends State<HomeScreen>
       _connectionStatus = connectionStatus;
     });
   }
+
+  void _showProVersionDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Pro version'),
+            content: Text(
+                '* There are no ads in the pro version\n* Be the first to receive new features'),
+            actions: <Widget>[
+              FlatButton(
+                textColor: Theme.of(context).accentColor,
+                child: Text('STORE'),
+                onPressed: () {
+                  _launchLink(
+                      'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog.pro');
+                },
+              )
+            ],
+          );
+        });
+  }
 }
 
 void _launchLink(String link) async {
   if (await canLaunch(link)) {
     await launch(link);
   }
-  print('lel');
 }
