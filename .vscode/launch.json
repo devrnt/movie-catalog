@@ -7,13 +7,21 @@
     {
       "name": "Flutter",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "args": [
+        "--flavor",
+        "free"
+      ]
     },
     {
       "name": "Flutter Pro",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main_pro.dart"
+      "program": "lib/main_pro.dart",
+      "args": [
+        "--flavor",
+        "pro"
+      ]
 
     }
   ]
