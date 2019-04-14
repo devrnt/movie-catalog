@@ -8,6 +8,7 @@ import 'package:movie_catalog/bloc/search_bloc.dart';
 import 'package:movie_catalog/bloc/suggestions_bloc.dart';
 
 import 'package:movie_catalog/colors.dart';
+import 'package:movie_catalog/config/flavor_config.dart';
 
 import 'package:movie_catalog/screens/home_screen.dart';
 
@@ -17,7 +18,12 @@ final SentryClient _sentry = new SentryClient(
     dsn: 'https://44ee1a5fe98040a2b2258a32f4cf31f4@sentry.io/1295373');
 
 void main() {
-  runApp(new MovieCatalog());
+  final flavorConfig = FlavorConfig(
+    child: MovieCatalog(),
+    flavorBuild: FlavorBuild.Free,
+  );
+
+  runApp(flavorConfig);
 }
 
 class MovieCatalog extends StatelessWidget {

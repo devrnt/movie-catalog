@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
+import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_details_screen.dart';
 import 'package:movie_catalog/services/movie_service.dart';
@@ -54,7 +55,8 @@ class MovieCard extends StatelessWidget {
     return GestureDetector(
       key: new Key(movie.id.toString()),
       onTap: () {
-        if (!DebugMode.isInDebugMode) {
+        print(FlavorConfig.of(context).flavorBuild);
+        if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Free) {
           interstitialAd
             ..load()
             ..show();
