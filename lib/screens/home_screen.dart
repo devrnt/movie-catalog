@@ -313,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen>
                       color: Theme.of(context).accentColor,
                       size: 20.0,
                     ),
-                    title: Text('Pro version'),
+                    title: Text('Buy Pro version'),
                     onTap: () {
                       _showProVersionDialog();
                     },
@@ -392,13 +392,13 @@ class _HomeScreenState extends State<HomeScreen>
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Pro version'),
+            title: Text('Buy Pro version'),
             content: Text(
                 '* There are no ads in the pro version\n* Be the first to receive new features'),
             actions: <Widget>[
               FlatButton(
                 textColor: Theme.of(context).accentColor,
-                child: Text('STORE'),
+                child: Text('BUY IN PLAY STORE'),
                 onPressed: () {
                   _launchLink(
                       'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog.pro');

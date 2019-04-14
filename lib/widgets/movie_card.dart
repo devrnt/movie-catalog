@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/bloc/bloc_provider.dart';
@@ -57,9 +58,15 @@ class MovieCard extends StatelessWidget {
       onTap: () {
         if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Free &&
             !DebugMode.isInDebugMode) {
-          interstitialAd
-            ..load()
-            ..show();
+          // Temp solution
+          // We could add another flag to display even less ads
+          bool displayAdFlag = new Random().nextBool();
+          print(displayAdFlag);
+          if (displayAdFlag) {
+            interstitialAd
+              ..load()
+              ..show();
+          }
         }
         Navigator.push(
           context,
