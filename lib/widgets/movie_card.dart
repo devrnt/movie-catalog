@@ -55,8 +55,8 @@ class MovieCard extends StatelessWidget {
     return GestureDetector(
       key: new Key(movie.id.toString()),
       onTap: () {
-        print(FlavorConfig.of(context).flavorBuild);
-        if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Free) {
+        if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Free &&
+            !DebugMode.isInDebugMode) {
           interstitialAd
             ..load()
             ..show();

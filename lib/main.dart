@@ -29,6 +29,11 @@ void main() {
 class MovieCatalog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String appNameSuffix = '';
+    if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro) {
+      appNameSuffix = 'Pro';
+    }
+
     return BlocProvider<MovieBloc>(
       bloc: MovieBloc(),
       child: BlocProvider<LikedBloc>(
@@ -38,7 +43,7 @@ class MovieCatalog extends StatelessWidget {
           child: BlocProvider<SearchBloc>(
             bloc: SearchBloc(),
             child: MaterialApp(
-              title: 'Movie Catalog',
+              title: 'Movie Catalog $appNameSuffix'.trim(),
               home: HomeScreen(),
               theme: _buildBlackTheme(),
             ),
