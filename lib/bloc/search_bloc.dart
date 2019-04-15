@@ -54,12 +54,16 @@ class SearchBloc extends BlocBase {
   void _handleSearchQuery(String searchQuery) async {
     if (searchQuery.isNotEmpty) {
       _loadingController.sink.add(true);
-      List<Movie> fetchedMovies =
-          await _movieService.fetchMoviesByQuery(http.Client(), searchQuery, 1);
+      try {
+        List<Movie> fetchedMovies = await _movieService.fetchMoviesByQuery(
+            http.Client(), searchQuery, 1);
 
-      _searchResults = UnmodifiableListView<Movie>(fetchedMovies);
+        _searchResults = UnmodifiableListView<Movie>(fetchedMovies);
+        searchResultsIn.add(_searchResults);
+      } catch (exception) {
+        _searchResultsController.addError(exception);
+      }
 
-      searchResultsIn.add(_searchResults);
       _loadingController.sink.add(false);
     } else {
       _searchResults = UnmodifiableListView<Movie>([]);

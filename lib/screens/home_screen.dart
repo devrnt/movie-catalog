@@ -14,6 +14,7 @@ import 'package:movie_catalog/screens/movie_list.dart';
 
 import 'package:movie_catalog/screens/search_screen.dart';
 import 'package:movie_catalog/screens/suggestions_screen.dart';
+import 'package:movie_catalog/widgets/api_not_available.dart';
 
 import 'package:movie_catalog/widgets/movie_grid.dart';
 import 'package:movie_catalog/widgets/no_internet_connection.dart';
@@ -138,70 +139,49 @@ class _HomeScreenState extends State<HomeScreen>
         StreamBuilder<List<Movie>>(
           stream: movieBloc.latestMoviesOut,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.error),
-                    Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                    Text(Strings.serverUnavailable),
-                  ],
-                ),
-              );
-            } else {
-              return NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification scrollInfo) {
-                  if (scrollInfo.metrics.pixels ==
-                      scrollInfo.metrics.maxScrollExtent) {
-                    // next page should fetch
-                    movieBloc.fetchNextPageIn.add(MovieType.latest);
-                  }
-                },
-                child: snapshot.hasData
-                    ? !grid
-                        ? MovieList(
-                            movies: snapshot.data,
-                          )
-                        : MovieGrid(movies: snapshot.data)
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      ),
-              );
-            }
+            return snapshot.hasError
+                ? ApiNotAvailable()
+                : NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo.metrics.pixels ==
+                          scrollInfo.metrics.maxScrollExtent) {
+                        // next page should fetch
+                        movieBloc.fetchNextPageIn.add(MovieType.latest);
+                      }
+                    },
+                    child: snapshot.hasData
+                        ? !grid
+                            ? MovieList(
+                                movies: snapshot.data,
+                              )
+                            : MovieGrid(movies: snapshot.data)
+                        : Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  );
           },
         ),
         StreamBuilder<List<Movie>>(
           stream: movieBloc.popularMoviesOut,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.error),
-                    Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                    Text('Could not reach the server. Please try again later.'),
-                  ],
-                ),
-              );
-            }
-            return NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent) {
-                  // second page should fetch
-                  movieBloc.fetchNextPageIn.add(MovieType.popular);
-                }
-              },
-              child: snapshot.hasData
-                  ? !grid
-                      ? MovieList(
-                          movies: snapshot.data,
-                        )
-                      : MovieGrid(movies: snapshot.data)
-                  : Center(child: Text('dzdzijdiz')),
-            );
+            return snapshot.hasError
+                ? ApiNotAvailable()
+                : NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo.metrics.pixels ==
+                          scrollInfo.metrics.maxScrollExtent) {
+                        // second page should fetch
+                        movieBloc.fetchNextPageIn.add(MovieType.popular);
+                      }
+                    },
+                    child: snapshot.hasData
+                        ? !grid
+                            ? MovieList(
+                                movies: snapshot.data,
+                              )
+                            : MovieGrid(movies: snapshot.data)
+                        : Center(child: Text('dzdzijdiz')),
+                  );
           },
         ),
         StreamBuilder<List<Movie>>(
@@ -392,6 +372,7 @@ class _HomeScreenState extends State<HomeScreen>
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: Theme.of(context).primaryColorLight,
             title: Text('Buy Pro version'),
             content: Text(
                 '* There are no ads in the pro version\n* Be the first to receive new features'),

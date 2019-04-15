@@ -9,6 +9,7 @@ import 'package:movie_catalog/data/strings.dart';
 import 'package:movie_catalog/models/subtitle.dart';
 import 'package:movie_catalog/services/subtitle_service.dart';
 import 'package:movie_catalog/utils/torrent_builder.dart';
+import 'package:movie_catalog/widgets/api_not_available.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -196,7 +197,7 @@ class MovieDetailsState extends State<MovieDetails> {
           FutureBuilder(
               future: _subtitles,
               builder: (context, snapshot) {
-                if (snapshot.hasError) print(snapshot.error);
+                if (snapshot.hasError) ApiNotAvailable();
                 if (snapshot.hasData) {
                   if (snapshot.data.isEmpty) {
                     return Text(
@@ -636,6 +637,7 @@ class MovieDetailsState extends State<MovieDetails> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Theme.of(context).primaryColorLight,
           title: Text('No Torrent app installed'),
           content: SingleChildScrollView(
             child: ListBody(

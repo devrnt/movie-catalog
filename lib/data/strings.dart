@@ -8,7 +8,7 @@ class Strings {
   static String noInternetTitle = 'No internet connection';
 
   static String serverUnavailable =
-      'Could not reach the server. Please try again later.';
+      'Could not reach the yts.am server';
   static String emptyLibrary = 'Your library is empty';
 
   static String noSearchResults = 'No movies found for this query';

@@ -5,6 +5,7 @@ import 'package:movie_catalog/bloc/suggestions_bloc.dart';
 
 import 'package:movie_catalog/screens/movie_list.dart';
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/widgets/api_not_available.dart';
 
 class SuggestionsScreen extends StatefulWidget {
   @override
@@ -14,7 +15,8 @@ class SuggestionsScreen extends StatefulWidget {
 class _SuggestionsScreenState extends State<SuggestionsScreen> {
   @override
   Widget build(BuildContext context) {
-    final SuggestionsBloc bloc = BlocProvider.of<SuggestionsBloc>(context)..getSuggestions();
+    final SuggestionsBloc bloc = BlocProvider.of<SuggestionsBloc>(context)
+      ..getSuggestions();
 
     return Scaffold(
       appBar: AppBar(
@@ -27,6 +29,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
+                      backgroundColor: Theme.of(context).primaryColorLight,
                       content: Text(
                           'Suggestions are based on the movies in your library.'),
                     );
@@ -52,16 +55,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                       child: Text(
                           'No suggestions available.\nClick the help icon for more info.'));
                 }
-                return Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.error),
-                      Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                      Text('Could not reach the server. Try again later.'),
-                    ],
-                  ),
-                );
+                return ApiNotAvailable();
               } else
                 return MovieList(movies: snapshot.data);
           }

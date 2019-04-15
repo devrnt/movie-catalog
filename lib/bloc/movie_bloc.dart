@@ -74,18 +74,26 @@ class MovieBloc extends BlocBase {
 
     switch (movieType) {
       case MovieType.latest:
-        fetchedMovies = await _movieService.fetchLatestMovies(
-            http.Client(), _latestMoviesPage);
-        _latestMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
+        try {
+          fetchedMovies = await _movieService.fetchLatestMovies(
+              http.Client(), _latestMoviesPage);
+          _latestMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
 
-        latestMoviesIn.add(_latestMovies);
+          latestMoviesIn.add(_latestMovies);
+        } catch (exception) {
+          _latestMoviesController.addError(exception);
+        }
         break;
       case MovieType.popular:
-        fetchedMovies = await _movieService.fetchPopularMovies(
-            http.Client(), _popularMoviesPage);
-        _popularMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
+        try {
+          fetchedMovies = await _movieService.fetchPopularMovies(
+              http.Client(), _popularMoviesPage);
+          _popularMovies.addAll(UnmodifiableListView<Movie>(fetchedMovies));
 
-        popularstMoviesIn.add(_popularMovies);
+          popularstMoviesIn.add(_popularMovies);
+        } catch (exception) {
+          _popularstMoviesController.addError(exception);
+        }
         break;
       default:
     }

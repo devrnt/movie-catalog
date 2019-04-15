@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/widgets/api_not_available.dart';
 import 'package:movie_catalog/widgets/movie_grid.dart';
 
 import 'package:movie_catalog/services/movie_service.dart';
@@ -202,7 +203,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   future: _movieService.fetchMoviesByConfig(
                       http.Client(), 1, genre, quality, rating),
                   builder: (context, snapshot) {
-                    if (snapshot.hasError) print(snapshot.error);
+                    if (snapshot.hasError) return ApiNotAvailable();
                     return snapshot.hasData
                         ? MovieGrid(movies: snapshot.data)
                         : Center(child: CircularProgressIndicator());
