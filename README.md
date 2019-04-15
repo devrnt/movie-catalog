@@ -8,8 +8,10 @@ For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
 
 ## Todo
+* Catch errors and display them for u good user experience
+* Add in torrents different types, like web and bluray option, 3d etc
+* Look in reviews for features
 * Add tests
-* Add Flavour build (pro version)
 
 ## Building
 To build the **free** version: 
