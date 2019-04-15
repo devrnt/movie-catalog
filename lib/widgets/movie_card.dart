@@ -12,7 +12,6 @@ import 'package:movie_catalog/services/movie_service.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:movie_catalog/colors.dart';
 
 import 'package:firebase_admob/firebase_admob.dart';
 
@@ -88,12 +87,12 @@ class MovieCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(10.0, 3.0, 10.0, 0.0),
       child: Card(
-        elevation: 5.0,
+        elevation: 4.0,
         color: Theme.of(context).primaryColorLight,
         child: Row(
           children: <Widget>[
             _buildCover(),
-            _buildLabels(),
+            _buildLabels(context),
             // _buildArrow(),
           ],
         ),
@@ -116,15 +115,15 @@ class MovieCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLabels() {
+  Widget _buildLabels(BuildContext context) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           _buildYearLabel(),
-          _buildTitleLabel(),
-          _buildRating(),
+          _buildTitleLabel(context),
+          _buildRating(context),
           _buildCategoriesLabel(),
         ],
       ),
@@ -144,16 +143,16 @@ class MovieCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleLabel() {
+  Widget _buildTitleLabel(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 7.0),
-      child: Text(
-        movie.title.toString(),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        style: TextStyle(
-            color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w500),
-      ),
+      child: Text(movie.title,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          style: Theme.of(context)
+              .textTheme
+              .subhead
+              .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500)),
     );
   }
 
@@ -184,7 +183,7 @@ class MovieCard extends StatelessWidget {
     );
   }
 
-  Widget _buildRating() {
+  Widget _buildRating(BuildContext context) {
     double amountOfStars = movie.rating / 2;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.5),
@@ -197,7 +196,7 @@ class MovieCard extends StatelessWidget {
                 starCount: 5,
                 rating: amountOfStars,
                 size: 17.0,
-                color: kAccentColor,
+                color: Theme.of(context).accentColor,
                 borderColor: Colors.grey[600]),
           ),
           Container(

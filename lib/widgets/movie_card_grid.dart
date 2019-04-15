@@ -79,8 +79,9 @@ class MovieCardGrid extends StatelessWidget {
                     Text(
                       movie.year.toString(),
                       style: TextStyle(
-                        color: kIconColor,
-                        fontSize: 13.0,
+                        color:
+                            Theme.of(context).iconTheme.color.withOpacity(0.6),
+                        fontSize: 13.0
                       ),
                     )
                   ],

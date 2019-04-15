@@ -15,7 +15,7 @@ class Strings {
   static String searchForAMovie = 'Search for a movie...';
 
   static String addMovieToLikes = 'Add movie to your library';
-  static String addedMovieToLikes = 'Removed from your library';
+  static String addedMovieToLikes = 'Added from your library';
   static String removedMovieToLikes = 'Removed from your library';
 
   static String noSubtitlesAvailable = 'No subtitles available';

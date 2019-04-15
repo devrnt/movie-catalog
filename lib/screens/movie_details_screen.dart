@@ -135,7 +135,11 @@ class MovieDetailsState extends State<MovieDetails> {
             child: Text(
               'Summary'.toUpperCase(),
               style: TextStyle(
-                  color: Colors.white30,
+                  color: Theme.of(context)
+                      .textTheme
+                      .subhead
+                      .color
+                      .withOpacity(0.3),
                   fontWeight: FontWeight.w500,
                   fontSize: 14.0),
             ),
@@ -143,10 +147,11 @@ class MovieDetailsState extends State<MovieDetails> {
           Text(
             widget.movie.summary,
             style: TextStyle(
-                color: Colors.white.withOpacity(0.80),
-                height: 1.55,
+                color:
+                    Theme.of(context).textTheme.subhead.color.withOpacity(0.8),
+                height: 1.50,
                 fontSize: 14.5,
-                wordSpacing: 1.2),
+                wordSpacing: 1),
           ),
         ],
       ),
@@ -189,7 +194,11 @@ class MovieDetailsState extends State<MovieDetails> {
             child: Text(
               subtitleString,
               style: TextStyle(
-                  color: Colors.white30,
+                  color: Theme.of(context)
+                      .textTheme
+                      .subhead
+                      .color
+                      .withOpacity(0.3),
                   fontWeight: FontWeight.w500,
                   fontSize: 14.0),
             ),
@@ -204,7 +213,11 @@ class MovieDetailsState extends State<MovieDetails> {
                       Strings.noSubtitlesAvailable,
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        color: Colors.white.withOpacity(0.80),
+                        color: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .color
+                            .withOpacity(0.8),
                       ),
                     );
                   } else {
@@ -256,7 +269,16 @@ class MovieDetailsState extends State<MovieDetails> {
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 10.0),
-                            child: Text(sub.language),
+                            child: Text(
+                              sub.language,
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .subhead
+                                    .color
+                                    .withOpacity(0.8),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -334,7 +356,6 @@ class MovieDetailsState extends State<MovieDetails> {
               ),
               DecoratedBox(
                 decoration: BoxDecoration(
-                  //color: Colors.lightGreen
                   gradient: LinearGradient(
                     begin: Alignment(0.87, 1.5),
                     end: Alignment(1.0, 0.0),
@@ -372,14 +393,26 @@ class MovieDetailsState extends State<MovieDetails> {
                       Text(
                         widget.movie.year.toString().toUpperCase(),
                         style: TextStyle(
-                            color: Colors.grey[500],
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimary
+                                .withOpacity(0.5),
                             fontSize: 15.0,
                             fontWeight: FontWeight.w600),
                       ),
                       Text(
                         widget.movie.title,
-                        style: TextStyle(
-                            fontSize: 22.0, fontWeight: FontWeight.w600),
+                        style: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .copyWith(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .subhead
+                                    .color
+                                    .withOpacity(0.9),
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.w600),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -407,7 +440,14 @@ class MovieDetailsState extends State<MovieDetails> {
                 children: <Widget>[
                   Text(
                     'Length'.toUpperCase(),
-                    style: TextStyle(fontSize: 10.0, color: Colors.white30),
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      color: Theme.of(context)
+                          .textTheme
+                          .subhead
+                          .color
+                          .withOpacity(0.3),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 3.0),
@@ -416,7 +456,11 @@ class MovieDetailsState extends State<MovieDetails> {
                     _fromMinutesToHourNotation(widget.movie.runtime),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: Colors.white.withOpacity(0.75),
+                        color: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .color
+                            .withOpacity(0.8),
                         fontWeight: FontWeight.w400),
                   ),
                 ],
@@ -427,8 +471,12 @@ class MovieDetailsState extends State<MovieDetails> {
                   Text(
                     'Language'.toUpperCase(),
                     style: TextStyle(
-                      fontSize: 10.0,
-                      color: Colors.white30,
+                      fontSize: 10.5,
+                      color: Theme.of(context)
+                          .textTheme
+                          .subhead
+                          .color
+                          .withOpacity(0.3),
                     ),
                   ),
                   Padding(
@@ -438,7 +486,11 @@ class MovieDetailsState extends State<MovieDetails> {
                     widget.movie.language,
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: Colors.white.withOpacity(0.75),
+                        color: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .color
+                            .withOpacity(0.8),
                         fontWeight: FontWeight.w400),
                   ),
                 ],
@@ -448,7 +500,14 @@ class MovieDetailsState extends State<MovieDetails> {
                 children: <Widget>[
                   Text(
                     'Rating'.toUpperCase(),
-                    style: TextStyle(fontSize: 10.0, color: Colors.white30),
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      color: Theme.of(context)
+                          .textTheme
+                          .subhead
+                          .color
+                          .withOpacity(0.3),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 1.0),
@@ -457,7 +516,11 @@ class MovieDetailsState extends State<MovieDetails> {
                     widget.movie.rating.toString(),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: Colors.white.withOpacity(0.75),
+                        color: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .color
+                            .withOpacity(0.8),
                         fontWeight: FontWeight.w400),
                   ),
                 ],
@@ -550,7 +613,11 @@ class MovieDetailsState extends State<MovieDetails> {
               child: Text(
                 'Torrents:'.toUpperCase(),
                 style: TextStyle(
-                    color: Colors.white30,
+                    color: Theme.of(context)
+                        .textTheme
+                        .subhead
+                        .color
+                        .withOpacity(0.3),
                     fontWeight: FontWeight.w500,
                     fontSize: 14.0),
               ),
@@ -628,7 +695,8 @@ class MovieDetailsState extends State<MovieDetails> {
           Text(
             genreString,
             style: TextStyle(
-                color: Colors.white30,
+                color:
+                    Theme.of(context).textTheme.subhead.color.withOpacity(0.3),
                 fontWeight: FontWeight.w500,
                 fontSize: 14.0),
           ),
@@ -639,7 +707,7 @@ class MovieDetailsState extends State<MovieDetails> {
             formattedGenres,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
+              color: Theme.of(context).textTheme.subhead.color.withOpacity(0.8),
               fontSize: 14.0,
             ),
           ),
