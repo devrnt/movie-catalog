@@ -541,93 +541,31 @@ class MovieDetailsState extends State<MovieDetails> {
   Widget _buildTorrents(List<Torrent> torrents, Color iconColor) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-          Widget>[
-        Text(
-          'Torrents:'.toUpperCase(),
-          style: TextStyle(
-              color: Colors.white30,
-              fontWeight: FontWeight.w500,
-              fontSize: 14.0),
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 10.0),
-        ),
-        Container(
-          child: Row(
-            children: torrents.map((torrent) {
-              return Padding(
-                padding: EdgeInsets.only(right: 5.0),
-                child: RaisedButton(
-                  elevation: 4.0,
-                  color: Theme.of(context).primaryColorLight,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 17.0, horizontal: 15.0),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          torrent.quality,
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 4.0),
-                        ),
-                        Text(
-                          (torrent.size / 1048576).floor().toString() + 'MB',
-                          style: TextStyle(fontWeight: FontWeight.w300),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 3.0),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 2.0),
-                                  child: Icon(
-                                    Icons.arrow_upward,
-                                    color: iconColor,
-                                    size: 15.0,
-                                  ),
-                                ),
-                                Text(torrent.seeds.toString()),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 3.0),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 2.0),
-                                  child: Icon(
-                                    Icons.arrow_downward,
-                                    color: iconColor,
-                                    size: 15.0,
-                                  ),
-                                ),
-                                Text(torrent.peers.toString()),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  onPressed: () {
-                    String magnetLink = TorrentBuilder.constructMagnetLink(
-                        torrent, widget.movie);
-                    _launchLink(magnetLink, context);
-                  },
-                ),
-              );
-            }).toList(),
-          ),
-        )
-      ]),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: Text(
+                'Torrents:'.toUpperCase(),
+                style: TextStyle(
+                    color: Colors.white30,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.0),
+              ),
+            ),
+            Container(
+              child: Wrap(
+                runSpacing: 10.0,
+                spacing: 12.0,
+                direction: Axis.horizontal,
+                children: torrents.map((torrent) {
+                  return _buildTorrentItem(torrent, iconColor);
+                }).toList(),
+              ),
+            ),
+          ]),
     );
   }
 
@@ -707,6 +645,84 @@ class MovieDetailsState extends State<MovieDetails> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTorrentItem(Torrent torrent, Color iconColor) {
+    return RaisedButton(
+      elevation: 4.0,
+      color: Theme.of(context).primaryColorLight,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0),
+              child: Text(
+                '${torrent.type.substring(0, 1).toUpperCase()}${torrent.type.substring(1)}',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).accentColor),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0),
+              child: Text(
+                torrent.quality,
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 3.0),
+              child: Text(
+                (torrent.size / 1048576).floor().toString() + 'MB',
+                style: TextStyle(fontWeight: FontWeight.w300),
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(right: 2.0),
+                      child: Icon(
+                        Icons.arrow_upward,
+                        color: iconColor,
+                        size: 15.0,
+                      ),
+                    ),
+                    Text(torrent.seeds.toString()),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.0),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(right: 2.0),
+                        child: Icon(
+                          Icons.arrow_downward,
+                          color: iconColor,
+                          size: 15.0,
+                        ),
+                      ),
+                      Text(torrent.peers.toString()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      onPressed: () {
+        String magnetLink =
+            TorrentBuilder.constructMagnetLink(torrent, widget.movie);
+        _launchLink(magnetLink, context);
+      },
     );
   }
 }

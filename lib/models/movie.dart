@@ -47,9 +47,6 @@ class Movie {
     if (jsonTorrentList != null) {
       listTorrents =
           jsonTorrentList.map<Torrent>((t) => Torrent.fromJson(t)).toList();
-      if (listTorrents.length > 2) {
-        listTorrents = listTorrents.sublist(0, 2);
-      }
     } else {
       listTorrents = new List();
     }
