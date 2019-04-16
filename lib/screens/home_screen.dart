@@ -363,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen>
               trailing: Switch(
                 value: widget.darkModeEnabled,
                 activeColor: Theme.of(context).accentColor,
-                onChanged: BlocProvider.of<ThemeBloc>(context).changeTheme,
+                onChanged: BlocProvider.of<ThemeBloc>(context).changeTheme.add,
               ),
             ),
           ],
