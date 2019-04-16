@@ -23,10 +23,10 @@ class _MovieGridState extends State<MovieGrid>
   Widget build(BuildContext context) {
     return widget.movies.isNotEmpty
         ? GridView.builder(
-            padding: EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 0.0),
+            padding: EdgeInsets.fromLTRB(6.0, 12.0, 0.0, 6.0),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              childAspectRatio: 0.58,
+              childAspectRatio: 0.56,
             ),
             itemCount: widget.movies.length,
             itemBuilder: (context, index) =>

@@ -41,9 +41,9 @@ class MovieCardGrid extends StatelessWidget {
 
   Widget _buildCard({BuildContext context}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+      padding: EdgeInsets.fromLTRB(2.0, 1.0, 2.0, 1.0),
       child: Card(
-        elevation: 5.0,
+        elevation: 4.0,
         color: Theme.of(context).primaryColorLight,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
@@ -53,17 +53,18 @@ class MovieCardGrid extends StatelessWidget {
             children: <Widget>[
               Center(
                 child: FadeInImage.assetNetwork(
-                  fadeInDuration: Duration(milliseconds: 750),
+                  fadeInDuration: Duration(milliseconds: 550),
                   image: movie.coverImageMedium ??
                       movie.coverImageLarge ??
                       'assets/images/cover_placeholder.jpg',
                   placeholder: 'assets/images/cover_placeholder.jpg',
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(7.0),
+                padding: EdgeInsets.all(6.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(

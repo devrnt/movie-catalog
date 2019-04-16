@@ -197,7 +197,7 @@ class MovieCard extends StatelessWidget {
                 rating: amountOfStars,
                 size: 17.0,
                 color: Theme.of(context).accentColor,
-                borderColor: Colors.grey[600]),
+                borderColor: Colors.grey[500]),
           ),
           Container(
             padding: EdgeInsets.only(
