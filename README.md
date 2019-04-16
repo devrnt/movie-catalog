@@ -8,7 +8,7 @@ For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
 
 ## Todo
-* Look in reviews for features
+* Watch poster fullscreen
 * Add tests
 
 ## Building
