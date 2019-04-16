@@ -15,7 +15,7 @@ class ThemeBloc extends BlocBase {
 
   final ThemeService _themeService = new ThemeService();
 
-  bool _darkModeEnabled = false;
+  bool _darkModeEnabled = true;
 
   ThemeBloc() {
     getThemeMode();
