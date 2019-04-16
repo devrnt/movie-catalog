@@ -9,8 +9,6 @@ import 'package:movie_catalog/services/movie_service.dart';
 
 import 'package:http/http.dart' as http;
 
-import 'package:movie_catalog/colors.dart';
-
 class MovieCardGrid extends StatelessWidget {
   final Movie movie;
   final MovieService _movieService = new MovieService();
@@ -79,10 +77,11 @@ class MovieCardGrid extends StatelessWidget {
                     Text(
                       movie.year.toString(),
                       style: TextStyle(
-                        color:
-                            Theme.of(context).iconTheme.color.withOpacity(0.6),
-                        fontSize: 13.0
-                      ),
+                          color: Theme.of(context)
+                              .iconTheme
+                              .color
+                              .withOpacity(0.6),
+                          fontSize: 13.0),
                     )
                   ],
                 ),

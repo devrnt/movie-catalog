@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
+import 'package:movie_catalog/bloc/theme_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/data/strings.dart';
 
@@ -25,6 +26,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
 class HomeScreen extends StatefulWidget {
+  final bool darkModeEnabled;
+
+  HomeScreen({@required this.darkModeEnabled});
+
   @override
   _HomeScreenState createState() => new _HomeScreenState();
 }
@@ -233,25 +238,27 @@ class _HomeScreenState extends State<HomeScreen>
                   Padding(
                     padding: EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
                     child: Text(
-                      'Movie Catalog',
+                      Strings.appName,
                       style: TextStyle(
                         fontSize: 18.0,
-                        color: Colors.white,
+                        color: Theme.of(context).textTheme.headline.color,
                       ),
                     ),
                   )
                 ],
               ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Theme.of(context).primaryColorDark,
-                    Theme.of(context).primaryColor,
-                  ],
-                ),
-              ),
+              decoration: widget.darkModeEnabled
+                  ? BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                          Theme.of(context).primaryColorDark,
+                          Theme.of(context).primaryColorLight,
+                        ],
+                      ),
+                    )
+                  : null,
             ),
             ListTile(
               leading: Icon(
@@ -300,14 +307,15 @@ class _HomeScreenState extends State<HomeScreen>
                   ) // Return empty widget
                 : SizedBox(),
             Divider(
-              color: Colors.white30,
-              height: 1.0,
+              color:
+                  Theme.of(context).textTheme.headline.color.withOpacity(0.2),
+              height: 1,
             ),
             ListTile(
               leading: Icon(
                 Icons.star,
                 color: Theme.of(context).accentColor,
-                size: 21.0,
+                size: 21,
               ),
               title: Text('Rate on Google Play'),
               onTap: () {
@@ -333,12 +341,30 @@ class _HomeScreenState extends State<HomeScreen>
               leading: Icon(
                 Icons.share,
                 color: Theme.of(context).accentColor,
-                size: 21.0,
+                size: 21,
               ),
               title: Text('Share Movie Catalog'),
               onTap: () {
                 _launchLink('https://app.jonasdevrient.be');
               },
+            ),
+            Divider(
+              color:
+                  Theme.of(context).textTheme.headline.color.withOpacity(0.2),
+              height: 1,
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.brightness_6,
+                color: Theme.of(context).accentColor,
+                size: 21,
+              ),
+              title: Text('Dark Mode'),
+              trailing: Switch(
+                value: widget.darkModeEnabled,
+                activeColor: Theme.of(context).accentColor,
+                onChanged: BlocProvider.of<ThemeBloc>(context).changeTheme,
+              ),
             ),
           ],
         ),

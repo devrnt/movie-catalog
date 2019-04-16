@@ -63,19 +63,24 @@ class MovieDetailsState extends State<MovieDetails> {
                 tooltip: Strings.addMovieToLikes,
                 iconSize: 20.0,
                 icon: snapshot.data == true
-                    ? Icon(Icons.favorite, color: Colors.white)
-                    : Icon(Icons.favorite_border, color: Colors.grey),
+                    ? Icon(Icons.favorite, color: Theme.of(context).accentColor)
+                    : Icon(Icons.favorite_border,
+                        color: Theme.of(context)
+                            .textTheme
+                            .subtitle
+                            .color
+                            .withOpacity(0.7)),
                 onPressed: () {
                   if (snapshot.data == true) {
                     bloc.removeLikedIn.add(widget.movie);
                     _showSnackBar(
-                        title: Strings.addedMovieToLikes,
+                        title: Strings.removedMovieToLikes,
                         color: Colors.red,
                         icon: Icons.delete);
                   } else {
                     bloc.addLikedIn.add(widget.movie);
                     _showSnackBar(
-                        title: Strings.removedMovieToLikes,
+                        title: Strings.addedMovieToLikes,
                         color: Colors.green,
                         icon: Icons.done);
                   }
@@ -183,7 +188,7 @@ class MovieDetailsState extends State<MovieDetails> {
   }
 
   Widget _buildSubtitles() {
-    final String subtitleString = 'subtitles:'.toUpperCase();
+    final String subtitleString = 'subtitles'.toUpperCase();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
       child: Column(
@@ -402,17 +407,10 @@ class MovieDetailsState extends State<MovieDetails> {
                       ),
                       Text(
                         widget.movie.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .copyWith(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .subhead
-                                    .color
-                                    .withOpacity(0.9),
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w600),
+                        style: Theme.of(context).textTheme.display2.copyWith(
+                            color: Theme.of(context).textTheme.display1.color,
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w600),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -553,7 +551,8 @@ class MovieDetailsState extends State<MovieDetails> {
           Text(
             'Links'.toUpperCase(),
             style: TextStyle(
-                color: Colors.white30,
+                color:
+                    Theme.of(context).textTheme.subhead.color.withOpacity(0.3),
                 fontWeight: FontWeight.w500,
                 fontSize: 14.0),
           ),
@@ -575,10 +574,12 @@ class MovieDetailsState extends State<MovieDetails> {
                 padding: EdgeInsets.symmetric(horizontal: 7.0),
               ),
               RaisedButton(
-                color: Colors.white,
+                color: Theme.of(context).accentColor,
                 child: Text(
                   'IMDB'.toUpperCase(),
-                  style: TextStyle(color: Theme.of(context).primaryColor),
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.8),
+                  ),
                 ),
                 onPressed: () {
                   String url =
@@ -611,7 +612,7 @@ class MovieDetailsState extends State<MovieDetails> {
             Padding(
               padding: EdgeInsets.only(bottom: 10.0),
               child: Text(
-                'Torrents:'.toUpperCase(),
+                'Torrents'.toUpperCase(),
                 style: TextStyle(
                     color: Theme.of(context)
                         .textTheme
@@ -671,8 +672,8 @@ class MovieDetailsState extends State<MovieDetails> {
 
   Widget _buildGenres() {
     final String genreString = widget.movie.genres.length > 1
-        ? 'Genres:'.toUpperCase()
-        : 'Genre:'.toUpperCase();
+        ? 'Genres'.toUpperCase()
+        : 'Genre'.toUpperCase();
     String genres = '';
 
     String formattedGenres = '';

@@ -6,11 +6,11 @@ import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
 import 'package:movie_catalog/bloc/search_bloc.dart';
 import 'package:movie_catalog/bloc/suggestions_bloc.dart';
+import 'package:movie_catalog/bloc/theme_bloc.dart';
 
-import 'package:movie_catalog/colors.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
-
 import 'package:movie_catalog/screens/home_screen.dart';
+import 'package:movie_catalog/theme/theme_builder.dart';
 
 import 'package:sentry/sentry.dart';
 
@@ -23,12 +23,19 @@ void main() {
     flavorBuild: FlavorBuild.Free,
   );
 
-  runApp(flavorConfig);
+  runApp(
+    BlocProvider<ThemeBloc>(
+      bloc: ThemeBloc(),
+      child: flavorConfig,
+    ),
+  );
 }
 
 class MovieCatalog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ThemeBloc _themeBloc = BlocProvider.of<ThemeBloc>(context);
+
     String appNameSuffix = '';
     if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro) {
       appNameSuffix = 'Pro';
@@ -41,52 +48,24 @@ class MovieCatalog extends StatelessWidget {
         child: BlocProvider<SuggestionsBloc>(
           bloc: SuggestionsBloc(),
           child: BlocProvider<SearchBloc>(
-            bloc: SearchBloc(),
-            child: MaterialApp(
-              title: 'Movie Catalog $appNameSuffix'.trim(),
-              home: HomeScreen(),
-              theme: _buildBlackTheme(),
-            ),
-          ),
+              bloc: SearchBloc(),
+              child: StreamBuilder(
+                stream: _themeBloc.darkThemeEnabled,
+                initialData: false,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  bool darkModeEnabled = snapshot.data;
+                  return MaterialApp(
+                    title: 'Movie Catalog $appNameSuffix'.trim(),
+                    theme: darkModeEnabled
+                        ? ThemeBuilder.buildBlackTheme()
+                        : ThemeBuilder.buildLightTheme(),
+                    home: HomeScreen(darkModeEnabled: darkModeEnabled),
+                  );
+                },
+              )),
         ),
       ),
     );
-  }
-
-  ThemeData _buildBlackTheme() {
-    final ThemeData base = ThemeData.dark();
-    return base.copyWith(
-      accentColor: kAccentColor,
-      primaryColor: kPrimaryColor,
-      primaryColorLight: kPrimaryLight,
-      primaryColorDark: kPrimaryDark,
-      scaffoldBackgroundColor: kPrimaryColor,
-      cardColor: kPrimaryDark,
-      textSelectionColor: kAccentColor,
-      textTheme: _buildBlackTextTheme(base.textTheme),
-      primaryTextTheme: _buildBlackTextTheme(base.primaryTextTheme),
-      accentTextTheme: _buildBlackTextTheme(base.accentTextTheme),
-      primaryIconTheme: base.iconTheme.copyWith(color: kIconColor),
-      canvasColor: kPrimaryLight,
-    );
-  }
-
-  TextTheme _buildBlackTextTheme(TextTheme base) {
-    return base
-        .copyWith(
-          headline: base.headline.copyWith(
-            fontWeight: FontWeight.normal,
-          ),
-          title: base.title.copyWith(fontSize: 18.0),
-          caption: base.caption.copyWith(
-            fontWeight: FontWeight.normal,
-            fontSize: 14.0,
-          ),
-        )
-        .apply(
-          displayColor: kPrimaryColor,
-          bodyColor: kSecondaryColor,
-        );
   }
 
   // Sentry help methods
