@@ -355,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             ListTile(
               leading: Icon(
-                Icons.brightness_6,
+                Icons.brightness_2,
                 color: Theme.of(context).accentColor,
                 size: 21,
               ),
