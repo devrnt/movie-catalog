@@ -10,6 +10,7 @@ import 'package:movie_catalog/models/subtitle.dart';
 import 'package:movie_catalog/services/subtitle_service.dart';
 import 'package:movie_catalog/utils/torrent_builder.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
+import 'package:photo_view/photo_view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -381,11 +382,15 @@ class MovieDetailsState extends State<MovieDetails> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                FadeInImage.assetNetwork(
-                  image: '${widget.movie.coverImageLarge}',
-                  // 'https://www.countryflags.io/${sub.countryCode}/flat/32.png',
-                  width: 93.0,
-                  placeholder: 'assets/images/cover_placeholder.jpg',
+                InkWell(
+                  onTap: () {
+                    _showCoverFullScreen();
+                  },
+                  child: FadeInImage.assetNetwork(
+                    image: '${widget.movie.coverImageLarge}',
+                    width: 93.0,
+                    placeholder: 'assets/images/cover_placeholder.jpg',
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -793,5 +798,22 @@ class MovieDetailsState extends State<MovieDetails> {
         _launchLink(magnetLink, context);
       },
     );
+  }
+
+  void _showCoverFullScreen() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            child: PhotoView(
+              initialScale: 0.65,
+              minScale: 0.55,
+              maxScale: 0.75,
+              imageProvider: NetworkImage('${widget.movie.coverImageLarge}'),
+              enableRotation: false,
+              backgroundDecoration: BoxDecoration(color: Colors.transparent),
+            ),
+          );
+        });
   }
 }

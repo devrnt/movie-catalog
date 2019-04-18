@@ -8,8 +8,12 @@ For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
 
 ## Todo
-* Watch poster fullscreen
+* Sentry
+* Firebase message opens play store
 * Add tests
+
+### Done this version
+* Watch poster fullscreen
 
 ## Building
 To build the **free** version: 
