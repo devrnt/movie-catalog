@@ -61,17 +61,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _tabController = new TabController(vsync: this, length: _tabs.length);
 
-    _firebaseMessaging = new FirebaseMessaging();
-    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
-      print('onMessage $message');
-    }, onResume: (Map<String, dynamic> message) {
-      print('oneResume $message');
-    }, onLaunch: (Map<String, dynamic> message) {
-      print('onLaunch $message');
-    });
-    _firebaseMessaging.getToken().then((token) {
-      print(token);
-    });
+    initFirebaseMessaging();
 
     initConnectivity();
     _connectivitySubscription =
@@ -390,6 +380,46 @@ class _HomeScreenState extends State<HomeScreen>
 
     setState(() {
       _connectionStatus = connectionStatus;
+    });
+  }
+
+  void initFirebaseMessaging() {
+    _firebaseMessaging = new FirebaseMessaging();
+    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+      final notificationAction = message['data']['notification_action'];
+      switch (notificationAction) {
+        case 'open_play_store':
+          String linkSuffix = widget.darkModeEnabled ? '.pro' : '';
+          _launchLink(
+              'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
+          break;
+        default:
+      }
+    }, onResume: (Map<String, dynamic> message) {
+      final notificationAction = message['data']['notification_action'];
+      switch (notificationAction) {
+        case 'open_play_store':
+          String linkSuffix = widget.darkModeEnabled ? '.pro' : '';
+          _launchLink(
+              'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
+          break;
+        default:
+      }
+      print(notificationAction);
+    }, onLaunch: (Map<String, dynamic> message) {
+      final notificationAction = message['data']['notification_action'];
+      switch (notificationAction) {
+        case 'open_play_store':
+          String linkSuffix = widget.darkModeEnabled ? '.pro' : '';
+          _launchLink(
+              'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
+          break;
+        default:
+      }
+      print('on Launch $message');
+    });
+    _firebaseMessaging.getToken().then((token) {
+      print('Firebase Message token: $token');
     });
   }
 
