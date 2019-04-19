@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/movie_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 class ApiNotAvailable extends StatelessWidget {
@@ -6,11 +8,12 @@ class ApiNotAvailable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MovieBloc _movieBloc = BlocProvider.of<MovieBloc>(context);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // Icon(Icons.cancel, size: 50.0, color: Theme.of(context).accentColor),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
@@ -34,7 +37,27 @@ class ApiNotAvailable extends StatelessWidget {
               Text(Strings.serverUnavailable),
             ],
           ),
-          Text('Try again later')
+          RaisedButton(
+            color: Theme.of(context).accentColor,
+            onPressed: () {
+              Scaffold.of(context).showSnackBar(
+                new SnackBar(
+                  content: new Text(
+                    Strings.retry,
+                    style: TextStyle(color: Colors.black.withOpacity(0.8)),
+                  ),
+                  backgroundColor: Theme.of(context).accentColor,
+                ),
+              );
+              _movieBloc.resetMovieBlocIn.add(null);
+            },
+            child: Text(
+              Strings.retryButton,
+              style: TextStyle(
+                color: Colors.black.withOpacity(0.8),
+              ),
+            ),
+          )
         ],
       ),
     );

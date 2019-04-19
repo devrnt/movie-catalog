@@ -24,7 +24,7 @@ class NoInternetConnection extends StatelessWidget {
             child: Icon(
               Icons.signal_wifi_off,
               size: 32.0,
-              color: Colors.white.withOpacity(0.75),
+              color: Theme.of(context).iconTheme.color.withOpacity(0.75),
             ),
           ),
           Padding(
@@ -35,12 +35,12 @@ class NoInternetConnection extends StatelessWidget {
               Icon(
                 Icons.help_outline,
                 size: 22.0,
-                color: Colors.white.withOpacity(0.9),
+                color: Theme.of(context).iconTheme.color,
               ),
               Text(
                 ' What can I do?',
                 style: TextStyle(
-                    fontSize: 15.0, color: Colors.white.withOpacity(0.9)),
+                    fontSize: 15.0, color: Theme.of(context).iconTheme.color),
               ),
             ],
           ),

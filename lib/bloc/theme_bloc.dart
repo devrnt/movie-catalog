@@ -24,14 +24,12 @@ class ThemeBloc extends BlocBase {
 
   void getThemeMode() async {
     _darkModeEnabled = await _themeService.readFile();
-    print('This is what I got from the file reader $_darkModeEnabled');
     changeTheme.add(_darkModeEnabled);
   }
 
   void _handleChangeTheme(bool event) {
     _darkModeEnabled = event;
     _themeService.writeToFile(_darkModeEnabled);
-    print('Ive written $_darkModeEnabled to the file service');
   }
 
   void dispose() {

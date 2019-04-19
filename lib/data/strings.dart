@@ -20,4 +20,7 @@ class Strings {
   static String noSubtitlesAvailable = 'No subtitles available';
 
   static String acceptPermission = 'Please accept the permission';
+
+  static String retryButton = 'RETRY';
+  static String retry = 'Retrying...';
 }

@@ -44,6 +44,13 @@ class MovieBloc extends BlocBase {
   /// The [Sink] is the input to increment the [_latestMoviesPage] or [_popularMoviesPage]
   Sink<MovieType> get fetchNextPageIn => _fetchNextPageController.sink;
 
+  /// The [BehaviorSubject] is a [StreamController]
+  /// The controller has the possibility to reset the movie streams
+  BehaviorSubject<void> _resetMovieBlocController = new BehaviorSubject();
+
+  /// The [Sink] is the input for the [_resetMovieBlocController]
+  Sink<void> get resetMovieBlocIn => _resetMovieBlocController.sink;
+
   /// Keeps track of the latest movies
   List<Movie> _latestMovies = [];
 
@@ -60,12 +67,14 @@ class MovieBloc extends BlocBase {
     getMovies(MovieType.popular);
 
     _fetchNextPageController.stream.listen(_handleNextPage);
+    _resetMovieBlocController.stream.listen(_handleResetMovieBlocs);
   }
 
   void dispose() {
     _latestMoviesController.close();
     _popularstMoviesController.close();
     _fetchNextPageController.close();
+    _resetMovieBlocController.close();
   }
 
   void getMovies(MovieType movieType) async {
@@ -113,6 +122,11 @@ class MovieBloc extends BlocBase {
 
       getMovies(movieType);
     }
+  }
+
+  void _handleResetMovieBlocs(void event) {
+    getMovies(MovieType.latest);
+    getMovies(MovieType.popular);
   }
 }
 
