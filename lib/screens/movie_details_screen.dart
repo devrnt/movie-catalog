@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/cast_bloc.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 
 import 'package:movie_catalog/bloc/liked_movie_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
+import 'package:movie_catalog/models/cast.dart';
 import 'package:movie_catalog/models/subtitle.dart';
 import 'package:movie_catalog/services/subtitle_service.dart';
 import 'package:movie_catalog/utils/torrent_builder.dart';
+import 'package:movie_catalog/utils/widget_helper.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:movie_catalog/widgets/cast_item.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -44,6 +47,7 @@ class MovieDetailsState extends State<MovieDetails> {
 
   bool liked = false;
   LikedMovieBloc _bloc;
+  CastBloc _castBloc;
 
   StreamSubscription _subscription;
 
@@ -74,16 +78,12 @@ class MovieDetailsState extends State<MovieDetails> {
                 onPressed: () {
                   if (snapshot.data == true) {
                     bloc.removeLikedIn.add(widget.movie);
-                    _showSnackBar(
-                        title: Strings.removedMovieToLikes,
-                        color: Colors.red,
-                        icon: Icons.delete);
+                    WidgetHelper.showSnackbar(context,
+                        Strings.removedMovieToLikes, Colors.red, Icons.delete);
                   } else {
                     bloc.addLikedIn.add(widget.movie);
-                    _showSnackBar(
-                        title: Strings.addedMovieToLikes,
-                        color: Colors.green,
-                        icon: Icons.done);
+                    WidgetHelper.showSnackbar(context,
+                        Strings.addedMovieToLikes, Colors.green, Icons.done);
                   }
                 },
               );
@@ -98,6 +98,7 @@ class MovieDetailsState extends State<MovieDetails> {
             _buildLabels(),
             _buildSummary(),
             _buildGenres(),
+            _buildCast(),
             _buildSubtitles(),
             _buildTorrents(
                 widget.movie.torrents, Theme.of(context).accentColor),
@@ -125,6 +126,7 @@ class MovieDetailsState extends State<MovieDetails> {
 
   void _createBloc() {
     _bloc = new LikedMovieBloc(movie: widget.movie);
+    _castBloc = new CastBloc(movie: widget.movie);
     // Simple pipe from the stream that lists all the favorites into
     // the BLoC that processes this particular movie
     _subscription = widget.likedMoviesStream.listen(_bloc.likedMovieIn.add);
@@ -162,30 +164,6 @@ class MovieDetailsState extends State<MovieDetails> {
         ],
       ),
     );
-  }
-
-  void _showSnackBar({String title, Color color, IconData icon}) {
-    final snackbar = SnackBar(
-      content: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 10.0),
-            child: Icon(
-              icon,
-              size: 20.0,
-            ),
-          ),
-          Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-      duration: Duration(seconds: 2),
-      backgroundColor: color,
-    );
-    widget._scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
   Widget _buildSubtitles() {
@@ -313,18 +291,13 @@ class MovieDetailsState extends State<MovieDetails> {
   void _downloadFile(String url) async {
     if (await _checkPermission()) {
       await _subtitleService.downloadSubtitle(url);
-      _showSnackBar(
-          color: Colors.green,
-          icon: Icons.done,
-          title: 'Subtitle downloaded in your Downloads folder');
+      WidgetHelper.showSnackbar(
+          context, Strings.subtitleDownloaded, Colors.green, Icons.done);
     } else {
       await _requestPermission();
       if (await _checkPermission() == false) {
-        _showSnackBar(
-            color: Colors.amber[700],
-            icon: Icons.warning,
-            title: Strings.acceptPermission);
-        //
+        WidgetHelper.showSnackbar(context, Strings.acceptPermission,
+            Colors.amber[700], Icons.warning);
       } else {
         _downloadFile(url);
       }
@@ -383,9 +356,8 @@ class MovieDetailsState extends State<MovieDetails> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 InkWell(
-                  onTap: () {
-                    _showCoverFullScreen();
-                  },
+                  onTap: () => WidgetHelper.showFullScreenImageDialog(
+                      context, '${widget.movie.coverImageLarge}'),
                   child: FadeInImage.assetNetwork(
                     image: '${widget.movie.coverImageLarge}',
                     width: 93.0,
@@ -800,20 +772,58 @@ class MovieDetailsState extends State<MovieDetails> {
     );
   }
 
-  void _showCoverFullScreen() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            child: PhotoView(
-              initialScale: 0.65,
-              minScale: 0.55,
-              maxScale: 0.75,
-              imageProvider: NetworkImage('${widget.movie.coverImageLarge}'),
-              enableRotation: false,
-              backgroundDecoration: BoxDecoration(color: Colors.transparent),
+  Widget _buildCast() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              'Cast'.toUpperCase(),
+              style: TextStyle(
+                  color: Theme.of(context)
+                      .textTheme
+                      .subhead
+                      .color
+                      .withOpacity(0.3),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.0),
             ),
-          );
-        });
+          ),
+          Container(
+            height: 80,
+            alignment: Alignment.centerLeft,
+            child: StreamBuilder(
+              stream: _castBloc.castOut,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                      child:
+                          Text('Something happened while fetching the cast'));
+                }
+                if (snapshot.hasData) {
+                  List<Cast> cast = snapshot.data;
+                  return ListView(
+                    children:
+                        cast.map((actor) => CastItem(cast: actor)).toList(),
+                    scrollDirection: Axis.horizontal,
+                  );
+                } else {
+                  return SizedBox(
+                    height: 12.0,
+                    width: 12.0,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

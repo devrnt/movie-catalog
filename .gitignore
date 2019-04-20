@@ -8,6 +8,7 @@ build/
 
 .flutter-plugins
 android/key.properties
-lib/sentry_dsn_key.dart
 
 .idea/
+
+lib/config/keys.dart

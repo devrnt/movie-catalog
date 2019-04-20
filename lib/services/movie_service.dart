@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_catalog/config/keys.dart';
+import 'package:movie_catalog/models/cast.dart';
 
 import 'package:movie_catalog/services/imovie_service.dart';
 
@@ -158,6 +160,22 @@ class MovieService implements IMovieService {
     });
     return movies;
   }
+
+  Future<dynamic> fetchCast(http.Client client, String imdb) async {
+    String url =
+        'https://api.themoviedb.org/3/movie/$imdb?api_key=${Keys.theMovieDb}&append_to_response=credits';
+
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      // Use the compute function to run parseMovies in a separate isolate
+      return compute(parseCast, response.body);
+      // return compute(parseMovie, response.body);
+    } else {
+      throw Exception('Failed to load movies: Check if the api' +
+          url +
+          'is still online. If not the case check if the mapping is still correct.');
+    }
+  }
 }
 
 // THIS SHOULD BE A TOP LEVEL FUNCTION OTHEREWISE COMPUTE WILL GIVE ERRORS
@@ -190,4 +208,11 @@ Movie parseMovie(String responseBody) {
   } else {
     return null;
   }
+}
+
+List<Cast> parseCast(String responseBody) {
+  final castJson = json.decode(responseBody)['credits']['cast'];
+  final parsed = castJson.cast<Map<String, dynamic>>();
+
+  return parsed.map<Cast>((json) => new Cast.fromJson(json)).toList();
 }

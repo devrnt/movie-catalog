@@ -18,6 +18,7 @@ class Strings {
   static String removedMovieToLikes = 'Removed from your library';
 
   static String noSubtitlesAvailable = 'No subtitles available';
+  static String subtitleDownloaded = 'Subtitle downloaded in your Downloads folder';
 
   static String acceptPermission = 'Please accept the permission';
 
