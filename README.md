@@ -8,6 +8,7 @@ For help getting started with Flutter, view our online
 [documentation](https://flutter.dev/).
 
 ## Todo
+* Refactor bloc pattern
 * Add tests
 * Sentry
 
@@ -16,6 +17,7 @@ For help getting started with Flutter, view our online
 * Fix bug when user starts with no internet that no movies get fetched after internet available
 * Firebase message opens play store
 * Add cast info
+* FIX BUG WHERE LIKED MOVIES IS NOT WORKING AND SUGGESTIONS
 
 ## Building
 To build the **free** version: 

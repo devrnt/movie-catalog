@@ -12,7 +12,6 @@ import 'package:movie_catalog/models/movie.dart';
 import 'package:http/http.dart' as http;
 
 /// Fetches the cast for the passed [movie]
-/// This could in fact be moved to the `liked bloc` class
 class CastBloc extends BlocBase {
   Movie movie;
 

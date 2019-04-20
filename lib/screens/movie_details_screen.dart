@@ -6,6 +6,7 @@ import 'package:movie_catalog/bloc/cast_bloc.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 
 import 'package:movie_catalog/bloc/liked_movie_bloc.dart';
+import 'package:movie_catalog/bloc/movie_details_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 import 'package:movie_catalog/models/cast.dart';
 import 'package:movie_catalog/models/subtitle.dart';
@@ -48,6 +49,7 @@ class MovieDetailsState extends State<MovieDetails> {
   bool liked = false;
   LikedMovieBloc _bloc;
   CastBloc _castBloc;
+  MovieDetailsBloc _movieDetailsBloc;
 
   StreamSubscription _subscription;
 
@@ -91,21 +93,25 @@ class MovieDetailsState extends State<MovieDetails> {
           ),
         ],
       ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            _buildBackgroundAndCover(),
-            _buildLabels(),
-            _buildSummary(),
-            _buildGenres(),
-            _buildCast(),
-            _buildSubtitles(),
-            _buildTorrents(
-                widget.movie.torrents, Theme.of(context).accentColor),
-            _buildLinks(),
-          ],
-        ),
-      ),
+      body: StreamBuilder(
+          stream: _movieDetailsBloc.movieDetailsOut,
+          builder: (BuildContext context, AsyncSnapshot<Movie> snapshot) {
+            return Container(
+              child: ListView(
+                children: <Widget>[
+                  _buildBackgroundAndCover(),
+                  _buildLabels(),
+                  _buildSummary(),
+                  _buildGenres(),
+                  _buildCast(),
+                  _buildSubtitles(),
+                  _buildTorrents(
+                      widget.movie.torrents, Theme.of(context).accentColor),
+                  _buildLinks(),
+                ],
+              ),
+            );
+          }),
     );
   }
 
@@ -121,12 +127,14 @@ class MovieDetailsState extends State<MovieDetails> {
   void dispose() {
     _subscription.cancel();
     _bloc.dispose();
+    _movieDetailsBloc.dispose();
     super.dispose();
   }
 
   void _createBloc() {
     _bloc = new LikedMovieBloc(movie: widget.movie);
     _castBloc = new CastBloc(movie: widget.movie);
+    _movieDetailsBloc = new MovieDetailsBloc(movie: widget.movie);
     // Simple pipe from the stream that lists all the favorites into
     // the BLoC that processes this particular movie
     _subscription = widget.likedMoviesStream.listen(_bloc.likedMovieIn.add);
@@ -703,7 +711,7 @@ class MovieDetailsState extends State<MovieDetails> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Padding(
+            torrent.type != null ?Padding(
               padding: EdgeInsets.symmetric(vertical: 4.0),
               child: Text(
                 '${torrent.type.substring(0, 1).toUpperCase()}${torrent.type.substring(1)}',
@@ -711,7 +719,7 @@ class MovieDetailsState extends State<MovieDetails> {
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).accentColor),
               ),
-            ),
+            ):SizedBox(),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 4.0),
               child: Text(
