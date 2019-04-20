@@ -15,7 +15,7 @@ For help getting started with Flutter, view our online
 * Watch poster fullscreen
 * Fix bug when user starts with no internet that no movies get fetched after internet available
 * Firebase message opens play store
-* Add info from external sources like themoviedb.com (cast)
+* Add cast info
 
 ## Building
 To build the **free** version: 
