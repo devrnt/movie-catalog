@@ -5,7 +5,7 @@
 ## Getting Started
 
 For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+[documentation](https://flutter.dev/).
 
 ## Todo
 * Add tests
