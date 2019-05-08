@@ -8,19 +8,16 @@ For help getting started with Flutter, view our online
 [documentation](https://flutter.dev/).
 
 ## Todo
-* Refactor bloc pattern
+* Refactor bloc patterns and services
+* Refactor code with `const` etc.
 * Add tests
 * Sentry
 
 ### Done this version
-* Watch poster fullscreen
-* Fix bug when user starts with no internet that no movies get fetched after internet available
-* Firebase message opens play store
-* Add cast info
-* FIX BUG WHERE LIKED MOVIES IS NOT WORKING AND SUGGESTIONS
+
 
 ## Building
-To build the **free** version: 
+To build the **free** version:
 ```
 flutter build apk --release --flavor free -t lib/main.dart
 ```

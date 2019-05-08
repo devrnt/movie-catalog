@@ -10,8 +10,10 @@ class CastItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(right: 25),
-        child: Row(children: <Widget>[
+      key: Key(cast.profilePath),
+      padding: const EdgeInsets.only(right: 25),
+      child: Row(
+        children: <Widget>[
           InkWell(
             child: ClipOval(
               clipBehavior: Clip.antiAlias,
@@ -28,7 +30,7 @@ class CastItem extends StatelessWidget {
                 context, 'https://image.tmdb.org/t/p/w500/${cast.profilePath}'),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,6 +51,8 @@ class CastItem extends StatelessWidget {
               ],
             ),
           )
-        ]));
+        ],
+      ),
+    );
   }
 }

@@ -8,10 +8,11 @@ import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
 import 'package:movie_catalog/bloc/theme_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
+import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/screens/movie_list.dart';
+import 'package:movie_catalog/widgets/movie_list.dart';
 
 import 'package:movie_catalog/screens/search_screen.dart';
 import 'package:movie_catalog/screens/suggestions_screen.dart';
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
     Tab(child: Text(Strings.tabLibrary.toUpperCase())),
   ];
 
-  bool grid = false;
+  bool gridEnabled = false;
 
   @override
   void initState() {
@@ -61,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _tabController = new TabController(vsync: this, length: _tabs.length);
 
-    initFirebaseMessaging();
+    _initFirebaseMessaging();
 
     initConnectivity();
     _connectivitySubscription =
@@ -69,8 +70,7 @@ class _HomeScreenState extends State<HomeScreen>
       setState(() => _connectionStatus = result.toString());
     });
 
-    FirebaseAdMob.instance
-        .initialize(appId: 'ca-app-pub-1624549113750524~5244789023');
+    FirebaseAdMob.instance.initialize(appId: Keys.theMovieDb);
   }
 
   @override
@@ -91,14 +91,14 @@ class _HomeScreenState extends State<HomeScreen>
 
   AppBar _buildAppBar() {
     return AppBar(
-      elevation: 5.0,
+      elevation: 5,
       title: Text(Strings.appName),
       actions: <Widget>[
         IconButton(
-          icon: Icon(grid ? Icons.grid_on : Icons.grid_off, size: 20.0),
+          icon: Icon(gridEnabled ? Icons.grid_on : Icons.grid_off, size: 20.0),
           onPressed: () {
             setState(() {
-              grid = !grid;
+              gridEnabled = !gridEnabled;
             });
           },
         ),
@@ -135,24 +135,20 @@ class _HomeScreenState extends State<HomeScreen>
           stream: movieBloc.latestMoviesOut,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
             return snapshot.hasError
-                ? ApiNotAvailable()
+                ? const ApiNotAvailable()
                 : NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification scrollInfo) {
                       if (scrollInfo.metrics.pixels ==
                           scrollInfo.metrics.maxScrollExtent) {
-                        // next page should fetch
+                        // next page should be fetched
                         movieBloc.fetchNextPageIn.add(MovieType.latest);
                       }
                     },
                     child: snapshot.hasData
-                        ? !grid
-                            ? MovieList(
-                                movies: snapshot.data,
-                              )
-                            : MovieGrid(movies: snapshot.data)
-                        : Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                        ? gridEnabled
+                            ? MovieGrid(movies: snapshot.data)
+                            : MovieList(movies: snapshot.data)
+                        : Center(child: const CircularProgressIndicator()),
                   );
           },
         ),
@@ -160,46 +156,33 @@ class _HomeScreenState extends State<HomeScreen>
           stream: movieBloc.popularMoviesOut,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
             return snapshot.hasError
-                ? ApiNotAvailable()
+                ? const ApiNotAvailable()
                 : NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification scrollInfo) {
                       if (scrollInfo.metrics.pixels ==
                           scrollInfo.metrics.maxScrollExtent) {
-                        // second page should fetch
+                        // next page should be fetched
                         movieBloc.fetchNextPageIn.add(MovieType.popular);
                       }
                     },
                     child: snapshot.hasData
-                        ? !grid
-                            ? MovieList(
-                                movies: snapshot.data,
-                              )
-                            : MovieGrid(movies: snapshot.data)
-                        : Center(child: Text('dzdzijdiz')),
+                        ? gridEnabled
+                            ? MovieGrid(movies: snapshot.data)
+                            : MovieList(movies: snapshot.data)
+                        : Center(child: const CircularProgressIndicator()),
                   );
           },
         ),
         StreamBuilder<List<Movie>>(
           stream: likedBloc.likedMoviesOut,
-          initialData: [],
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.error),
-                    Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
-                    Text('There went something wrong'),
-                  ],
-                ),
-              );
-            }
-            return !grid
-                ? MovieList(
-                    movies: snapshot.data,
-                  )
-                : MovieGrid(movies: snapshot.data);
+            return snapshot.hasError
+                ? const ApiNotAvailable()
+                : snapshot.hasData
+                    ? gridEnabled
+                        ? MovieGrid(movies: snapshot.data)
+                        : MovieList(movies: snapshot.data)
+                    : Center(child: const CircularProgressIndicator());
           },
         ),
       ],
@@ -207,6 +190,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildDrawer() {
+    ThemeBloc _themeBloc = BlocProvider.of<ThemeBloc>(context);
+
     return SizedBox(
       width: MediaQuery.of(context).size.width / (3 / 2),
       child: Drawer(
@@ -214,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen>
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              curve: ElasticInCurve(),
+              curve: Curves.easeIn,
               margin: EdgeInsets.only(bottom: 2.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -256,13 +241,11 @@ class _HomeScreenState extends State<HomeScreen>
                 color: Theme.of(context).accentColor,
                 size: 21.0,
               ),
-              title: Text('Search'),
+              title: Text(Strings.search),
               onTap: () {
                 online
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SearchScreen()),
-                      )
+                    ? Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SearchScreen()))
                     : print('Not online, searching is unavailable');
               },
             ),
@@ -270,16 +253,15 @@ class _HomeScreenState extends State<HomeScreen>
               leading: Icon(
                 Icons.lightbulb_outline,
                 color: Theme.of(context).accentColor,
-                size: 20.0,
+                size: 21.0,
               ),
-              title: Text('Suggestions'),
+              title: Text(Strings.suggestions),
               onTap: () {
                 online
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SuggestionsScreen()),
-                      )
+                            builder: (context) => SuggestionsScreen()))
                     : print('Not online, suggestions are unavailable');
               },
             ),
@@ -288,13 +270,12 @@ class _HomeScreenState extends State<HomeScreen>
                     leading: Icon(
                       Icons.redeem,
                       color: Theme.of(context).accentColor,
-                      size: 20.0,
+                      size: 21.0,
                     ),
-                    title: Text('Buy Pro version'),
-                    onTap: () {
-                      _showProVersionDialog();
-                    },
-                  ) // Return empty widget
+                    title: Text(Strings.buyProVersion),
+                    onTap: () => _showProVersionDialog(),
+                  )
+                // Return empty widget
                 : SizedBox(),
             Divider(
               color:
@@ -307,17 +288,16 @@ class _HomeScreenState extends State<HomeScreen>
                 color: Theme.of(context).accentColor,
                 size: 21,
               ),
-              title: Text('Rate on Google Play'),
-              onTap: () {
-                _launchLink(
-                    'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog');
-              },
+              title: Text(Strings.rateInPlayStore),
+              onTap: () => _launchLink(
+                  'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog'),
             ),
             ListTile(
               leading: Icon(
                 Icons.reply,
                 textDirection: TextDirection.rtl,
                 color: Theme.of(context).accentColor,
+                size: 21,
               ),
               title: Text('Feedback'),
               onTap: () {
@@ -349,11 +329,11 @@ class _HomeScreenState extends State<HomeScreen>
                 color: Theme.of(context).accentColor,
                 size: 21,
               ),
-              title: Text('Dark Mode'),
+              title: Text(Strings.darkMode),
               trailing: Switch(
                 value: widget.darkModeEnabled,
                 activeColor: Theme.of(context).accentColor,
-                onChanged: BlocProvider.of<ThemeBloc>(context).changeTheme.add,
+                onChanged: _themeBloc.changeTheme.add,
               ),
             ),
           ],
@@ -383,41 +363,15 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  void initFirebaseMessaging() {
-    _firebaseMessaging = new FirebaseMessaging();
-    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
-      final notificationAction = message['data']['notification_action'];
-      switch (notificationAction) {
-        case 'open_play_store':
-          String linkSuffix = widget.darkModeEnabled ? '.pro' : '';
-          _launchLink(
-              'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
-          break;
-        default:
-      }
-    }, onResume: (Map<String, dynamic> message) {
-      final notificationAction = message['data']['notification_action'];
-      switch (notificationAction) {
-        case 'open_play_store':
-          String linkSuffix = widget.darkModeEnabled ? '.pro' : '';
-          _launchLink(
-              'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
-          break;
-        default:
-      }
-      print(notificationAction);
-    }, onLaunch: (Map<String, dynamic> message) {
-      final notificationAction = message['data']['notification_action'];
-      switch (notificationAction) {
-        case 'open_play_store':
-          String linkSuffix = widget.darkModeEnabled ? '.pro' : '';
-          _launchLink(
-              'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
-          break;
-        default:
-      }
-      print('on Launch $message');
-    });
+  void _initFirebaseMessaging() {
+    _firebaseMessaging = new FirebaseMessaging()
+      ..configure(onMessage: (Map<String, dynamic> message) {
+        _addNotificationAction(context, message);
+      }, onResume: (Map<String, dynamic> message) {
+        _addNotificationAction(context, message);
+      }, onLaunch: (Map<String, dynamic> message) {
+        _addNotificationAction(context, message);
+      });
     _firebaseMessaging.getToken().then((token) {
       print('Firebase Message token: $token');
     });
@@ -429,7 +383,7 @@ class _HomeScreenState extends State<HomeScreen>
         builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: Theme.of(context).primaryColorLight,
-            title: Text('Buy Pro version'),
+            title: Text(Strings.buyProVersion),
             content: Text(
                 '* There are no ads in the pro version\n* Be the first to receive new features'),
             actions: <Widget>[
@@ -444,6 +398,23 @@ class _HomeScreenState extends State<HomeScreen>
             ],
           );
         });
+  }
+}
+
+void _addNotificationAction(
+    BuildContext context, Map<String, dynamic> message) {
+  // defined in Firebase Console
+  final notificationAction = message['data']['notification_action'];
+  print(notificationAction);
+
+  switch (notificationAction) {
+    case 'open_play_store':
+      String linkSuffix =
+          FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro ? '.pro' : '';
+      _launchLink(
+          'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
+      break;
+    default:
   }
 }
 

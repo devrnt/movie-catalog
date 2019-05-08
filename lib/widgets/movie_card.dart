@@ -1,25 +1,20 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
+import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import 'package:debug_mode/debug_mode.dart';
+
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
+import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/models/movie.dart';
 import 'package:movie_catalog/screens/movie_details_screen.dart';
-import 'package:movie_catalog/services/movie_service.dart';
-
-import 'package:http/http.dart' as http;
-
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-
-import 'package:firebase_admob/firebase_admob.dart';
-
-import 'package:debug_mode/debug_mode.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
-  final MovieService _movieService = new MovieService();
 
   static final MobileAdTargetingInfo targetingInfo =
       new MobileAdTargetingInfo(childDirected: false, testDevices: [
@@ -37,18 +32,13 @@ class MovieCard extends StatelessWidget {
   ]);
 
   final InterstitialAd interstitialAd = new InterstitialAd(
-      adUnitId: 'ca-app-pub-1624549113750524/5253207122',
+      adUnitId: Keys.addUnitId,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
         print('InterstitialAd event is $event');
       });
 
-  MovieCard({this.movie}) {
-    if (movie.torrents.length == 0) {
-      addMovieDetails(movie.id)
-          .then((Movie updatedMovie) => movie.torrents = updatedMovie.torrents);
-    }
-  }
+  MovieCard({this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +47,8 @@ class MovieCard extends StatelessWidget {
       onTap: () {
         if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Free &&
             !DebugMode.isInDebugMode) {
-          // Temp solution
-          // We could add another flag to display even less ads
+          // we could add another flag to display even less ads
           bool displayAdFlag = new Random().nextBool();
-          print(displayAdFlag);
           if (displayAdFlag) {
             interstitialAd
               ..load()
@@ -85,15 +73,14 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildCard({BuildContext context}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10.0, 3.0, 10.0, 0.0),
+      padding: EdgeInsets.fromLTRB(10, 3, 10, 0),
       child: Card(
-        elevation: 4.0,
+        elevation: 4,
         color: Theme.of(context).primaryColorLight,
         child: Row(
           children: <Widget>[
             _buildCover(),
             _buildLabels(context),
-            // _buildArrow(),
           ],
         ),
       ),
@@ -102,15 +89,15 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildCover() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(9.0, 8.0, 15.0, 8.0),
+      padding: const EdgeInsets.fromLTRB(8, 8, 15, 8),
       child: FadeInImage.assetNetwork(
-        fadeInDuration: Duration(milliseconds: 750),
+        fadeInDuration: const Duration(milliseconds: 750),
         image: movie.coverImageMedium ??
             movie.coverImageLarge ??
             'assets/images/cover_placeholder.jpg',
         placeholder: 'assets/images/cover_placeholder.jpg',
         fit: BoxFit.fill,
-        width: 103.0,
+        width: 105.0,
       ),
     );
   }
@@ -119,7 +106,6 @@ class MovieCard extends StatelessWidget {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           _buildYearLabel(),
           _buildTitleLabel(context),
@@ -132,7 +118,7 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildYearLabel() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Text(
         movie.year.toString().toUpperCase(),
         style: TextStyle(
@@ -145,7 +131,7 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildTitleLabel(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7.0),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Text(movie.title,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
@@ -169,7 +155,7 @@ class MovieCard extends StatelessWidget {
       formattedGenres = 'No genres';
     }
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Text(
         formattedGenres,
         overflow: TextOverflow.ellipsis,
@@ -178,7 +164,7 @@ class MovieCard extends StatelessWidget {
             color: Colors.grey[500],
             fontSize: 15.0,
             fontWeight: FontWeight.w400,
-            letterSpacing: 0.2),
+            letterSpacing: 0.1),
       ),
     );
   }
@@ -186,37 +172,28 @@ class MovieCard extends StatelessWidget {
   Widget _buildRating(BuildContext context) {
     double amountOfStars = movie.rating / 2;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.5),
+      padding: const EdgeInsets.symmetric(vertical: 2.5),
       child: Row(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 3.0),
+            padding: const EdgeInsets.symmetric(vertical: 2),
             child: SmoothStarRating(
                 allowHalfRating: true,
                 starCount: 5,
                 rating: amountOfStars,
-                size: 17.0,
+                size: 17,
                 color: Theme.of(context).accentColor,
                 borderColor: Colors.grey[500]),
           ),
           Container(
-            padding: EdgeInsets.only(
-              left: 7.0,
-            ),
+            padding: const EdgeInsets.only(left: 7),
             alignment: Alignment.center,
-            height: 20.0,
-            child: Text(
-              movie.rating.toString(),
-              style: TextStyle(color: Colors.grey),
-            ),
+            height: 20,
+            child:
+                Text('${movie.rating}', style: TextStyle(color: Colors.grey)),
           )
         ],
       ),
     );
-  }
-
-  Future<Movie> addMovieDetails(int id) async {
-    Movie movie = await _movieService.fetchMovieById(http.Client(), id);
-    return movie;
   }
 }

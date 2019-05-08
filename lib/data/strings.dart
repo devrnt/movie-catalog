@@ -18,10 +18,17 @@ class Strings {
   static String removedMovieToLikes = 'Removed from your library';
 
   static String noSubtitlesAvailable = 'No subtitles available';
-  static String subtitleDownloaded = 'Subtitle downloaded in your Downloads folder';
+  static String subtitleDownloaded =
+      'Subtitle downloaded in your Downloads folder';
 
   static String acceptPermission = 'Please accept the permission';
 
   static String retryButton = 'RETRY';
   static String retry = 'Retrying...';
+
+  static String search = 'Search';
+  static String suggestions = 'Suggestions';
+  static String buyProVersion = 'Buy Pro version';
+  static String rateInPlayStore = ' Rate in Play Store';
+  static String darkMode = 'Dark Mode';
 }

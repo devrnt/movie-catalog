@@ -29,10 +29,8 @@ class MovieCatalog extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeBloc _themeBloc = BlocProvider.of<ThemeBloc>(context);
 
-    String appNameSuffix = '';
-    if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro) {
-      appNameSuffix = 'Pro';
-    }
+    String appNameSuffix =
+        FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro ? 'Pro' : '';
 
     return BlocProvider<MovieBloc>(
       bloc: MovieBloc(),
@@ -41,21 +39,22 @@ class MovieCatalog extends StatelessWidget {
         child: BlocProvider<SuggestionsBloc>(
           bloc: SuggestionsBloc(),
           child: BlocProvider<SearchBloc>(
-              bloc: SearchBloc(),
-              child: StreamBuilder(
-                stream: _themeBloc.darkThemeEnabled,
-                initialData: false,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  bool darkModeEnabled = snapshot.data;
-                  return MaterialApp(
-                    title: 'Movie Catalog $appNameSuffix'.trim(),
-                    theme: darkModeEnabled
-                        ? ThemeBuilder.buildBlackTheme()
-                        : ThemeBuilder.buildLightTheme(),
-                    home: HomeScreen(darkModeEnabled: darkModeEnabled),
-                  );
-                },
-              )),
+            bloc: SearchBloc(),
+            child: StreamBuilder(
+              stream: _themeBloc.darkThemeEnabled,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                bool darkModeEnabled = snapshot.data;
+                return MaterialApp(
+                  title: 'Movie Catalog $appNameSuffix',
+                  theme: darkModeEnabled
+                      ? ThemeBuilder.buildBlackTheme()
+                      : ThemeBuilder.buildLightTheme(),
+                  home: HomeScreen(darkModeEnabled: darkModeEnabled),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

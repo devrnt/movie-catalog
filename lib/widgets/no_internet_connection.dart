@@ -5,7 +5,7 @@ class NoInternetConnection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -14,11 +14,11 @@ class NoInternetConnection extends StatelessWidget {
           Center(
             child: Text(
               Strings.noInternetTitle,
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 18),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 15.0),
+            padding: const EdgeInsets.only(bottom: 15),
           ),
           Center(
             child: Icon(
@@ -28,24 +28,24 @@ class NoInternetConnection extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 7.0),
+            padding: const EdgeInsets.only(bottom: 7),
           ),
           Row(
             children: <Widget>[
               Icon(
                 Icons.help_outline,
-                size: 22.0,
+                size: 2,
                 color: Theme.of(context).iconTheme.color,
               ),
               Text(
                 ' What can I do?',
                 style: TextStyle(
-                    fontSize: 15.0, color: Theme.of(context).iconTheme.color),
+                    fontSize: 15, color: Theme.of(context).iconTheme.color),
               ),
             ],
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 4.0),
+            padding: EdgeInsets.symmetric(vertical: 4),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -57,14 +57,14 @@ class NoInternetConnection extends StatelessWidget {
                 style: TextStyle(color: Colors.grey),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 3.0),
+                padding: const EdgeInsets.symmetric(vertical: 3),
               ),
               Text(
                 '2. Turn off wifi/mobile network.',
                 style: TextStyle(color: Colors.grey),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 3.0),
+                padding: const EdgeInsets.symmetric(vertical: 3),
               ),
               Text(
                 // 'Please turn on your internet connection.\nMake sure you have a working network connection.\nVPN are not supported at the moment.\nTry turning your WiFi on and off.',

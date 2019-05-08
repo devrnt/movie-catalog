@@ -61,7 +61,6 @@ class LikedBloc implements BlocBase {
   }
 
   void _handleRemoveLiked(Movie movie) async {
-    print('Remove ${movie.title}');
     await _storageService.removeFromFile(movie);
 
     getLikedMovies();
