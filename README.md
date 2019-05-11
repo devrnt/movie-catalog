@@ -14,21 +14,37 @@ For help getting started with Flutter, view our online
 * Sentry
 
 ### Done this version
-
+* ...
 
 ## Building
+Create a `keys.dart` file in the `lib/config/` folder and add the following code snippet in the `keys.dart`:
+
+```dart 
+class Keys {
+  static String admobAppId = 'your admob app id';
+  static String addUnitId = 'your admob add unit id';
+  static String theMovieDb = 'your https://www.themoviedb.org api key';
+}
+```
+
 To build the **free** version:
 ```
 flutter build apk --release --flavor free -t lib/main.dart
 ```
 
 To build the **pro** version
-```dart
+```
 flutter build apk --release --flavor pro -t lib/main_pro.dart
 ```
 
 **Explanation:** The `flavor` option makes sure that in Android the `build.gradle` is using the right build flavors (including different applicationId).
 The `target` option (-t) makes sure we can use the different flavors in the dart code.
+
+**VSCode:** Go to the debug tab (ctrl + shift + D) and select on top the debug configuration and there will be 2 available options: `Flutter Free` and `Flutter Pro`.
+These configurations will build the app with the commands given above.
+
+## Developping
+Don't hesitate to fork this repository and if you are having any questions please contact me.
 
 ## Play Store
 ### Free
