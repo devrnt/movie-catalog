@@ -21,6 +21,7 @@ class _MovieGridState extends State<MovieGrid>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return widget.movies.isNotEmpty
         ? GridView.builder(
             padding: const EdgeInsets.fromLTRB(6, 12, 0, 6),
