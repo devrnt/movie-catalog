@@ -21,6 +21,7 @@ class _MovieListState extends State<MovieList>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return widget.movies.isNotEmpty
         ? ListView.builder(
             padding: const EdgeInsets.fromLTRB(0, 12, 2, 0),
