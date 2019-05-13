@@ -24,6 +24,7 @@ class Keys {
   static String admobAppId = 'your admob app id';
   static String addUnitId = 'your admob add unit id';
   static String theMovieDb = 'your https://www.themoviedb.org api key';
+  static String sentryDsn = 'your sentry Dsn';
 }
 ```
 
