@@ -31,7 +31,7 @@ class MovieService implements IMovieService {
     } else {
       throw Exception('Failed to load movies: Check if the api' +
           fetchUrl +
-          'is still online. If not the case check if the mapping is still correct.');
+          ' is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}.');
     }
   }
 
@@ -52,7 +52,7 @@ class MovieService implements IMovieService {
     } else {
       throw Exception('Failed to load movies: Check if the api' +
           fetchUrl +
-          'is still online. If not the case check if the mapping is still correct.');
+          'is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}');
     }
   }
 
@@ -75,7 +75,7 @@ class MovieService implements IMovieService {
     } else {
       throw Exception('Failed to load movies: Check if the api' +
           fetchUrl +
-          'is still online. If not the case check if the mapping is still correct.');
+          'is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}');
     }
   }
 
@@ -96,7 +96,7 @@ class MovieService implements IMovieService {
     } else {
       throw Exception('Failed to load movies: Check if the api' +
           fetchUrl +
-          'is still online. If not the case check if the mapping is still correct.');
+          'is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}');
     }
   }
 
@@ -112,7 +112,7 @@ class MovieService implements IMovieService {
     } else {
       throw Exception('Failed to load movies: Check if the api' +
           fetchUrl +
-          'is still online. If not the case check if the mapping is still correct.');
+          'is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}');
     }
   }
 
@@ -130,7 +130,7 @@ class MovieService implements IMovieService {
     } else {
       throw Exception('Failed to load movies: Check if the api' +
           fetchUrl +
-          'is still online. If not the case check if the mapping is still correct.');
+          'is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}');
     }
   }
 
@@ -155,7 +155,7 @@ class MovieService implements IMovieService {
       } else {
         throw Exception('Failed to load movies: Check if the api' +
             // fetchUrl +
-            'is still online. If not the case check if the mapping is still correct.');
+            'is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}');
       }
     });
     return movies;
@@ -173,7 +173,7 @@ class MovieService implements IMovieService {
     } else {
       throw Exception('Failed to load movies: Check if the api' +
           url +
-          'is still online. If not the case check if the mapping is still correct.');
+          'is still online. If not the case check if the mapping is still correct. Response code: ${response.statusCode}');
     }
   }
 }
