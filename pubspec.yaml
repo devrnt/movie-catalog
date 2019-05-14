@@ -5,17 +5,17 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.0+1
-  connectivity: ^0.4.2+2
+  connectivity: ^0.4.3+1
   url_launcher: ^5.0.2
   path_provider: ^0.5.0+1
-  firebase_messaging: ^4.0.0+3
+  firebase_messaging: ^5.0.1+1
   archive: ^2.0.8
   smooth_star_rating: ^1.0.2
   html: ^0.13.4+2
   permission_handler: ^3.0.0
-  firebase_admob: ^0.8.0+3
+  firebase_admob: ^0.9.0
   rxdart: ^0.21.0
-  photo_view: ^0.2.4
+  photo_view: ^0.3.3
   sentry: ^2.2.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -25,7 +25,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.6.1
+  flutter_launcher_icons: ^0.7.0
   debug_mode: ^0.1.1
 
 flutter_icons:

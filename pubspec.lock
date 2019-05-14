@@ -56,7 +56,7 @@ packages:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2+2"
+    version: "0.4.3+1"
   convert:
     dependency: transitive
     description:
@@ -107,14 +107,14 @@ packages:
       name: firebase_admob
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.0+3"
+    version: "0.9.0"
   firebase_messaging:
     dependency: "direct main"
     description:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0+3"
+    version: "5.0.1+1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -126,7 +126,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -159,7 +159,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.9"
   matcher:
     dependency: transitive
     description:
@@ -201,21 +201,21 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   petitparser:
     dependency: transitive
     description:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.1"
   photo_view:
     dependency: "direct main"
     description:
       name: photo_view
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.3.3"
   platform:
     dependency: transitive
     description:
@@ -339,7 +339,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.1"
+    version: "3.4.1"
   yaml:
     dependency: transitive
     description:
@@ -349,4 +349,4 @@ packages:
     version: "2.1.15"
 sdks:
   dart: ">=2.2.0 <3.0.0"
-  flutter: ">=1.2.0 <2.0.0"
+  flutter: ">=1.4.7 <2.0.0"
