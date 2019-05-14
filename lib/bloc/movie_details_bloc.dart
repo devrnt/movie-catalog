@@ -31,7 +31,9 @@ class MovieDetailsBloc extends BlocBase {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
+    // Discards all data on the stream, but signals when it's done or an error occurred.
+    await _movieDetailsController.drain();
     _movieDetailsController.close();
   }
 }
