@@ -283,15 +283,20 @@ class _HomeScreenState extends State<HomeScreen>
               height: 1,
             ),
             ListTile(
-              leading: Icon(
-                Icons.star,
-                color: Theme.of(context).accentColor,
-                size: 21,
-              ),
-              title: Text(Strings.rateInPlayStore),
-              onTap: () => _launchLink(
-                  'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog'),
-            ),
+                leading: Icon(
+                  Icons.star,
+                  color: Theme.of(context).accentColor,
+                  size: 21,
+                ),
+                title: Text(Strings.rateInPlayStore),
+                onTap: () {
+                  String linkSuffix =
+                      FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro
+                          ? '.pro'
+                          : '';
+                  _launchLink(
+                      'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
+                }),
             ListTile(
               leading: Icon(
                 Icons.reply,
