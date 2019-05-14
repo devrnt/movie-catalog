@@ -24,7 +24,7 @@ class _MovieGridState extends State<MovieGrid>
     super.build(context);
     return widget.movies.isNotEmpty
         ? GridView.builder(
-            padding: const EdgeInsets.fromLTRB(6, 12, 0, 6),
+            padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               childAspectRatio: 0.56,

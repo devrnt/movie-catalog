@@ -704,7 +704,7 @@ class MovieDetailsState extends State<MovieDetails> {
 
   Widget _buildTorrentItem(Torrent torrent, Color iconColor) {
     return RaisedButton(
-      elevation: 4.0,
+      elevation: 2,
       color: Theme.of(context).primaryColorLight,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 12.0),

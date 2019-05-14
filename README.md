@@ -9,9 +9,7 @@ For help getting started with Flutter, view our online
 
 ## Todo
 * Refactor bloc patterns and services
-* Refactor code with `const` etc.
 * Add tests
-* Sentry
 
 ### Done this version
 * ...

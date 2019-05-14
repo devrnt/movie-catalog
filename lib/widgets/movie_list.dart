@@ -24,7 +24,7 @@ class _MovieListState extends State<MovieList>
     super.build(context);
     return widget.movies.isNotEmpty
         ? ListView.builder(
-            padding: const EdgeInsets.fromLTRB(0, 12, 2, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             itemCount: widget.movies.length,
             itemBuilder: (BuildContext context, int index) =>
                 MovieCard(movie: widget.movies[index]))

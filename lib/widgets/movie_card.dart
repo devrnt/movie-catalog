@@ -75,7 +75,7 @@ class MovieCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 3, 10, 0),
       child: Card(
-        elevation: 4,
+        elevation: 3,
         color: Theme.of(context).primaryColorLight,
         child: Row(
           children: <Widget>[
