@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/models/cast.dart';
 
@@ -104,7 +106,13 @@ class MovieService implements IMovieService {
   Future<Movie> fetchMovieById(http.Client client, int id) async {
     String fetchUrl = apiUrlDetails + '?movie_id=$id';
 
-    final response = await client.get(fetchUrl);
+    Response response;
+
+    try {
+      response = await client.get(fetchUrl);
+    } on SocketException catch (e) {
+      throw e;
+    }
 
     if (response.statusCode == 200) {
       // Use the compute function to run parseMovies in a separate isolate
