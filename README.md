@@ -8,6 +8,7 @@ For help getting started with Flutter, view our online
 [documentation](https://flutter.dev/).
 
 ## Todo
+* VPN Support
 * Refactor bloc patterns and services
 * Add tests
 
@@ -27,7 +28,7 @@ class Keys {
 ```
 
 To build the **free** version:
-```
+```console
 flutter build apk --release --flavor free -t lib/main.dart
 ```
 
