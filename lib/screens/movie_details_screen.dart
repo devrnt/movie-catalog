@@ -106,7 +106,8 @@ class MovieDetailsState extends State<MovieDetails> {
                   _buildCast(),
                   _buildSubtitles(),
                   _buildTorrents(
-                      widget.movie.torrents, Theme.of(context).accentColor),
+                      snapshot?.data?.torrents ?? widget.movie.torrents,
+                      Theme.of(context).accentColor),
                   _buildLinks(),
                 ],
               ),
@@ -711,15 +712,17 @@ class MovieDetailsState extends State<MovieDetails> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            torrent.type != null ?Padding(
-              padding: EdgeInsets.symmetric(vertical: 4.0),
-              child: Text(
-                '${torrent.type.substring(0, 1).toUpperCase()}${torrent.type.substring(1)}',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).accentColor),
-              ),
-            ):SizedBox(),
+            torrent.type != null
+                ? Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: Text(
+                      '${torrent.type.substring(0, 1).toUpperCase()}${torrent.type.substring(1)}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).accentColor),
+                    ),
+                  )
+                : SizedBox(),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 4.0),
               child: Text(

@@ -19,15 +19,15 @@ class MovieDetailsBloc extends BlocBase {
   final MovieService _movieService = new MovieService();
 
   MovieDetailsBloc({@required this.movie}) {
-    _movieDetailsController.sink.add(this.movie);
+    movie = movie;
     _getMovieDetails();
   }
 
   void _getMovieDetails() async {
-    Movie updatedMovie =
+    movie =
         await _movieService.fetchMovieById(http.Client(), movie.id);
 
-    _movieDetailsController.sink.add(updatedMovie);
+    _movieDetailsController.sink.add(movie);
   }
 
   @override
