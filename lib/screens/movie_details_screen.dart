@@ -8,18 +8,15 @@ import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/liked_movie_bloc.dart';
 import 'package:movie_catalog/bloc/movie_details_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
-import 'package:movie_catalog/models/cast.dart';
-import 'package:movie_catalog/models/subtitle.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/subtitle_service.dart';
 import 'package:movie_catalog/utils/torrent_builder.dart';
 import 'package:movie_catalog/utils/widget_helper.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
 import 'package:movie_catalog/widgets/cast_item.dart';
+import 'package:movie_catalog/widgets/movie_details_section.dart';
 
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:movie_catalog/models/movie.dart';
-import 'package:movie_catalog/models/torrent.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -142,94 +139,54 @@ class MovieDetailsState extends State<MovieDetails> {
   }
 
   Widget _buildSummary() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Text(
-              'Summary'.toUpperCase(),
-              style: TextStyle(
-                  color: Theme.of(context)
-                      .textTheme
-                      .subhead
-                      .color
-                      .withOpacity(0.3),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14.0),
-            ),
-          ),
-          Text(
-            widget.movie.summary,
-            style: TextStyle(
-                color:
-                    Theme.of(context).textTheme.subhead.color.withOpacity(0.8),
-                height: 1.50,
-                fontSize: 14.5,
-                wordSpacing: 1),
-          ),
-        ],
+    return MovieDetailsSection(
+      title: 'Summary',
+      child: Text(
+        widget.movie.summary,
+        style: TextStyle(
+          color: Theme.of(context).textTheme.subhead.color.withOpacity(0.8),
+          height: 1.50,
+          fontSize: 14.5,
+          wordSpacing: 1,
+        ),
       ),
     );
   }
 
   Widget _buildSubtitles() {
-    final String subtitleString = 'subtitles'.toUpperCase();
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Text(
-              subtitleString,
-              style: TextStyle(
+    return MovieDetailsSection(
+      title: 'Subtitles',
+      child: FutureBuilder(
+        future: _subtitles,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) ApiNotAvailable();
+          if (snapshot.hasData) {
+            if (snapshot.data.isEmpty) {
+              return Text(
+                Strings.noSubtitlesAvailable,
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
                   color: Theme.of(context)
                       .textTheme
                       .subhead
                       .color
-                      .withOpacity(0.3),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14.0),
-            ),
-          ),
-          FutureBuilder(
-              future: _subtitles,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) ApiNotAvailable();
-                if (snapshot.hasData) {
-                  if (snapshot.data.isEmpty) {
-                    return Text(
-                      Strings.noSubtitlesAvailable,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .color
-                            .withOpacity(0.8),
-                      ),
-                    );
-                  } else {
-                    return _buildSubtitleDropDown(snapshot.data);
-                  }
-                } else {
-                  return Container(
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: SizedBox(
-                      height: 12.0,
-                      width: 12.0,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.0,
-                      ),
-                    ),
-                  );
-                }
-              }),
-        ],
+                      .withOpacity(0.8),
+                ),
+              );
+            } else {
+              return _buildSubtitleDropDown(snapshot.data);
+            }
+          } else {
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: SizedBox(
+                height: 12.0,
+                width: 12.0,
+                child: CircularProgressIndicator(strokeWidth: 2.0),
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -529,51 +486,35 @@ class MovieDetailsState extends State<MovieDetails> {
   }
 
   Widget _buildLinks() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return MovieDetailsSection(
+      title: 'Links',
+      child: Row(
         children: <Widget>[
-          Text(
-            'Links'.toUpperCase(),
-            style: TextStyle(
-                color:
-                    Theme.of(context).textTheme.subhead.color.withOpacity(0.3),
-                fontWeight: FontWeight.w500,
-                fontSize: 14.0),
+          RaisedButton(
+            color: Theme.of(context).primaryColorLight,
+            child: Text('Trailer'.toUpperCase()),
+            onPressed: () {
+              String url =
+                  'https://www.youtube.com/watch?v=${widget.movie.ytTrailerCode}';
+              _launchLink(url, context);
+            },
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 7.0),
           ),
-          Row(
-            children: <Widget>[
-              RaisedButton(
-                color: Theme.of(context).primaryColorLight,
-                child: Text('Trailer'.toUpperCase()),
-                onPressed: () {
-                  String url =
-                      'https://www.youtube.com/watch?v=${widget.movie.ytTrailerCode}';
-                  _launchLink(url, context);
-                },
+          RaisedButton(
+            color: Theme.of(context).accentColor,
+            child: Text(
+              'IMDB'.toUpperCase(),
+              style: TextStyle(
+                color: Colors.black.withOpacity(0.8),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 7.0),
-              ),
-              RaisedButton(
-                color: Theme.of(context).accentColor,
-                child: Text(
-                  'IMDB'.toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.black.withOpacity(0.8),
-                  ),
-                ),
-                onPressed: () {
-                  String url =
-                      'https://www.imdb.com/title/${widget.movie.imdbCode}';
-                  _launchLink(url, context);
-                },
-              ),
-            ],
+            ),
+            onPressed: () {
+              String url =
+                  'https://www.imdb.com/title/${widget.movie.imdbCode}';
+              _launchLink(url, context);
+            },
           ),
         ],
       ),
@@ -589,37 +530,18 @@ class MovieDetailsState extends State<MovieDetails> {
   }
 
   Widget _buildTorrents(List<Torrent> torrents, Color iconColor) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                'Torrents'.toUpperCase(),
-                style: TextStyle(
-                    color: Theme.of(context)
-                        .textTheme
-                        .subhead
-                        .color
-                        .withOpacity(0.3),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.0),
-              ),
-            ),
-            Container(
-              child: Wrap(
-                runSpacing: 10.0,
-                spacing: 12.0,
-                direction: Axis.horizontal,
-                children: torrents.map((torrent) {
-                  return _buildTorrentItem(torrent, iconColor);
-                }).toList(),
-              ),
-            ),
-          ]),
+    return MovieDetailsSection(
+      title: 'Torrents',
+      child: Container(
+        child: Wrap(
+          runSpacing: 10.0,
+          spacing: 12.0,
+          direction: Axis.horizontal,
+          children: torrents.map((torrent) {
+            return _buildTorrentItem(torrent, iconColor);
+          }).toList(),
+        ),
+      ),
     );
   }
 
@@ -657,9 +579,6 @@ class MovieDetailsState extends State<MovieDetails> {
   }
 
   Widget _buildGenres() {
-    final String genreString = widget.movie.genres.length > 1
-        ? 'Genres'.toUpperCase()
-        : 'Genre'.toUpperCase();
     String genres = '';
 
     String formattedGenres = '';
@@ -673,39 +592,22 @@ class MovieDetailsState extends State<MovieDetails> {
       formattedGenres = 'No genres';
     }
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            genreString,
-            style: TextStyle(
-                color:
-                    Theme.of(context).textTheme.subhead.color.withOpacity(0.3),
-                fontWeight: FontWeight.w500,
-                fontSize: 14.0),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-          ),
-          Text(
-            formattedGenres,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Theme.of(context).textTheme.subhead.color.withOpacity(0.8),
-              fontSize: 14.0,
-            ),
-          ),
-        ],
+    return MovieDetailsSection(
+      title: widget.movie.genres.length > 1 ? 'Genres' : 'Genre',
+      child: Text(
+        formattedGenres,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: Theme.of(context).textTheme.subhead.color.withOpacity(0.8),
+          fontSize: 14.0,
+        ),
       ),
     );
   }
 
   Widget _buildTorrentItem(Torrent torrent, Color iconColor) {
     return RaisedButton(
-      elevation: 2,
+      elevation: 1,
       color: Theme.of(context).primaryColorLight,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 12.0),
@@ -820,6 +722,7 @@ class MovieDetailsState extends State<MovieDetails> {
                     children:
                         cast.map((actor) => CastItem(cast: actor)).toList(),
                     scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
                   );
                 } else {
                   return SizedBox(

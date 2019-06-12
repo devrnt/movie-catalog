@@ -6,7 +6,7 @@ import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/search_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 
-import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/widgets/movie_list.dart';
 
 import 'package:movie_catalog/screens/filter_screen.dart';

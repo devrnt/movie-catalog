@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/models.dart';
 
 import 'package:http/http.dart' as http;
 

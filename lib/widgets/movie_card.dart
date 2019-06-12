@@ -10,7 +10,7 @@ import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/config/keys.dart';
-import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/screens/movie_details_screen.dart';
 
 class MovieCard extends StatelessWidget {
@@ -75,7 +75,7 @@ class MovieCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 3, 10, 0),
       child: Card(
-        elevation: 3,
+        elevation: 2,
         color: Theme.of(context).primaryColorLight,
         child: Row(
           children: <Widget>[

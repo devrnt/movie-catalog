@@ -1,4 +1,4 @@
-import 'package:movie_catalog/models/torrent.dart';
+import 'package:movie_catalog/models/models.dart';
 
 class Movie {
   int id;

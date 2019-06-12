@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:movie_catalog/data/strings.dart';
 
-import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/widgets/movie_card_grid.dart';
 
 class MovieGrid extends StatefulWidget {

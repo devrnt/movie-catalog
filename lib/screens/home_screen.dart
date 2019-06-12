@@ -11,7 +11,7 @@ import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/data/strings.dart';
 
-import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/widgets/movie_list.dart';
 
 import 'package:movie_catalog/screens/search_screen.dart';

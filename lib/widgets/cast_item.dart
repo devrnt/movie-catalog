@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/models/cast.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/utils/widget_helper.dart';
 
 class CastItem extends StatelessWidget {

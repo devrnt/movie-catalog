@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:movie_catalog/bloc/bloc_provider.dart';
-import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/storage_service.dart';
 
 import 'package:rxdart/rxdart.dart';

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/services/movie_service.dart';
-import 'package:movie_catalog/models/movie.dart';
+import 'package:movie_catalog/models/models.dart';
 
 class MovieBloc extends BlocBase {
   /// Keeps track of the page to fetch the latest movies from the api

@@ -6,7 +6,7 @@ import 'package:html/dom.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:html/parser.dart';
-import 'package:movie_catalog/models/subtitle.dart';
+import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/storage_service.dart';
 
 // WEB CRAWLER - DOM MIGHT CHANGE IN FUTURE

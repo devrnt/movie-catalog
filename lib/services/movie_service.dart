@@ -6,11 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:movie_catalog/config/keys.dart';
-import 'package:movie_catalog/models/cast.dart';
+import 'package:movie_catalog/models/models.dart';
 
 import 'package:movie_catalog/services/imovie_service.dart';
-
-import 'package:movie_catalog/models/movie.dart';
 
 class MovieService implements IMovieService {
   final String apiUrl = 'https://yts.am/api/v2/list_movies.json';
