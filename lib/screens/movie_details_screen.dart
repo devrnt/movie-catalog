@@ -7,13 +7,13 @@ import 'package:movie_catalog/bloc/liked_bloc.dart';
 
 import 'package:movie_catalog/bloc/liked_movie_bloc.dart';
 import 'package:movie_catalog/bloc/movie_details_bloc.dart';
+import 'package:movie_catalog/bloc/subtitle_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 import 'package:movie_catalog/models/models.dart';
-import 'package:movie_catalog/services/subtitle_service.dart';
 import 'package:movie_catalog/utils/torrent_builder.dart';
 import 'package:movie_catalog/utils/widget_helper.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
-import 'package:movie_catalog/widgets/cast_item.dart';
+import 'package:movie_catalog/widgets/movie/cast_item.dart';
 import 'package:movie_catalog/widgets/movie/movie_details_section.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -36,9 +36,8 @@ class MovieDetails extends StatefulWidget {
 }
 
 class MovieDetailsState extends State<MovieDetails> {
-  SubtitleService _subtitleService;
   Subtitle _selectedSubtitle;
-  Future<List<Subtitle>> _subtitles;
+  // Future<List<Subtitle>> _subtitles;
 
   // permissions
   PermissionGroup permission = PermissionGroup.storage;
@@ -47,6 +46,7 @@ class MovieDetailsState extends State<MovieDetails> {
   LikedMovieBloc _bloc;
   CastBloc _castBloc;
   MovieDetailsBloc _movieDetailsBloc;
+  SubtitleBloc _subtitleBloc;
 
   StreamSubscription _subscription;
 
@@ -116,9 +116,7 @@ class MovieDetailsState extends State<MovieDetails> {
   @override
   void initState() {
     super.initState();
-    _subtitleService = new SubtitleService();
-    _createBloc();
-    _subtitles = _subtitleService.getSubtitles(widget.movie.imdbCode);
+    _createBlocs();
   }
 
   @override
@@ -126,13 +124,15 @@ class MovieDetailsState extends State<MovieDetails> {
     _subscription.cancel();
     _bloc.dispose();
     _movieDetailsBloc.dispose();
+    _subtitleBloc.dispose();
     super.dispose();
   }
 
-  void _createBloc() {
+  void _createBlocs() {
     _bloc = new LikedMovieBloc(movie: widget.movie);
     _castBloc = new CastBloc(movie: widget.movie);
     _movieDetailsBloc = new MovieDetailsBloc(movie: widget.movie);
+    _subtitleBloc = new SubtitleBloc(movie: widget.movie);
     // Simple pipe from the stream that lists all the favorites into
     // the BLoC that processes this particular movie
     _subscription = widget.likedMoviesStream.listen(_bloc.likedMovieIn.add);
@@ -156,8 +156,8 @@ class MovieDetailsState extends State<MovieDetails> {
   Widget _buildSubtitles() {
     return MovieDetailsSection(
       title: 'Subtitles',
-      child: FutureBuilder(
-        future: _subtitles,
+      child: StreamBuilder(
+        stream: _subtitleBloc.subtitlesOut,
         builder: (context, snapshot) {
           if (snapshot.hasError) ApiNotAvailable();
           if (snapshot.hasData) {
@@ -256,7 +256,7 @@ class MovieDetailsState extends State<MovieDetails> {
 
   void _downloadFile(String url) async {
     if (await _checkPermission()) {
-      await _subtitleService.downloadSubtitle(url);
+      await _subtitleBloc.downloadSubtitle(url);
       WidgetHelper.showSnackbar(
           context, Strings.subtitleDownloaded, Colors.green, Icons.done);
     } else {
