@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:movie_catalog/bloc/filter_bloc.dart';
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
 
-import 'package:movie_catalog/services/movie_service.dart';
 import 'package:movie_catalog/widgets/movie/list/movie_grid.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -13,7 +12,8 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  MovieService _movieService;
+  FilterBloc _filterBloc;
+
   List<DropdownMenuItem<Genres>> genres = Genres.values
       .map((enumVal) => DropdownMenuItem(
             child: Text(_formatGenreEnumValue(enumVal)),
@@ -42,7 +42,6 @@ class _FilterScreenState extends State<FilterScreen> {
   @override
   void initState() {
     super.initState();
-    _movieService = new MovieService();
   }
 
   @override
@@ -186,28 +185,28 @@ class _FilterScreenState extends State<FilterScreen> {
     } else {
       rating = selectedRating.toString();
     }
-    _movieService
-        .fetchMoviesByConfig(http.Client(), 1, genre, quality, rating)
-        .then((movies) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-                appBar: AppBar(
-                  title: Text('Filter results'),
-                ),
-                body: FutureBuilder<List<Movie>>(
-                  future: _movieService.fetchMoviesByConfig(
-                      http.Client(), 1, genre, quality, rating),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) return ApiNotAvailable();
-                    return snapshot.hasData
-                        ? MovieGrid(movies: snapshot.data)
-                        : Center(child: CircularProgressIndicator());
-                  },
-                )),
-          ));
-    });
+    _filterBloc = new FilterBloc(
+        currentPage: 1, genre: genre, quality: quality, rating: rating);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: Text('Filter results'),
+              ),
+              body: StreamBuilder<List<Movie>>(
+                stream: _filterBloc.filteredMoviesOut,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) return ApiNotAvailable();
+                  return snapshot.hasData
+                      ? MovieGrid(movies: snapshot.data)
+                      : Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+      ),
+    );
   }
 }
 
