@@ -1,5 +1,5 @@
 import 'package:movie_catalog/bloc/bloc_provider.dart';
-import 'package:movie_catalog/services/theme_service.dart';
+import 'package:movie_catalog/services/storage/theme_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ThemeBloc extends BlocBase {

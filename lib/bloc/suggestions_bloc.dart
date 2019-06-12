@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:movie_catalog/services/storage_service.dart';
+import 'package:movie_catalog/services/storage/liked_movies_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +24,7 @@ class SuggestionsBloc extends BlocBase {
   List<Movie> _suggestions = [];
 
   final MovieService _movieService = new MovieService();
-  final StorageService _storageService = new StorageService();
+  final LikedMoviesService _storageService = new LikedMoviesService();
 
   /// Keeps track if there is already a handle request in progress to protect from to many requests
   bool loading = false;

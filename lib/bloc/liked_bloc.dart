@@ -3,7 +3,7 @@ import 'dart:collection';
 
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/models/models.dart';
-import 'package:movie_catalog/services/storage_service.dart';
+import 'package:movie_catalog/services/storage/liked_movies_service.dart';
 
 import 'package:rxdart/rxdart.dart';
 
@@ -33,7 +33,7 @@ class LikedBloc implements BlocBase {
   /// The [Stream] is the output for the [_likedMoviesController]
   Stream<List<Movie>> get likedMoviesOut => _likedMoviesController.stream;
 
-  final StorageService _storageService = new StorageService();
+  final LikedMoviesService _storageService = new LikedMoviesService();
 
   LikedBloc() {
     getLikedMovies();

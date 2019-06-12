@@ -7,19 +7,19 @@ import 'package:http/http.dart' as http;
 
 import 'package:html/parser.dart';
 import 'package:movie_catalog/models/models.dart';
-import 'package:movie_catalog/services/storage_service.dart';
+import 'package:movie_catalog/services/storage/liked_movies_service.dart';
 
 // WEB CRAWLER - DOM MIGHT CHANGE IN FUTURE
 class SubtitleService {
   http.Client _client;
-  StorageService _storageService;
+  LikedMoviesService _storageService;
   String _baseUrl = 'https://www.yifysubtitles.com/movie-imdb';
   String _url;
   // static var httpClient = new HttpClient(); is for original download code
 
   SubtitleService() {
     _client = new http.Client();
-    _storageService = new StorageService();
+    _storageService = new LikedMoviesService();
   }
 
   Future<Document> _fetchDOM(String imdbCode) async {

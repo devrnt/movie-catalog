@@ -2,26 +2,16 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:movie_catalog/services/storage/istorage_service.dart';
 import 'package:path_provider/path_provider.dart';
 
-class ThemeService {
-  final String fileName = 'selectedTheme.json';
+class ThemeService extends IStorageService<bool> {
+  ThemeService() : super('selectedTheme.json');
 
-  Map<String, bool> fileContent;
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/$fileName');
-  }
-
+  @override
   Future<bool> readFile() async {
     try {
-      final file = await _localFile;
+      final file = await localFile;
       bool flag = json.decode(await file.readAsString()) as bool;
 
       return flag;
@@ -33,7 +23,7 @@ class ThemeService {
   }
 
   Future<File> writeToFile(bool flag) async {
-    final file = await _localFile;
+    final file = await localFile;
     return file.writeAsString(json.encode(flag));
   }
 
