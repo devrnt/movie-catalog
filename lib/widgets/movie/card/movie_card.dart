@@ -88,7 +88,8 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _buildCover() {
-    return Padding(
+    return Container(
+      height: 175,
       padding: const EdgeInsets.fromLTRB(8, 8, 15, 8),
       child: FadeInImage.assetNetwork(
         fadeInDuration: const Duration(milliseconds: 750),
@@ -131,7 +132,7 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildTitleLabel(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.fromLTRB(0, 7, 5,7),
       child: Text(movie.title,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
