@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/suggestions_bloc.dart';
+import 'package:movie_catalog/widgets/movie/list/movie_list.dart';
 
-import 'package:movie_catalog/widgets/movie_list.dart';
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
 

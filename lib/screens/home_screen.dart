@@ -12,13 +12,13 @@ import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/models.dart';
-import 'package:movie_catalog/widgets/movie_list.dart';
+import 'package:movie_catalog/widgets/movie/list/movie_grid.dart';
 
 import 'package:movie_catalog/screens/search_screen.dart';
 import 'package:movie_catalog/screens/suggestions_screen.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
+import 'package:movie_catalog/widgets/movie/list/movie_list.dart';
 
-import 'package:movie_catalog/widgets/movie_grid.dart';
 import 'package:movie_catalog/widgets/no_internet_connection.dart';
 import 'package:url_launcher/url_launcher.dart';
 

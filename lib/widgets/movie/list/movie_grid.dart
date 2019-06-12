@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/models.dart';
-import 'package:movie_catalog/widgets/movie_card_grid.dart';
+import 'package:movie_catalog/widgets/movie/card/movie_card_grid.dart';
 
 class MovieGrid extends StatefulWidget {
   final List<Movie> movies;

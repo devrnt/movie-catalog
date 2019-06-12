@@ -14,7 +14,7 @@ import 'package:movie_catalog/utils/torrent_builder.dart';
 import 'package:movie_catalog/utils/widget_helper.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
 import 'package:movie_catalog/widgets/cast_item.dart';
-import 'package:movie_catalog/widgets/movie_details_section.dart';
+import 'package:movie_catalog/widgets/movie/movie_details_section.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 

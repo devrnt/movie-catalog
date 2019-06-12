@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
-import 'package:movie_catalog/widgets/movie_grid.dart';
 
 import 'package:movie_catalog/services/movie_service.dart';
+import 'package:movie_catalog/widgets/movie/list/movie_grid.dart';
 
 class FilterScreen extends StatefulWidget {
   @override

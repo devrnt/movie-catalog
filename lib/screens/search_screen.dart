@@ -7,9 +7,9 @@ import 'package:movie_catalog/bloc/search_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/models.dart';
-import 'package:movie_catalog/widgets/movie_list.dart';
 
 import 'package:movie_catalog/screens/filter_screen.dart';
+import 'package:movie_catalog/widgets/movie/list/movie_list.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -91,7 +91,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                       : Center(
                                           child: Text(Strings.noSearchResults))
                                   : MovieList(movies: snapshot.data)
-                              : Center(child: CircularProgressIndicator());
+                              : Center(
+                                  child: CircularProgressIndicator(),
+                                );
                     },
                   );
           },
