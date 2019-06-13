@@ -74,7 +74,10 @@ class MovieCatalog extends StatelessWidget {
                   theme: darkModeEnabled
                       ? ThemeBuilder.buildBlackTheme()
                       : ThemeBuilder.buildLightTheme(),
-                  home: HomeScreen(darkModeEnabled: darkModeEnabled),
+                  darkTheme: ThemeBuilder.buildBlackTheme(),
+                  home: HomeScreen(
+                    darkModeEnabled: darkModeEnabled,
+                  ),
                 );
               },
             ),
