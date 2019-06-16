@@ -10,6 +10,8 @@ import 'package:movie_catalog/bloc/movie_details_bloc.dart';
 import 'package:movie_catalog/bloc/subtitle_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 import 'package:movie_catalog/models/models.dart';
+import 'package:movie_catalog/services/permission_service.dart';
+import 'package:movie_catalog/utils/string_helper.dart';
 import 'package:movie_catalog/utils/torrent_builder.dart';
 import 'package:movie_catalog/utils/widget_helper.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
@@ -116,7 +118,7 @@ class MovieDetailsState extends State<MovieDetails> {
   @override
   void initState() {
     super.initState();
-    _createBlocs();
+    _initBlocs();
   }
 
   @override
@@ -128,7 +130,7 @@ class MovieDetailsState extends State<MovieDetails> {
     super.dispose();
   }
 
-  void _createBlocs() {
+  void _initBlocs() {
     _bloc = new LikedMovieBloc(movie: widget.movie);
     _castBloc = new CastBloc(movie: widget.movie);
     _movieDetailsBloc = new MovieDetailsBloc(movie: widget.movie);
@@ -255,29 +257,19 @@ class MovieDetailsState extends State<MovieDetails> {
   }
 
   void _downloadFile(String url) async {
-    if (await _checkPermission()) {
+    if (await PermissionService.checkPermission(permission)) {
       await _subtitleBloc.downloadSubtitle(url);
       WidgetHelper.showSnackbar(
           context, Strings.subtitleDownloaded, Colors.green, Icons.done);
     } else {
-      await _requestPermission();
-      if (await _checkPermission() == false) {
+      await PermissionService.requestPermission(permission);
+      if (!await PermissionService.checkPermission(permission)) {
         WidgetHelper.showSnackbar(context, Strings.acceptPermission,
             Colors.amber[700], Icons.warning);
       } else {
         _downloadFile(url);
       }
     }
-  }
-
-  _requestPermission() async {
-    await PermissionHandler().requestPermissions([permission]);
-  }
-
-  Future<bool> _checkPermission() async {
-    PermissionStatus permissionStatus =
-        await PermissionHandler().checkPermissionStatus(permission);
-    return permissionStatus == PermissionStatus.granted;
   }
 
   Widget _buildBackgroundAndCover() {
@@ -394,7 +386,8 @@ class MovieDetailsState extends State<MovieDetails> {
                     padding: EdgeInsets.symmetric(vertical: 3.0),
                   ),
                   Text(
-                    _fromMinutesToHourNotation(widget.movie.runtime),
+                    StringHelper.fromMinutesToHourNotation(
+                        widget.movie.runtime),
                     style: TextStyle(
                         fontSize: 16.0,
                         color: Theme.of(context)
@@ -469,20 +462,6 @@ class MovieDetailsState extends State<MovieDetails> {
             ],
           ),
         ));
-  }
-
-  String _fromMinutesToHourNotation(int minutes) {
-    int amountOfHours = (minutes / 60).floor();
-    int amountOfMinutes = minutes % 60;
-
-    String amountOfMinutesFormatted;
-    if (amountOfMinutes.toString().length < 2) {
-      amountOfMinutesFormatted = '0$amountOfMinutes';
-    } else {
-      amountOfMinutesFormatted = amountOfMinutes.toString();
-    }
-
-    return '$amountOfHours:${amountOfMinutesFormatted}h';
   }
 
   Widget _buildLinks() {
