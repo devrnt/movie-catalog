@@ -12,6 +12,7 @@ import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/models.dart';
+import 'package:movie_catalog/services/link_service.dart';
 import 'package:movie_catalog/widgets/movie/list/movie_grid.dart';
 
 import 'package:movie_catalog/screens/search_screen.dart';
@@ -20,7 +21,6 @@ import 'package:movie_catalog/widgets/api_not_available.dart';
 import 'package:movie_catalog/widgets/movie/list/movie_list.dart';
 
 import 'package:movie_catalog/widgets/no_internet_connection.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -256,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen>
                       FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro
                           ? '.pro'
                           : '';
-                  _launchLink(
+                  LinkService.launchLink(
                       'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
                 }),
             ListTile(
@@ -271,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen>
                 String mail = 'contact@jonasdevrient.be';
                 String subject = 'Movie Catalog - Feedback';
 
-                _launchLink('mailto:$mail?subject=$subject');
+                LinkService.launchLink('mailto:$mail?subject=$subject');
               },
             ),
             ListTile(
@@ -282,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text('Share Movie Catalog'),
               onTap: () {
-                _launchLink('https://app.jonasdevrient.be');
+                LinkService.launchLink('https://app.jonasdevrient.be');
               },
             ),
             Divider(
@@ -358,7 +358,7 @@ class _HomeScreenState extends State<HomeScreen>
                 textColor: Theme.of(context).accentColor,
                 child: Text('BUY IN PLAY STORE'),
                 onPressed: () {
-                  _launchLink(
+                  LinkService.launchLink(
                       'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog.pro');
                 },
               )
@@ -417,16 +417,10 @@ class _HomeScreenState extends State<HomeScreen>
             FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro
                 ? '.pro'
                 : '';
-        _launchLink(
+        LinkService.launchLink(
             'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
         break;
       default:
-    }
-  }
-
-  void _launchLink(String link) async {
-    if (await canLaunch(link)) {
-      await launch(link);
     }
   }
 }

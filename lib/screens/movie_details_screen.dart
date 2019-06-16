@@ -10,6 +10,7 @@ import 'package:movie_catalog/bloc/movie_details_bloc.dart';
 import 'package:movie_catalog/bloc/subtitle_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 import 'package:movie_catalog/models/models.dart';
+import 'package:movie_catalog/services/link_service.dart';
 import 'package:movie_catalog/services/permission_service.dart';
 import 'package:movie_catalog/utils/string_helper.dart';
 import 'package:movie_catalog/utils/torrent_builder.dart';
@@ -17,8 +18,6 @@ import 'package:movie_catalog/utils/widget_helper.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
 import 'package:movie_catalog/widgets/movie/cast_item.dart';
 import 'package:movie_catalog/widgets/movie/movie_details_section.dart';
-
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -202,9 +201,7 @@ class MovieDetailsState extends State<MovieDetails> {
           hint: Text('Language'),
           onChanged: (Subtitle subtitle) {
             print(subtitle.language);
-            setState(() {
-              _selectedSubtitle = subtitle;
-            });
+            setState(() => _selectedSubtitle = subtitle);
           },
           items: subtitles
               .map(
@@ -472,10 +469,12 @@ class MovieDetailsState extends State<MovieDetails> {
           RaisedButton(
             color: Theme.of(context).primaryColorLight,
             child: Text('Trailer'.toUpperCase()),
-            onPressed: () {
+            onPressed: () async {
               String url =
                   'https://www.youtube.com/watch?v=${widget.movie.ytTrailerCode}';
-              _launchLink(url, context);
+              if (!await LinkService.launchLink(url)) {
+                _showAlert(context);
+              }
             },
           ),
           Padding(
@@ -489,23 +488,17 @@ class MovieDetailsState extends State<MovieDetails> {
                 color: Colors.black.withOpacity(0.8),
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               String url =
                   'https://www.imdb.com/title/${widget.movie.imdbCode}';
-              _launchLink(url, context);
+              if (!await LinkService.launchLink(url)) {
+                _showAlert(context);
+              }
             },
           ),
         ],
       ),
     );
-  }
-
-  void _launchLink(String link, BuildContext context) async {
-    if (await canLaunch(link)) {
-      await launch(link);
-    } else {
-      _showAlert(context);
-    }
   }
 
   Widget _buildTorrents(List<Torrent> torrents, Color iconColor) {
@@ -541,12 +534,15 @@ class MovieDetailsState extends State<MovieDetails> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('PLAY STORE'),
-              textColor: Colors.grey,
-              onPressed: () => _launchLink(
-                  'https://play.google.com/store/apps/details?id=com.bittorrent.client',
-                  context),
-            ),
+                child: Text('PLAY STORE'),
+                textColor: Colors.grey,
+                onPressed: () async {
+                  String url =
+                      'https://play.google.com/store/apps/details?id=com.bittorrent.client';
+                  if (!await LinkService.launchLink(url)) {
+                    _showAlert(context);
+                  }
+                }),
             FlatButton(
               child: Text('CLOSE'),
               onPressed: () => Navigator.of(context).pop(),
@@ -656,10 +652,12 @@ class MovieDetailsState extends State<MovieDetails> {
           ],
         ),
       ),
-      onPressed: () {
+      onPressed: () async {
         String magnetLink =
             TorrentBuilder.constructMagnetLink(torrent, widget.movie);
-        _launchLink(magnetLink, context);
+        if (!await LinkService.launchLink(magnetLink)) {
+          _showAlert(context);
+        }
       },
     );
   }
