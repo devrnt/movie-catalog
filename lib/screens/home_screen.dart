@@ -131,48 +131,8 @@ class _HomeScreenState extends State<HomeScreen>
     return TabBarView(
       controller: _tabController,
       children: <Widget>[
-        StreamBuilder<List<Movie>>(
-          stream: movieBloc.latestMoviesOut,
-          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-            return snapshot.hasError
-                ? const ApiNotAvailable()
-                : NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo.metrics.pixels ==
-                          scrollInfo.metrics.maxScrollExtent) {
-                        // next page should be fetched
-                        movieBloc.fetchNextPageIn.add(MovieType.latest);
-                      }
-                    },
-                    child: snapshot.hasData
-                        ? gridEnabled
-                            ? MovieGrid(movies: snapshot.data)
-                            : MovieList(movies: snapshot.data)
-                        : Center(child: const CircularProgressIndicator()),
-                  );
-          },
-        ),
-        StreamBuilder<List<Movie>>(
-          stream: movieBloc.popularMoviesOut,
-          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-            return snapshot.hasError
-                ? const ApiNotAvailable()
-                : NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo.metrics.pixels ==
-                          scrollInfo.metrics.maxScrollExtent) {
-                        // next page should be fetched
-                        movieBloc.fetchNextPageIn.add(MovieType.popular);
-                      }
-                    },
-                    child: snapshot.hasData
-                        ? gridEnabled
-                            ? MovieGrid(movies: snapshot.data)
-                            : MovieList(movies: snapshot.data)
-                        : Center(child: const CircularProgressIndicator()),
-                  );
-          },
-        ),
+        _buildStreamBuilder(movieBloc, MovieType.latest),
+        _buildStreamBuilder(movieBloc, MovieType.popular),
         StreamBuilder<List<Movie>>(
           stream: likedBloc.likedMoviesOut,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
@@ -182,7 +142,9 @@ class _HomeScreenState extends State<HomeScreen>
                     ? gridEnabled
                         ? MovieGrid(movies: snapshot.data)
                         : MovieList(movies: snapshot.data)
-                    : Center(child: const CircularProgressIndicator());
+                    : Center(
+                        child: const CircularProgressIndicator(),
+                      );
           },
         ),
       ],
@@ -404,27 +366,67 @@ class _HomeScreenState extends State<HomeScreen>
           );
         });
   }
-}
 
-void _addNotificationAction(
-    BuildContext context, Map<String, dynamic> message) {
-  // defined in Firebase Console
-  final notificationAction = message['data']['notification_action'];
-  print(notificationAction);
+  StreamBuilder _buildStreamBuilder(MovieBloc movieBloc, MovieType movieType) {
+    Stream<List<Movie>> stream;
 
-  switch (notificationAction) {
-    case 'open_play_store':
-      String linkSuffix =
-          FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro ? '.pro' : '';
-      _launchLink(
-          'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
-      break;
-    default:
+    switch (movieType) {
+      case MovieType.latest:
+        stream = movieBloc.latestMoviesOut;
+        break;
+      case MovieType.popular:
+        stream = movieBloc.popularMoviesOut;
+        break;
+      default:
+    }
+
+    return StreamBuilder<List<Movie>>(
+      stream: stream,
+      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+        return snapshot.hasError
+            ? const ApiNotAvailable()
+            : NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    // next page should be fetched
+                    movieBloc.fetchNextPageIn.add(movieType);
+                  }
+                },
+                child: snapshot.hasData
+                    ? gridEnabled
+                        ? MovieGrid(movies: snapshot.data)
+                        : MovieList(movies: snapshot.data)
+                    : Center(
+                        child: const CircularProgressIndicator(),
+                      ),
+              );
+      },
+    );
   }
-}
 
-void _launchLink(String link) async {
-  if (await canLaunch(link)) {
-    await launch(link);
+  void _addNotificationAction(
+      BuildContext context, Map<String, dynamic> message) {
+    // defined in Firebase Console
+    final notificationAction = message['data']['notification_action'];
+    print(notificationAction);
+
+    switch (notificationAction) {
+      case 'open_play_store':
+        String linkSuffix =
+            FlavorConfig.of(context).flavorBuild == FlavorBuild.Pro
+                ? '.pro'
+                : '';
+        _launchLink(
+            'https://play.google.com/store/apps/details?id=com.devrnt.moviecatalog$linkSuffix');
+        break;
+      default:
+    }
+  }
+
+  void _launchLink(String link) async {
+    if (await canLaunch(link)) {
+      await launch(link);
+    }
   }
 }
