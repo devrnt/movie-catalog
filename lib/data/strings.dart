@@ -28,6 +28,7 @@ class Strings {
 
   static String search = 'Search';
   static String suggestions = 'Suggestions';
+  static String magic = 'Magic Search';
   static String buyProVersion = 'Buy Pro version';
   static String rateInPlayStore = 'Rate on Google Play';
   static String darkMode = 'Dark Mode';

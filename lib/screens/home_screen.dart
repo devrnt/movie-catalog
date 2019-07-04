@@ -12,6 +12,7 @@ import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/models.dart';
+import 'package:movie_catalog/screens/magic_search_screen.dart';
 import 'package:movie_catalog/services/link_service.dart';
 import 'package:movie_catalog/widgets/movie/list/movie_grid.dart';
 
@@ -225,6 +226,22 @@ class _HomeScreenState extends State<HomeScreen>
                         MaterialPageRoute(
                             builder: (context) => SuggestionsScreen()))
                     : print('Not online, suggestions are unavailable');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.camera_enhance,
+                color: Theme.of(context).accentColor,
+                size: 21.0,
+              ),
+              title: Text(Strings.magic),
+              onTap: () {
+                online
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MagicSearchScreen()))
+                    : print('Not online, magic search is unavailable');
               },
             ),
             FlavorConfig.of(context).flavorBuild == FlavorBuild.Free

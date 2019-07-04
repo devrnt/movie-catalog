@@ -17,6 +17,8 @@ class ThemeBuilder {
       accentTextTheme: _buildBlackTextTheme(base.accentTextTheme),
       primaryIconTheme: base.iconTheme.copyWith(color: BlackColor.kIconColor),
       canvasColor: BlackColor.kPrimaryLight,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: BlackColor.kAccentColor),
     );
   }
 
@@ -37,6 +39,8 @@ class ThemeBuilder {
       accentTextTheme: _buildLightTextTheme(base.accentTextTheme),
       primaryIconTheme: base.iconTheme.copyWith(color: LightColor.kIconColor),
       canvasColor: LightColor.kPrimaryLight,
+            floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: BlackColor.kAccentColor),
+
     );
   }
 
