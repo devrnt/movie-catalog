@@ -7,7 +7,7 @@ packages:
       name: after_layout
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.7+1"
+    version: "1.0.7+2"
   archive:
     dependency: "direct main"
     description:
@@ -105,7 +105,7 @@ packages:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -117,7 +117,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.2"
+    version: "0.7.2+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -337,7 +337,7 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.15"
+    version: "2.1.16"
 sdks:
   dart: ">=2.2.0 <3.0.0"
   flutter: ">=1.5.0 <2.0.0"

@@ -8,7 +8,7 @@ dependencies:
   connectivity: ^0.4.3+2
   url_launcher: ^5.0.3
   path_provider: ^0.5.0+1
-  firebase_messaging: ^5.0.3
+  firebase_messaging: ^5.0.4
   archive: ^2.0.10
   smooth_star_rating: ^1.0.3
   html: ^0.13.4+2
@@ -25,7 +25,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.7.2
+  flutter_launcher_icons: ^0.7.2+1
   debug_mode: ^0.1.1
 
 flutter_icons:
