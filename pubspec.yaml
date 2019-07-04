@@ -17,6 +17,8 @@ dependencies:
   rxdart: ^0.21.0
   photo_view: ^0.3.3
   sentry: ^2.2.0
+  image_picker: ^0.6.0+10
+  firebase_ml_vision: ^0.9.0+3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
