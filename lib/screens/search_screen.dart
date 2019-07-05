@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/search_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 
@@ -10,6 +9,7 @@ import 'package:movie_catalog/models/models.dart';
 
 import 'package:movie_catalog/screens/filter_screen.dart';
 import 'package:movie_catalog/widgets/movie/list/movie_list.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -17,8 +17,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  SearchBloc _bloc;
-
   TextEditingController _searchQueryController = new TextEditingController();
   Timer _debounce;
 
@@ -26,7 +24,6 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _searchQueryController.addListener(_textInputListener);
-    _bloc = BlocProvider.of<SearchBloc>(context);
   }
 
   @override
@@ -38,6 +35,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SearchBloc _searchBloc = Provider.of<SearchBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: _buildSearchInput(),
@@ -60,13 +59,13 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Container(
         child: StreamBuilder<bool>(
-          stream: _bloc.loadingOut,
+          stream: _searchBloc.loadingOut,
           builder: (context, snapshot) {
             bool loading = snapshot?.data ?? false;
             return loading
                 ? Center(child: CircularProgressIndicator())
                 : StreamBuilder<List<Movie>>(
-                    stream: _bloc.searchResultsOut,
+                    stream: _searchBloc.searchResultsOut,
                     initialData: [],
                     builder: (BuildContext context,
                         AsyncSnapshot<List<Movie>> snapshot) {
@@ -128,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _debounce.cancel();
     }
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      _bloc.searchTextIn.add(_searchQueryController.text);
+      Provider.of<SearchBloc>(context).searchTextIn.add(_searchQueryController.text);
     });
   }
 }

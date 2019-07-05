@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:debug_mode/debug_mode.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/theme_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/services/sentry_service.dart';
+import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 
 import 'main.dart';
@@ -25,17 +25,15 @@ Future<Null> main() async {
   };
 
   runZoned<Future<Null>>(() async {
-    final flavorConfig = FlavorConfig(
-      child: MovieCatalog(),
+    final movieCatalogApp = FlavorConfig(
       flavorBuild: FlavorBuild.Pro,
-    );
-
-    runApp(
-      BlocProvider<ThemeBloc>(
-        bloc: ThemeBloc(),
-        child: flavorConfig,
+      child: Provider<ThemeBloc>(
+        builder: (_) => ThemeBloc(),
+        child: MovieCatalog(),
       ),
     );
+
+    runApp(movieCatalogApp);
   }, onError: (error, stackTrace) async {
     await SentryService.reportError(_sentryClient, error, stackTrace);
   });

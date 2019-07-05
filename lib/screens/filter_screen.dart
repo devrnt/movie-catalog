@@ -186,7 +186,11 @@ class _FilterScreenState extends State<FilterScreen> {
       rating = selectedRating.toString();
     }
     _filterBloc = new FilterBloc(
-        currentPage: 1, genre: genre, quality: quality, rating: rating);
+      currentPage: 1,
+      genre: genre,
+      quality: quality,
+      rating: rating,
+    );
 
     Navigator.push(
       context,

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/bloc_base.dart';
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/storage/liked_movies_service.dart';
 

@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:debug_mode/debug_mode.dart';
 
-import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/config/keys.dart';
@@ -62,7 +62,7 @@ class MovieCard extends StatelessWidget {
             builder: (context) => MovieDetails(
                   movie: movie,
                   likedMoviesStream:
-                      BlocProvider.of<LikedBloc>(context).likedMoviesOut,
+                      Provider.of<LikedBloc>(context).likedMoviesOut,
                 ),
           ),
         );

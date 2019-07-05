@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/cast_bloc.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 
@@ -20,6 +19,7 @@ import 'package:movie_catalog/widgets/movie/cast_item.dart';
 import 'package:movie_catalog/widgets/movie/movie_details_section.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetails extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -53,7 +53,7 @@ class MovieDetailsState extends State<MovieDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final LikedBloc bloc = BlocProvider.of<LikedBloc>(context);
+    final LikedBloc bloc = Provider.of<LikedBloc>(context);
 
     return Scaffold(
       key: widget._scaffoldKey,

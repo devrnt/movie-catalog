@@ -1,4 +1,4 @@
-import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/bloc_base.dart';
 import 'package:movie_catalog/services/storage/theme_service.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -27,9 +27,9 @@ class ThemeBloc extends BlocBase {
     changeTheme.add(_darkModeEnabled);
   }
 
-  void _handleChangeTheme(bool event) {
-    _darkModeEnabled = event;
-    _themeService.writeToFile(_darkModeEnabled);
+  void _handleChangeTheme(bool flag) async {
+    _darkModeEnabled = flag;
+    await _themeService.writeToFile(_darkModeEnabled);
   }
 
   void dispose() {

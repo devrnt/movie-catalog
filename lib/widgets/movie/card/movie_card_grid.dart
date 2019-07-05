@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/screens/movie_details_screen.dart';
+import 'package:provider/provider.dart';
 
 class MovieCardGrid extends StatelessWidget {
   final Movie movie;
@@ -19,7 +19,7 @@ class MovieCardGrid extends StatelessWidget {
               builder: (context) => MovieDetails(
                     movie: movie,
                     likedMoviesStream:
-                        BlocProvider.of<LikedBloc>(context).likedMoviesOut,
+                        Provider.of<LikedBloc>(context).likedMoviesOut,
                   ),
             ),
           ),

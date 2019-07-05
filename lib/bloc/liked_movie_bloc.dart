@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/bloc_base.dart';
 import 'package:movie_catalog/models/models.dart';
 
 /// Checks if a movie is already liked or not

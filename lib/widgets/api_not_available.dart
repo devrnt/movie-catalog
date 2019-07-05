@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
+import 'package:provider/provider.dart';
 
 class ApiNotAvailable extends StatelessWidget {
   const ApiNotAvailable({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final MovieBloc _movieBloc = BlocProvider.of<MovieBloc>(context);
+    final MovieBloc _movieBloc = Provider.of<MovieBloc>(context);
 
     return Center(
       child: Column(

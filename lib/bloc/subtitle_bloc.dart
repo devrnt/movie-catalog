@@ -6,7 +6,7 @@ import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/subtitle_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:movie_catalog/bloc/bloc_provider.dart';
+import 'package:movie_catalog/bloc/bloc_base.dart';
 
 /// Fetches the movie details for the passed [movie]
 class SubtitleBloc extends BlocBase {

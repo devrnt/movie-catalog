@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:movie_catalog/bloc/bloc_provider.dart';
 import 'package:movie_catalog/bloc/liked_bloc.dart';
 import 'package:movie_catalog/bloc/movie_bloc.dart';
+import 'package:movie_catalog/bloc/search_bloc.dart';
+import 'package:movie_catalog/bloc/suggestions_bloc.dart';
 import 'package:movie_catalog/bloc/theme_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/config/keys.dart';
@@ -26,6 +27,7 @@ import 'package:movie_catalog/widgets/no_internet_connection.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool darkModeEnabled;
@@ -110,7 +112,10 @@ class _HomeScreenState extends State<HomeScreen>
                 ? Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SearchScreen(),
+                      builder: (context) => Provider(
+                            builder: (_) => SearchBloc(),
+                            child: SearchScreen(),
+                          ),
                     ),
                   )
                 : print('Not online, searching is unavailable');
@@ -126,8 +131,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildBody() {
-    final MovieBloc movieBloc = BlocProvider.of<MovieBloc>(context);
-    final LikedBloc likedBloc = BlocProvider.of<LikedBloc>(context);
+    final MovieBloc movieBloc = Provider.of<MovieBloc>(context);
+    final LikedBloc likedBloc = Provider.of<LikedBloc>(context);
 
     return TabBarView(
       controller: _tabController,
@@ -153,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildDrawer() {
-    ThemeBloc _themeBloc = BlocProvider.of<ThemeBloc>(context);
+    ThemeBloc _themeBloc = Provider.of<ThemeBloc>(context);
 
     return SizedBox(
       width: MediaQuery.of(context).size.width / (3 / 2),
@@ -207,8 +212,15 @@ class _HomeScreenState extends State<HomeScreen>
               title: Text(Strings.search),
               onTap: () {
                 online
-                    ? Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SearchScreen()))
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Provider(
+                                builder: (_) => SearchBloc(),
+                                child: SearchScreen(),
+                              ),
+                        ),
+                      )
                     : print('Not online, searching is unavailable');
               },
             ),
@@ -224,7 +236,12 @@ class _HomeScreenState extends State<HomeScreen>
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SuggestionsScreen()))
+                          builder: (context) => Provider(
+                                child: SuggestionsScreen(),
+                                builder: (_) => SuggestionsBloc(),
+                              ),
+                        ),
+                      )
                     : print('Not online, suggestions are unavailable');
               },
             ),
