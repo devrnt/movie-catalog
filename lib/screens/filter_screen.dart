@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:movie_catalog/bloc/filter_bloc.dart';
+import 'package:movie_catalog/blocs/filter_bloc.dart';
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/widgets/api_not_available.dart';
 

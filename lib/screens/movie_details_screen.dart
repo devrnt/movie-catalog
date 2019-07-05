@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/cast_bloc.dart';
-import 'package:movie_catalog/bloc/liked_bloc.dart';
+import 'package:movie_catalog/blocs/cast_bloc.dart';
+import 'package:movie_catalog/blocs/liked_bloc.dart';
 
-import 'package:movie_catalog/bloc/liked_movie_bloc.dart';
-import 'package:movie_catalog/bloc/movie_details_bloc.dart';
-import 'package:movie_catalog/bloc/subtitle_bloc.dart';
+import 'package:movie_catalog/blocs/liked_movie_bloc.dart';
+import 'package:movie_catalog/blocs/movie_details_bloc.dart';
+import 'package:movie_catalog/blocs/subtitle_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/link_service.dart';

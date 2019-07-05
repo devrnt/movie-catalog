@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/liked_bloc.dart';
+import 'package:movie_catalog/blocs/liked_bloc.dart';
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/screens/movie_details_screen.dart';
 import 'package:provider/provider.dart';

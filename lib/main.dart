@@ -9,9 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 
-import 'package:movie_catalog/bloc/liked_bloc.dart';
-import 'package:movie_catalog/bloc/movie_bloc.dart';
-import 'package:movie_catalog/bloc/theme_bloc.dart';
+import 'package:movie_catalog/blocs/liked_bloc.dart';
+import 'package:movie_catalog/blocs/movie_bloc.dart';
+import 'package:movie_catalog/blocs/theme_bloc.dart';
 
 import 'package:movie_catalog/screens/home_screen.dart';
 import 'package:movie_catalog/theme/theme_builder.dart';

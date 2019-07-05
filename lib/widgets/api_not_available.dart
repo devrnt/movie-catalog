@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/movie_bloc.dart';
+import 'package:movie_catalog/blocs/movie_bloc.dart';
 import 'package:movie_catalog/data/strings.dart';
 import 'package:provider/provider.dart';
 

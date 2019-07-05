@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:movie_catalog/bloc/suggestions_bloc.dart';
+import 'package:movie_catalog/blocs/suggestions_bloc.dart';
 import 'package:movie_catalog/widgets/movie/list/movie_list.dart';
 
 import 'package:movie_catalog/models/models.dart';

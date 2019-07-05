@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:debug_mode/debug_mode.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_catalog/bloc/theme_bloc.dart';
+import 'package:movie_catalog/blocs/theme_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/services/sentry_service.dart';

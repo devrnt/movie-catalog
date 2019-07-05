@@ -7,7 +7,7 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:debug_mode/debug_mode.dart';
 
-import 'package:movie_catalog/bloc/liked_bloc.dart';
+import 'package:movie_catalog/blocs/liked_bloc.dart';
 import 'package:movie_catalog/config/flavor_config.dart';
 import 'package:movie_catalog/config/keys.dart';
 import 'package:movie_catalog/models/models.dart';
