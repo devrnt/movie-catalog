@@ -26,7 +26,7 @@ class Keys {
   static String sentryDsn = 'your sentry Dsn';
 }
 ```
-
+### Apk
 To build the **free** version:
 ```console
 flutter build apk --release --flavor free -t lib/main.dart
@@ -42,6 +42,17 @@ The `target` option (-t) makes sure we can use the different flavors in the dart
 
 **VSCode:** Go to the debug tab (ctrl + shift + D) and select on top the debug configuration and there will be 2 available options: `Flutter Free` and `Flutter Pro`.
 These configurations will build the app with the commands given above.
+
+### App bundles (preferred)
+To build the **free** version:
+```console
+flutter build appbundle --flavor free -t lib/main.dart
+```
+
+To build the **pro** version
+```
+flutter build appbundle --flavor pro -t lib/main_pro.dart
+```
 
 ## Developping
 Don't hesitate to fork this repository and if you are having any questions please contact me.
