@@ -113,9 +113,9 @@ class _HomeScreenState extends State<HomeScreen>
                     context,
                     MaterialPageRoute(
                       builder: (context) => Provider(
-                            builder: (_) => SearchBloc(),
-                            child: SearchScreen(),
-                          ),
+                        builder: (_) => SearchBloc(),
+                        child: SearchScreen(),
+                      ),
                     ),
                   )
                 : print('Not online, searching is unavailable');
@@ -216,9 +216,9 @@ class _HomeScreenState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) => Provider(
-                                builder: (_) => SearchBloc(),
-                                child: SearchScreen(),
-                              ),
+                            builder: (_) => SearchBloc(),
+                            child: SearchScreen(),
+                          ),
                         ),
                       )
                     : print('Not online, searching is unavailable');
@@ -237,9 +237,9 @@ class _HomeScreenState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) => Provider(
-                                child: SuggestionsScreen(),
-                                builder: (_) => SuggestionsBloc(),
-                              ),
+                            child: SuggestionsScreen(),
+                            builder: (_) => SuggestionsBloc(),
+                          ),
                         ),
                       )
                     : print('Not online, suggestions are unavailable');
@@ -368,10 +368,13 @@ class _HomeScreenState extends State<HomeScreen>
     _firebaseMessaging = new FirebaseMessaging()
       ..configure(onMessage: (Map<String, dynamic> message) {
         _addNotificationAction(context, message);
+        return null;
       }, onResume: (Map<String, dynamic> message) {
         _addNotificationAction(context, message);
+        return null;
       }, onLaunch: (Map<String, dynamic> message) {
         _addNotificationAction(context, message);
+        return null;
       });
     _firebaseMessaging.getToken().then((token) {
       print('Firebase Message token: $token');
@@ -426,6 +429,7 @@ class _HomeScreenState extends State<HomeScreen>
                     // next page should be fetched
                     movieBloc.fetchNextPageIn.add(movieType);
                   }
+                  return true;
                 },
                 child: snapshot.hasData
                     ? gridEnabled
