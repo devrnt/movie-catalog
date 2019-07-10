@@ -196,19 +196,19 @@ class _FilterScreenState extends State<FilterScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Text('Filter results'),
-              ),
-              body: StreamBuilder<List<Movie>>(
-                stream: _filterBloc.filteredMoviesOut,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) return ApiNotAvailable();
-                  return snapshot.hasData
-                      ? MovieGrid(movies: snapshot.data)
-                      : Center(child: CircularProgressIndicator());
-                },
-              ),
-            ),
+          appBar: AppBar(
+            title: Text('Filter results'),
+          ),
+          body: StreamBuilder<List<Movie>>(
+            stream: _filterBloc.filteredMoviesOut,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return ApiNotAvailable();
+              return snapshot.hasData
+                  ? MovieGrid(movies: snapshot.data)
+                  : Center(child: CircularProgressIndicator());
+            },
+          ),
+        ),
       ),
     );
   }

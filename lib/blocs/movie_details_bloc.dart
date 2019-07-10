@@ -24,8 +24,7 @@ class MovieDetailsBloc extends BlocBase {
   }
 
   void _getMovieDetails() async {
-    movie =
-        await _movieService.fetchMovieById(http.Client(), movie.id);
+    movie = await _movieService.fetchMovieById(http.Client(), movie.id);
 
     _movieDetailsController.sink.add(movie);
   }

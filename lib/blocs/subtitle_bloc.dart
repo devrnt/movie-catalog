@@ -28,7 +28,7 @@ class SubtitleBloc extends BlocBase {
 
     _subtitleController.sink.add(_subtitles);
   }
-  
+
   // This function is added to the bloc but is in fact no stream
   // Moved it to here so the details screen does not need to depend on SubtitleService
   Future<File> downloadSubtitle(String url) async {

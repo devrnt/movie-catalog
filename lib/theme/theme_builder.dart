@@ -39,8 +39,8 @@ class ThemeBuilder {
       accentTextTheme: _buildLightTextTheme(base.accentTextTheme),
       primaryIconTheme: base.iconTheme.copyWith(color: LightColor.kIconColor),
       canvasColor: LightColor.kPrimaryLight,
-            floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: BlackColor.kAccentColor),
-
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: BlackColor.kAccentColor),
     );
   }
 

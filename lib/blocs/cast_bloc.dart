@@ -7,7 +7,6 @@ import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/movie_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-
 import 'package:http/http.dart' as http;
 
 /// Fetches the cast for the passed [movie]

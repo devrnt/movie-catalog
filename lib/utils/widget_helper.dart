@@ -20,8 +20,8 @@ class WidgetHelper {
     );
   }
 
-  static SnackBar buildSnackbar(
-      GlobalKey<ScaffoldState> scaffoldState, String title, Color color, IconData icon) {
+  static SnackBar buildSnackbar(GlobalKey<ScaffoldState> scaffoldState,
+      String title, Color color, IconData icon) {
     final snackbar = SnackBar(
       content: Row(
         children: <Widget>[

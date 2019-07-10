@@ -13,16 +13,15 @@ class MovieCardGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              maintainState: true,
-              builder: (context) => MovieDetails(
-                    movie: movie,
-                    likedMoviesStream:
-                        Provider.of<LikedBloc>(context).likedMoviesOut,
-                  ),
-            ),
+        context,
+        MaterialPageRoute(
+          maintainState: true,
+          builder: (context) => MovieDetails(
+            movie: movie,
+            likedMoviesStream: Provider.of<LikedBloc>(context).likedMoviesOut,
           ),
+        ),
+      ),
       child: _buildCard(context: context),
     );
   }

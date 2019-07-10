@@ -60,10 +60,9 @@ class MovieCard extends StatelessWidget {
           MaterialPageRoute(
             maintainState: true,
             builder: (context) => MovieDetails(
-                  movie: movie,
-                  likedMoviesStream:
-                      Provider.of<LikedBloc>(context).likedMoviesOut,
-                ),
+              movie: movie,
+              likedMoviesStream: Provider.of<LikedBloc>(context).likedMoviesOut,
+            ),
           ),
         );
       },
@@ -132,7 +131,7 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildTitleLabel(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 7, 5,7),
+      padding: const EdgeInsets.fromLTRB(0, 7, 5, 7),
       child: Text(movie.title,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
