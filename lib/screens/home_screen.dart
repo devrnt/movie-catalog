@@ -14,6 +14,7 @@ import 'package:movie_catalog/data/strings.dart';
 
 import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/screens/magic_search_screen.dart';
+import 'package:movie_catalog/services/connectivity_service.dart';
 import 'package:movie_catalog/services/link_service.dart';
 import 'package:movie_catalog/widgets/movie/list/movie_grid.dart';
 
@@ -43,10 +44,9 @@ class _HomeScreenState extends State<HomeScreen>
   TabController _tabController;
   FirebaseMessaging _firebaseMessaging;
 
+  final _connectivityService = ConnectivityService();
   // String result of the connection, gets updated by the subscription
   String _connectionStatus = 'Unknown';
-  final Connectivity _connectivity = new Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   bool get online =>
       _connectionStatus == 'ConnectivityResult.none' ? false : true;
@@ -67,9 +67,8 @@ class _HomeScreenState extends State<HomeScreen>
 
     _initFirebaseMessaging();
 
-    initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    _initConnectivity();
+    _connectivityService.connectivityStream.listen((ConnectivityResult result) {
       setState(() => _connectionStatus = result.toString());
     });
 
@@ -79,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    _connectivitySubscription.cancel();
     super.dispose();
   }
 
@@ -343,10 +341,11 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Future<Null> initConnectivity() async {
+  Future<Null> _initConnectivity() async {
     String connectionStatus;
     try {
-      connectionStatus = (await _connectivity.checkConnectivity()).toString();
+      connectionStatus =
+          (await _connectivityService.checkConnectivity()).toString();
     } on PlatformException catch (e) {
       print('There occured an error: ' + e.toString());
       connectionStatus = 'Failed to get connectivity';
