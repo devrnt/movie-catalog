@@ -78,12 +78,22 @@ class MovieDetailsState extends State<MovieDetails> {
                 onPressed: () {
                   if (snapshot.data == true) {
                     bloc.removeLikedIn.add(widget.movie);
-                    WidgetHelper.showSnackbar(context,
-                        Strings.removedMovieToLikes, Colors.red, Icons.delete);
+
+                    final snackbar = WidgetHelper.buildSnackbar(
+                        widget._scaffoldKey,
+                        Strings.removedMovieToLikes,
+                        Colors.red,
+                        Icons.delete);
+                    widget._scaffoldKey.currentState.showSnackBar(snackbar);
                   } else {
                     bloc.addLikedIn.add(widget.movie);
-                    WidgetHelper.showSnackbar(context,
-                        Strings.addedMovieToLikes, Colors.green, Icons.done);
+                    final snackbar = WidgetHelper.buildSnackbar(
+                        widget._scaffoldKey,
+                        Strings.addedMovieToLikes,
+                        Colors.green,
+                        Icons.done);
+
+                    widget._scaffoldKey.currentState.showSnackBar(snackbar);
                   }
                 },
               );
@@ -206,32 +216,32 @@ class MovieDetailsState extends State<MovieDetails> {
           items: subtitles
               .map(
                 (sub) => DropdownMenuItem(
-                      value: sub,
-                      child: Row(
-                        children: <Widget>[
-                          FadeInImage.assetNetwork(
-                            image:
-                                // 'https://www.geoips.com/assets/img/flag/128/${sub.countryCode.toLowerCase()}.png',
-                                'https://www.countryflags.io/${sub.countryCode}/flat/32.png',
-                            height: 22.0,
-                            placeholder: 'assets/images/flag_placeholder.jpg',
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Text(
-                              sub.language,
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .subhead
-                                    .color
-                                    .withOpacity(0.8),
-                              ),
-                            ),
-                          ),
-                        ],
+                  value: sub,
+                  child: Row(
+                    children: <Widget>[
+                      FadeInImage.assetNetwork(
+                        image:
+                            // 'https://www.geoips.com/assets/img/flag/128/${sub.countryCode.toLowerCase()}.png',
+                            'https://www.countryflags.io/${sub.countryCode}/flat/32.png',
+                        height: 22.0,
+                        placeholder: 'assets/images/flag_placeholder.jpg',
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          sub.language,
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .textTheme
+                                .subhead
+                                .color
+                                .withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               )
               .toList(),
         ),
@@ -256,13 +266,15 @@ class MovieDetailsState extends State<MovieDetails> {
   void _downloadFile(String url) async {
     if (await PermissionService.checkPermission(permission)) {
       await _subtitleBloc.downloadSubtitle(url);
-      WidgetHelper.showSnackbar(
-          context, Strings.subtitleDownloaded, Colors.green, Icons.done);
+      final snackbar = WidgetHelper.buildSnackbar(widget._scaffoldKey,
+          Strings.subtitleDownloaded, Colors.green, Icons.done);
+      widget._scaffoldKey.currentState.showSnackBar(snackbar);
     } else {
       await PermissionService.requestPermission(permission);
       if (!await PermissionService.checkPermission(permission)) {
-        WidgetHelper.showSnackbar(context, Strings.acceptPermission,
-            Colors.amber[700], Icons.warning);
+        final snackbar = WidgetHelper.buildSnackbar(widget._scaffoldKey,
+            Strings.acceptPermission, Colors.amber[700], Icons.warning);
+        widget._scaffoldKey.currentState.showSnackBar(snackbar);
       } else {
         _downloadFile(url);
       }

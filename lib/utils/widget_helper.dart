@@ -20,8 +20,8 @@ class WidgetHelper {
     );
   }
 
-  static void showSnackbar(
-      BuildContext context, String title, Color color, IconData icon) {
+  static SnackBar buildSnackbar(
+      GlobalKey<ScaffoldState> scaffoldState, String title, Color color, IconData icon) {
     final snackbar = SnackBar(
       content: Row(
         children: <Widget>[
@@ -42,6 +42,6 @@ class WidgetHelper {
       duration: Duration(seconds: 2),
       backgroundColor: color,
     );
-    Scaffold.of(context).showSnackBar(snackbar);
+    return snackbar;
   }
 }
