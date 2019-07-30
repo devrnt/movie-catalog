@@ -25,7 +25,7 @@ class ConnectivityService {
 
   void _httpConnectivityCheck() async {
     try {
-      await _httpClient.read('https://yts.am/api/v2/list_movies.json');
+      await _httpClient.read('https://yts.lt/api/v2/list_movies.json');
       _connectivityController.add(ConnectivityResult.wifi);
     } on Exception catch (e) {
       print('No internet connection: $e');

@@ -11,10 +11,10 @@ import 'package:movie_catalog/models/models.dart';
 import 'package:movie_catalog/services/imovie_service.dart';
 
 class MovieService implements IMovieService {
-  final String apiUrl = 'https://yts.am/api/v2/list_movies.json';
-  final String apiUrlDetails = 'https://yts.am/api/v2/movie_details.json';
+  final String apiUrl = 'https://yts.lt/api/v2/list_movies.json';
+  final String apiUrlDetails = 'https://yts.lt/api/v2/movie_details.json';
   final String apiUrlSuggestions =
-      'https://yts.am/api/v2/movie_suggestions.json';
+      'https://yts.lt/api/v2/movie_suggestions.json';
 
   // Fetch all the movies, the order of the api is kept
   Future<List<Movie>> fetchLatestMovies(
