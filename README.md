@@ -1,4 +1,4 @@
-# Movie catalog
+# Movie Catalog App
 
 🎬 Browse through movies from the YIFY api
 
