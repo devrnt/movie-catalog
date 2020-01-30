@@ -7,19 +7,19 @@ dependencies:
   http: ^0.12.0+1
   connectivity: ^0.4.3+2
   url_launcher: ^5.0.3
-  path_provider: ^0.5.0+1
-  firebase_messaging: ^5.0.4
-  archive: ^2.0.10
+  path_provider: ^1.6.0
+  firebase_messaging: ^6.0.9
+  archive: ^2.0.11
   smooth_star_rating: ^1.0.3
-  html: ^0.13.4+2
-  permission_handler: ^3.1.0
+  html: ^0.14.0+3
+  permission_handler: ^4.2.0+hotfix.3
   firebase_admob: ^0.9.0+1
-  rxdart: ^0.21.0
-  photo_view: ^0.4.0
-  sentry: ^2.2.0
+  rxdart: ^0.23.1
+  photo_view: ^0.9.1
+  sentry: ^3.0.1
   image_picker: ^0.6.0+10
   firebase_ml_vision: ^0.9.0+3
-  provider: ^3.0.0+1
+  provider: ^4.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,10 +40,8 @@ flutter_icons:
   adaptive_icon_background: "#FF1E1E24"
   adaptive_icon_foreground: "assets/icon/icon.png"
 
-
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

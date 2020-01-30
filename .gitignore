@@ -12,3 +12,5 @@ android/key.properties
 .idea/
 
 lib/config/keys.dart
+ios/Flutter/flutter_export_environment.sh
+.flutter-plugins-dependencies

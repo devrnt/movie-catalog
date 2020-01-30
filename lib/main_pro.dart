@@ -28,7 +28,7 @@ Future<Null> main() async {
     final movieCatalogApp = FlavorConfig(
       flavorBuild: FlavorBuild.Pro,
       child: Provider<ThemeBloc>(
-        builder: (_) => ThemeBloc(),
+        create: (_) => ThemeBloc(),
         child: MovieCatalog(),
       ),
     );

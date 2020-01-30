@@ -52,6 +52,7 @@ class SearchBloc extends BlocBase {
   }
 
   void _handleSearchQuery(String searchQuery) async {
+    print(searchQuery);
     if (searchQuery.isNotEmpty) {
       _loadingController.sink.add(true);
       try {

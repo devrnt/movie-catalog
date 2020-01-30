@@ -127,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _debounce.cancel();
     }
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      Provider.of<SearchBloc>(context)
+      Provider.of<SearchBloc>(context, listen: false)
           .searchTextIn
           .add(_searchQueryController.text);
     });

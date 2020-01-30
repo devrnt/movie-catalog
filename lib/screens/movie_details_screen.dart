@@ -210,7 +210,6 @@ class MovieDetailsState extends State<MovieDetails> {
           value: _selectedSubtitle,
           hint: Text('Language'),
           onChanged: (Subtitle subtitle) {
-            print(subtitle.language);
             setState(() => _selectedSubtitle = subtitle);
           },
           items: subtitles

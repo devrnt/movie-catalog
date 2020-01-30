@@ -7,7 +7,7 @@ class FlavorConfig extends InheritedWidget {
   FlavorConfig({@required this.child, @required this.flavorBuild});
 
   static FlavorConfig of(BuildContext context) =>
-      context.inheritFromWidgetOfExactType(FlavorConfig);
+      context.dependOnInheritedWidgetOfExactType<FlavorConfig>();
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;

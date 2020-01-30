@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen>
                     context,
                     MaterialPageRoute(
                       builder: (context) => Provider(
-                        builder: (_) => SearchBloc(),
+                        create: (_) => SearchBloc(),
                         child: SearchScreen(),
                       ),
                     ),
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildDrawer() {
-    ThemeBloc _themeBloc = Provider.of<ThemeBloc>(context);
+    ThemeBloc _themeBloc = Provider.of<ThemeBloc>(context, listen: false);
 
     return SizedBox(
       width: MediaQuery.of(context).size.width / (3 / 2),
@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) => Provider(
-                            builder: (_) => SearchBloc(),
+                            create: (_) => SearchBloc(),
                             child: SearchScreen(),
                           ),
                         ),
@@ -235,8 +235,8 @@ class _HomeScreenState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) => Provider(
+                            create: (_) => SuggestionsBloc(),
                             child: SuggestionsScreen(),
-                            builder: (_) => SuggestionsBloc(),
                           ),
                         ),
                       )

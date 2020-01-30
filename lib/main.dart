@@ -33,7 +33,7 @@ Future<Null> main() async {
     final movieCatalogApp = FlavorConfig(
       flavorBuild: FlavorBuild.Free,
       child: Provider<ThemeBloc>(
-        builder: (_) => ThemeBloc(),
+        create: (_) => ThemeBloc(),
         child: MovieCatalog(),
       ),
     );
@@ -54,8 +54,8 @@ class MovieCatalog extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        Provider(builder: (_) => MovieBloc()),
-        Provider(builder: (_) => LikedBloc()),
+        Provider(create: (_) => MovieBloc()),
+        Provider(create: (_) => LikedBloc()),
       ],
       child: StreamBuilder<bool>(
         stream: _themeBloc.darkThemeEnabled,
