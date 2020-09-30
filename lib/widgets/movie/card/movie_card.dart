@@ -47,9 +47,8 @@ class MovieCard extends StatelessWidget {
       onTap: () {
         if (FlavorConfig.of(context).flavorBuild == FlavorBuild.Free &&
             !DebugMode.isInDebugMode) {
-          // we could add another flag to display even less ads
-          bool displayAdFlag = new Random().nextBool();
-          if (displayAdFlag) {
+          var displayAdFlag = new Random().nextInt(10);
+          if (displayAdFlag == 1) {
             interstitialAd
               ..load()
               ..show();
