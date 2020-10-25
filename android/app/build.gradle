@@ -29,8 +29,8 @@ android {
         applicationId "com.devrnt.moviecatalog"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 28
-        versionName "1.5.4"
+        versionCode 29
+        versionName "1.5.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
