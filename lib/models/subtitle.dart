@@ -5,7 +5,7 @@ class Subtitle {
   String downloadUrl;
   String countryCode;
   int rating;
-  static final String baseUrl = 'https://www.yifysubtitles.com';
+  static final String baseUrl = 'https://www.yifysubtitles.org';
 
   // Fill this map up for every country name that is not
   // directly convertable for a flag code on the site

@@ -13,7 +13,7 @@ import 'package:movie_catalog/services/storage/liked_movies_service.dart';
 class SubtitleService {
   http.Client _client;
   LikedMoviesService _storageService;
-  String _baseUrl = 'https://www.yifysubtitles.com/movie-imdb';
+  String _baseUrl = 'https://www.yifysubtitles.org/movie-imdb';
   String _url;
   // static var httpClient = new HttpClient(); is for original download code
 
@@ -40,16 +40,24 @@ class SubtitleService {
     List<Subtitle> subtitles = [];
 
     if (subtitlesAvailable) {
-      List<Element> startElement = document.getElementsByClassName('sub-lang');
+      List<Element> startElement = document.getElementsByTagName('tbody');
 
-      subtitles = startElement.map((elem) {
+      subtitles = startElement.first.children.map((row) {
         return new Subtitle(
             // id: int.parse(elem.parent.parent.attributes['data-id']),
-            language: elem.text,
-            downloadUrl:
-                elem.parent.nextElementSibling.firstChild.attributes['href'],
-            rating:
-                int.parse(elem.parent.previousElementSibling.firstChild.text));
+            language: row.getElementsByClassName('sub-lang').first.text,
+            downloadUrl: row
+                .getElementsByClassName('flag-cell')
+                .first
+                .nextElementSibling
+                .children
+                .first
+                .attributes['href'],
+            rating: int.parse(row
+                .getElementsByClassName('rating-cell')
+                .first
+                .firstChild
+                .text));
       }).toList();
     }
     // filter the big subtitle list
@@ -61,15 +69,10 @@ class SubtitleService {
     var req = await _client.get(Uri.parse(url));
     var bytes = req.bodyBytes;
 
-    // THIS IS THE ORIGAL I wrote it with http package; (above)
-    // var request = await httpClient.getUrl(Uri.parse(url));
-    // var response = await request.close();
-    // var bytes = await consolidateHttpClientResponseBytes(response);
-
     String path = await _storageService.downloadsPath;
 
     String fileName = url
-        .replaceFirst('https://www.yifysubtitles.com/subtitle/', '')
+        .replaceFirst('https://www.yifysubtitles.org/subtitle/', '')
         .replaceFirst('.zip', '')
         .replaceFirst('-yify-', '');
 

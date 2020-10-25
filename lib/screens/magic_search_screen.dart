@@ -24,7 +24,9 @@ class _MagicSearchScreenState extends State<MagicSearchScreen> {
       ),
       body: _searchWord == null
           ? Center(child: Text('Take a picture'))
-          : _movies.isEmpty ? noMagicSearchResults : MovieList(movies: _movies),
+          : _movies.isEmpty
+              ? noMagicSearchResults
+              : MovieList(movies: _movies),
       floatingActionButton: floatingActionButton,
     );
   }
