@@ -14,8 +14,7 @@ abstract class IStorageService<T> {
   }
 
   Future<String> get downloadsPath async {
-    final directoryTemp = await getExternalStorageDirectory();
-    return '${directoryTemp.path}/Download';
+    return '/storage/emulated/0/Download/';
   }
 
   Future<T> readFile();
